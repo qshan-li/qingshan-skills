@@ -26,6 +26,7 @@ Adapters may provide:
 - UI metadata and invocation policy
 - tool or MCP dependency declarations
 - hooks or lifecycle enforcement
+- trigger-based project or global memory retrieval
 - runtime-specific subagent, fork, or context behavior
 - prompt or rules wrappers for runtimes that do not read Agent Skills directly
 
@@ -64,6 +65,18 @@ Adapters must not:
 
 Runtime automation protects workflow boundaries; it does not drive the whole
 development process.
+
+## Memory Retrieval Boundary
+
+Runtime adapters may help implement the root Memory Retrieval Gate. They may
+search project artifacts and global memory such as
+`~/.qingshan-skills/memory/learnings.jsonl` for entries whose trigger matches
+the task type, stack, risk, artifact, or failure mode.
+
+Adapters must return targeted excerpts or artifact references, not full memory
+dumps. Missing global memory is not a blocker. Adapter retrieval must not change
+canonical workflow semantics, invent new memory rules, or continue past User
+Challenge decisions.
 
 ## Workflow Breadcrumbs
 

@@ -75,18 +75,26 @@ artifact produced from `docs/templates/task-handoff.md`, or root `STATE.md` when
 no project task artifact exists. Treat missing acceptance criteria, required
 evidence, or unresolved User Challenge decisions as stop conditions.
 
+Read only durable context that can affect architecture, risk, validation,
+rollback, or user decision boundaries. Prefer existing ADRs or `DECISIONS.md`
+for settled durable decisions and `LEARNINGS.md` or the relevant project
+retrospective for recurring project pitfalls, verification commands, and known
+traps. Retrieve global memory only when an entry's trigger matches the current
+task shape, stack, risk, or artifact. Do not load unbounded memory dumps.
+
 ## Workflow
 
 1. Re-read the clarified goal, acceptance criteria, and any Task Handoff artifact.
-2. List files or modules likely affected and files that should remain untouched.
-3. Grade decisions:
+2. Read relevant durable decisions, project learnings, and trigger-matched global memory that can change architecture, risk, validation, rollback, or user decision boundaries.
+3. List files or modules likely affected and files that should remain untouched.
+4. Grade decisions:
    - Mechanical: choose using project conventions.
    - Taste: batch and present with a Decision Brief using `docs/templates/decision-brief.md`.
    - User Challenge: stop for explicit approval using a Decision Brief based on `docs/templates/decision-brief.md`.
-4. Decompose work into vertical slices with verification after each meaningful change.
-5. Record approved durable decisions that pass the three-gate rule, or explicitly defer them with a reason.
-6. Define rollback or failure handling when changes affect deploy, data, security, or architecture.
-7. End with a plan that can be executed without inventing missing requirements.
+5. Decompose work into vertical slices with verification after each meaningful change.
+6. Record approved durable decisions that pass the three-gate rule, or explicitly defer them with a reason.
+7. Define rollback or failure handling when changes affect deploy, data, security, or architecture.
+8. End with a plan that can be executed without inventing missing requirements.
 
 ## Hard Rules
 
@@ -96,6 +104,7 @@ evidence, or unresolved User Challenge decisions as stop conditions.
 - Do not add future-proofing, compatibility layers, or abstractions without current need.
 - Do not let the plan include unrelated cleanup.
 - Do not proceed if evidence required by the task is missing.
+- Do not ignore a relevant durable decision, project learning, or trigger-matched global memory entry that can affect the plan.
 - Do not split by technical layer when a thin end-to-end slice can be verified independently.
 - Do not leave approved durable decisions only in the conversation or plan text.
 - Do not create a durable decision record when any gate is missing.
@@ -115,6 +124,7 @@ evidence, or unresolved User Challenge decisions as stop conditions.
 - Ordered tasks.
 - Affected and protected files/modules.
 - Decision grades, Decision Briefs, and unresolved approvals.
+- Referenced memory and the trigger that made it relevant.
 - Durable decision artifact path and entry, or deferral reason.
 - Vertical slices and dependencies.
 - Validation strategy.

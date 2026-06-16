@@ -45,11 +45,21 @@ Use `docs/templates/release-checklist.md` for release-path verification so the
 claim, fresh evidence, scope review, release or handoff risk, and status are
 reported consistently.
 
+When the user explicitly requested a ship, deploy, publish, PR, merge, release,
+or release handoff, `/verify` owns readiness proof first. Perform or hand off
+the requested release action only after the release checklist status is Ready or
+ready with stated risk, the user has accepted any residual User Challenge risk,
+and the action is mechanical for the current repository. If readiness is blocked
+or the action would change scope, route to `/execute`, `/plan`, or the user
+before acting.
+
 ## Scope Drift Detection
 
 Compare the intended work against the actual artifacts before claiming completion.
 
-Use the task statement, plan, acceptance criteria, commit messages, and diff when available. Classify the result:
+Use the task statement, plan, acceptance criteria, referenced memory, durable
+decisions, project learning, commit messages, and diff when available. Classify
+the result:
 
 - Delivered: requested work is present.
 - Missing: required work is absent.
@@ -59,6 +69,7 @@ Use the task statement, plan, acceptance criteria, commit messages, and diff whe
 
 Scope drift does not automatically mean failure, but it must be visible before the final status.
 For Extra items, distinguish required orphan-only cleanup from unrelated cleanup.
+Scope drift includes durable decisions, project learning, and referenced memory when relevant.
 For fresh-context work, compare the context manifest, owned files, protected
 files, worker report, and actual diff.
 
@@ -88,6 +99,16 @@ or use those prompts as local checklists and state that the review was self-run.
 Do not accept a worker report until the referenced diff, command, or artifact has
 been checked.
 
+## Context and Learning Check
+
+When task-local artifacts, project lessons, durable decisions, or scoped global
+memory entries were used, verify that the implementation honored the relevant
+rules. Include durable decision and learning compliance in Scope Drift
+Detection when those artifacts affected the task. When verification reveals a
+recurring pitfall, project invariant, verification command, or skill-rule
+candidate, report it as a `/reflect` candidate instead of writing memory during
+verification.
+
 ## Adversarial Review
 
 Run an adversarial review for high-risk changes, or state why it could not run.
@@ -115,12 +136,14 @@ local checklist and state that the review was self-run.
 3. Run fresh verification or state why it cannot be run.
 4. Read the output and exit code.
 5. Compare results against acceptance criteria.
-6. Run Scope Drift Detection when a task statement, plan, or diff exists, including whether changed lines trace to the request.
+6. Run Scope Drift Detection when a task statement, plan, referenced memory, durable decision, learning, or diff exists, including whether changed lines trace to the request.
 7. Use the Review Readiness Dashboard for medium-risk, high-risk, or release-path work.
 8. Use `docs/templates/release-checklist.md` for release-path work.
 9. For fresh-context work, run spec and quality review using `prompts/spec-reviewer.md` and `prompts/quality-reviewer.md`, or state why the review was self-run or blocked.
 10. Run Adversarial Review for high-risk changes using `prompts/adversarial-reviewer.md` when available.
-11. State actual status with evidence and residual risk.
+11. Check whether relevant lessons or durable decisions were honored and whether new `/reflect` candidates emerged.
+12. For release-path work, perform or hand off the requested mechanical release action only when readiness is proven and no User Challenge decision remains.
+13. State actual status with evidence and residual risk.
 
 ## Hard Rules
 
@@ -131,7 +154,9 @@ local checklist and state that the review was self-run.
 - Do not ignore warnings that affect the changed surface.
 - Do not say "should", "probably", or "looks good" as completion proof.
 - Do not ship, deploy, merge, publish, or create PR handoff without release-path verification.
+- Do not perform a release action unless the user requested it, release readiness is proven, and no User Challenge decision remains open.
 - Do not hide missing, extra, changed, or unverifiable work behind passing tests.
+- Do not ignore durable decision, project learning, or referenced memory drift when it affected the task.
 - Do not accept unrelated cleanup as orphan-only cleanup unless the current change created the orphan.
 
 ## Rationalization Prevention
@@ -151,6 +176,7 @@ local checklist and state that the review was self-run.
 - Relevant output and exit status.
 - Acceptance criteria status.
 - Scope Drift Detection status.
+- Durable decision, project learning, or referenced memory compliance when relevant.
 - Review Readiness Dashboard when risk justifies it.
 - Adversarial Review result or reason skipped.
 - Context manifest, worker artifact review, spec review, and quality review when fresh context was used.

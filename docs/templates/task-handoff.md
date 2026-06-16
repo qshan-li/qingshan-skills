@@ -29,6 +29,16 @@ type. Include Low, Medium, or High risk.>
 
 <CONTEXT.md updated, no glossary update needed, or unresolved terminology.>
 
+## Referenced Memory
+
+- `CONTEXT.md` or glossary term: <trigger and excerpt, or not used>
+- `LEARNINGS.md` or project retrospective: <trigger and excerpt, or not used>
+- ADR, `DECISIONS.md`, or decision artifact: <trigger and excerpt, or not used>
+- Global memory excerpt: <trigger and excerpt, or not used>
+
+Reference only memory that affects this task. Do not paste whole memory files
+when a targeted excerpt or artifact path is enough.
+
 ## Investigation Evidence
 
 - Symptom:
@@ -55,4 +65,4 @@ type. Include Low, Medium, or High risk.>
 ## Stop Conditions
 
 - Stop if acceptance criteria, required evidence, or a User Challenge decision is missing.
-- Stop if the next workflow would need files or context not named here.
+- Stop if the next workflow would need files, referenced memory, or context not named here.

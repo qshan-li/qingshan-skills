@@ -49,21 +49,26 @@ Before editing, read the plan plus any Task Handoff artifact produced from
 artifact exists. The inputs must name the goal, owned files, protected
 boundaries, acceptance criteria, and required proof.
 
+Apply only the scoped glossary terms, durable decisions, project lessons, or
+trigger-matched global memory named by the plan, Task Handoff, or context
+manifest. If execution needs an unlisted lesson, decision, file, or boundary to
+proceed safely, stop and return to `/plan` instead of widening scope.
+
 When context risk justifies a fresh worker, create a packet with
 `docs/templates/fresh-context-packet.md` and pair it with `prompts/fresh-worker.md`.
-The packet must include owned files, protected files, a context manifest, stop
-conditions, and required proof.
+The packet must include owned files, protected files, a context manifest with
+access mode for every referenced artifact, stop conditions, and required proof.
 
 ## Workflow
 
-1. Re-read the plan, any Task Handoff artifact, constraints, protected files, and validation requirements.
+1. Re-read the plan, any Task Handoff artifact, referenced memory, scoped lessons or durable decisions, constraints, protected files, and validation requirements.
 2. Run the Context Gate:
    - Can the task be completed accurately in the current context?
    - Does it touch multiple modules, runtimes, or ownership boundaries?
    - Has the conversation been compressed or polluted by unrelated exploration?
    - Would a context manifest make owned files, reference files, and proof clearer?
    - Would a fresh worker reduce risk more than it adds coordination cost?
-3. If context risk is high, use `docs/templates/fresh-context-packet.md` and `prompts/fresh-worker.md` with a narrow task, explicit file ownership, and a context manifest.
+3. If context risk is high, use `docs/templates/fresh-context-packet.md` and `prompts/fresh-worker.md` with a narrow task, explicit file ownership, protected boundaries, and a context manifest with read-only or owned-edit access modes.
 4. For high-risk code changes, write one behavior-focused failing test before production code.
 5. Make the smallest change that satisfies the current task. Every changed line should trace to the task, required proof, or cleanup caused by this change.
 6. Run the specified verification.
@@ -77,6 +82,7 @@ conditions, and required proof.
 - Do not swallow errors, ignore promises, or hide failures.
 - Do not refactor adjacent code unless the plan requires it.
 - Do not clean up pre-existing dead code; only remove orphaned imports, variables, or helpers created by the current change.
+- Do not fetch or apply memory that is not named by the plan, Task Handoff, or context manifest unless you return to `/plan`.
 - Do not keep code written before a required failing test.
 - Do not use fresh context for vague work; narrow the task first.
 - Do not couple tests to private implementation when a public behavior seam exists.
@@ -98,6 +104,7 @@ conditions, and required proof.
 
 - Changed files.
 - What changed and why.
+- Referenced memory applied, or confirmation that no referenced memory affected execution.
 - Verification commands and results.
 - Any concerns, blockers, or deviations from plan.
 

@@ -40,6 +40,10 @@ invocation changes the entry point, not the hard rules.
 
 When a task depends on domain terms, read existing `CONTEXT.md`, `CONTEXT-MAP.md`, or ADRs if they exist. Challenge overloaded or conflicting terms, propose precise canonical vocabulary, and cross-check user claims against code or docs when possible.
 
+Read `CONTEXT.md` when terminology, naming, domain boundaries, or user wording
+can change the goal, acceptance criteria, file ownership, or fresh-context
+manifest. Do not read it for unrelated tasks just because it exists.
+
 Treat `CONTEXT.md` as a glossary only: stable domain terms and resolved ambiguities. It is not a spec, scratch pad, implementation note, or decision log.
 
 When the user confirms stable canonical vocabulary or a resolved ambiguity that future agents should reuse, update the project root `CONTEXT.md` before handoff. If `CONTEXT.md` does not exist and the repository needs shared vocabulary, create it using `docs/templates/context-glossary.md`. Do not persist candidate terms, unresolved disagreements, implementation details, task plans, decision rationale, or session summaries.
@@ -65,7 +69,7 @@ turn it into a diary, glossary, decision log, or reusable learning file.
 6. Resolve terminology ambiguities before turning them into requirements.
 7. Persist confirmed stable shared language in `CONTEXT.md`, or state why no glossary update is warranted.
 8. For medium/high risk, present two or three approaches with tradeoffs and a recommendation.
-9. Persist a Task Handoff when the clarified goal, non-goals, constraints, acceptance criteria, open decisions, or next proof must survive outside the conversation.
+9. Persist a Task Handoff when the clarified goal, non-goals, constraints, acceptance criteria, referenced memory, open decisions, or next proof must survive outside the conversation.
 10. End with either a lightweight target statement or an approved design.
 
 ## Question Stop Rule
@@ -107,6 +111,7 @@ If the runtime cannot surface interactive input, stop with the single blocking q
 - Goal and non-goals.
 - Constraints and acceptance criteria.
 - Shared-language terms or ambiguities captured in `CONTEXT.md`, or the reason no glossary update was needed.
+- Referenced memory used, or the reason no memory retrieval was needed.
 - Open decisions classified by importance.
 - Task Handoff artifact path when one was needed, or the reason no handoff artifact was needed.
 - Approved design or lightweight target statement.

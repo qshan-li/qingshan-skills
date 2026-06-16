@@ -186,15 +186,21 @@ validate_root_skill "SKILL.md"
 
 require_text "SKILL.md" "Ship, deploy, publish, PR, merge, release"
 require_text "SKILL.md" "/verify"
+require_text "SKILL.md" "## Memory Retrieval Gate"
 require_text "skills/plan/SKILL.md" "Decision Brief"
+require_text "skills/plan/SKILL.md" "LEARNINGS.md"
 require_text "skills/verify/SKILL.md" "Scope Drift Detection"
+require_text "skills/verify/SKILL.md" "durable decisions, project learning"
 require_text "skills/verify/SKILL.md" "Review Readiness Dashboard"
 require_text "skills/verify/SKILL.md" "Adversarial Review"
 require_text "skills/reflect/SKILL.md" "Durable Decision Log"
+require_text "skills/reflect/SKILL.md" "## Consumption Contract"
+require_text "skills/reflect/SKILL.md" 'trigger`, `lesson`, `scope`,'
 require_text "docs/runtime-adapters.md" "Runtime-specific fields, manifests, hooks, and UI metadata belong outside the"
 require_text "docs/runtime-adapters.md" "## Automation Boundary"
 require_text "docs/runtime-adapters.md" "## Bootstrap Wrapper"
 require_text "docs/runtime-adapters.md" "Runtime automation protects workflow boundaries; it does not drive the whole"
+require_text "docs/runtime-adapters.md" "## Memory Retrieval Boundary"
 require_text "docs/testing.md" "## Layer 3: Transcript Behavior Tests"
 require_text "docs/testing.md" "ACP is a transport and host-integration layer"
 require_text "CONTEXT.md" "This file is a glossary only."
@@ -232,6 +238,8 @@ require_text "skills/verify/SKILL.md" "prompts/quality-reviewer.md"
 require_text "docs/templates/decision-brief.md" "Mechanical decisions must not use this template"
 require_text "docs/templates/release-checklist.md" "## Review Staleness"
 require_text "docs/templates/release-checklist.md" "## Commit Or PR Hygiene"
+require_text "docs/templates/task-handoff.md" "## Referenced Memory"
+require_text "docs/templates/runtime-bootstrap.md" "global memory"
 
 for scenario in \
   simple-task-overprocessing \
@@ -252,6 +260,10 @@ for scenario in \
   adversarial-review \
   durable-decision-log \
   reflect-promotion-artifact-map \
+  memory-pollution \
+  memory-consumption-contract \
+  wrong-generalization \
+  skill-reinforcement \
   runtime-adapter-boundary \
   verification-scope-drift \
   context-manifest \

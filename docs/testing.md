@@ -39,13 +39,16 @@ Run:
 bash scripts/validate-behavior-tests.sh
 ```
 
-The validator checks artifact completeness only:
+The validator checks artifact completeness and required scenario coverage:
 
 - the referenced pressure scenario exists
 - the verdict is `PASS`, `FAIL`, or `BLOCKED`
 - every required signal has evidence
 - no transcript references unknown signal IDs
-- critical workflow scenarios have at least one transcript
+- every pressure scenario has at least one `PASS` transcript
+
+`FAIL` and `BLOCKED` transcripts may be kept as historical evidence, but they do
+not satisfy pressure scenario coverage.
 
 It does not judge prose quality or perform NLP matching. That keeps the test
 stable and reviewable.

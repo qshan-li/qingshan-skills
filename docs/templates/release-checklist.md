@@ -39,6 +39,13 @@ requests. This is not a separate `/ship` workflow.
 
 <Rollback, recovery, environment boundary, or residual risk.>
 
+## Release Action Boundary
+
+- requested action:
+- readiness status: Ready | ready with stated risk | blocked | not ready
+- residual User Challenge risk: accepted | blocked | not applicable
+- action result or handoff:
+
 ## Status
 
 <Ready, ready with stated risk, blocked, or not ready.>

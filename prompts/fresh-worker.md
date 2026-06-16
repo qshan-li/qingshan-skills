@@ -7,9 +7,9 @@ main session owns coordination, scope control, and final verification.
 
 - Task goal
 - Files you own
-- Files you must not touch
+- Protected files you must not edit
 - Relevant plan/spec excerpts
-- Context manifest with each relevant file or artifact and why it matters
+- Context manifest with each relevant file or artifact, access mode, and why it matters
 - Verification command or proof required
 - Known glossary terms or durable decisions that affect this task
 
@@ -28,7 +28,9 @@ If any input is missing and would change the implementation, return
 - Do not widen the task to adjacent cleanup, formatting, or abstraction work.
 - Do not read or edit files outside the context manifest unless you return
   `NEEDS_CONTEXT` and explain why the extra context is required.
-- Do not treat protected files as reference material for edits.
+- Do not edit protected files.
+- Do not read protected files unless they are also listed in the context
+  manifest as `read-only reference`.
 - If the task is unclear, return `NEEDS_CONTEXT` with the exact missing information.
 - If blocked, return `BLOCKED` with evidence.
 

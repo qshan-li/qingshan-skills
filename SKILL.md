@@ -29,6 +29,8 @@ If no workflow skill applies, answer directly. If a workflow skill might apply, 
 | New feature, product change, refactor, project structure work, deployment improvement, documentation workflow | `/clarify` | Goal, scope, constraints, and acceptance criteria must be explicit |
 | Bug, failing test, performance issue, deployment failure, security or stability concern | `/investigate` | Evidence must exist before fixes |
 | Clarified goal that needs decomposition, sequencing, rollback, or validation strategy | `/plan` | Hidden decisions and scope drift need control |
+| Dependency or toolchain upgrade | `/plan` | Blast radius, compatibility impact, and verification paths must be controlled |
+| Test-system improvement with unclear coverage gap, flaky signal, or failing behavior | `/investigate` | Improve a real signal instead of manufacturing tests for metrics |
 | Planned code, config, docs, or tooling change | `/execute` | Edits must stay scoped and context-safe |
 | Any completion, fixed, passing, optimized, or ready claim | `/verify` | Claims require fresh proof |
 | Ship, deploy, publish, PR, merge, release | `/verify` | Release requests need fresh proof, scope review, and rollback or recovery notes before handoff |
@@ -56,6 +58,23 @@ Risk controls workflow weight, not whether the methodology applies.
 
 Do not steal User Challenge decisions. Architecture direction, product behavior, irreversible data changes, and release risk belong to the user.
 
+## Memory Retrieval Gate
+
+Use trigger-based retrieval, not automatic memory loading. After classifying the
+request shape and risk, read only memory whose trigger matches the current task
+type, domain terms, technical stack, artifact path, failure mode, validation
+need, release risk, or decision boundary.
+
+Project memory includes `CONTEXT.md`, `LEARNINGS.md`, ADRs, `DECISIONS.md`, and
+current task artifacts such as `STATE.md`. Global memory entries such as
+`~/.qingshan-skills/memory/learnings.jsonl` may be retrieved by trigger when
+they are relevant. A missing global memory file is not a blocker; failing to
+read a relevant available memory entry is a workflow gap.
+
+Record any memory that affects the task in the next handoff, plan, context
+manifest, or verification report. Do not dump whole memory files into context
+when a matching excerpt or artifact reference is enough.
+
 ## Pipeline
 
 ```text
@@ -68,7 +87,9 @@ TDD, review, and ship are embedded disciplines:
 
 - TDD is the default for high-risk code changes inside `/execute`.
 - Review is part of `/verify`.
-- Ship happens only after `/verify` passes.
+- Ship happens only after `/verify` passes. The requested release action may be
+  performed or handed off only when fresh release-path verification is ready and
+  no User Challenge decision remains open.
 
 Use soft dependencies to reduce risk without forcing ceremony:
 

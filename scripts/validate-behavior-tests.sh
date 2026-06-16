@@ -64,12 +64,15 @@ contains_line() {
   grep -qxF "$expected"
 }
 
-scenario_has_transcript() {
+scenario_has_pass_transcript() {
   local expected="$1"
   local transcript
 
   for transcript in "${transcripts[@]}"; do
-    [[ "$(section_value "$transcript" "Scenario")" == "$expected" ]] && return 0
+    if [[ "$(section_value "$transcript" "Scenario")" == "$expected" ]] &&
+      [[ "$(section_value "$transcript" "Verdict")" == "PASS" ]]; then
+      return 0
+    fi
   done
 
   return 1
@@ -119,26 +122,20 @@ for transcript in "${transcripts[@]}"; do
   validate_transcript "$transcript"
 done
 
-critical_scenarios=(
-  simple-task-overprocessing
-  clarify-plan-handoff-persistence
-  investigation-handoff-persistence
-  context-manifest
-  release-stale-evidence
-  adversarial-review
-  plan-durable-decision-persistence
-  reflect-promotion-artifact-map
-)
+scenario_count="$(find tests/pressure-scenarios -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')"
 
-for scenario in "${critical_scenarios[@]}"; do
-  scenario_has_transcript "$scenario" || fail "missing behavior transcript for critical scenario: $scenario"
+for scenario_path in tests/pressure-scenarios/*.md; do
+  scenario="${scenario_path##*/}"
+  scenario="${scenario%.md}"
+  scenario_has_pass_transcript "$scenario" || fail "missing PASS behavior transcript for pressure scenario: $scenario"
 done
 
-scenario_count="$(find tests/pressure-scenarios -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')"
-covered_count="$(
+pass_covered_count="$(
   for transcript in "${transcripts[@]}"; do
-    section_value "$transcript" "Scenario"
+    if [[ "$(section_value "$transcript" "Verdict")" == "PASS" ]]; then
+      section_value "$transcript" "Scenario"
+    fi
   done | sort -u | wc -l | tr -d ' '
 )"
 
-echo "OK qingshan-skills behavior tests validation passed (${covered_count}/${scenario_count} scenarios covered)"
+echo "OK qingshan-skills behavior tests validation passed (${pass_covered_count}/${scenario_count} scenarios covered by PASS transcripts)"

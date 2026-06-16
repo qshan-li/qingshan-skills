@@ -19,17 +19,22 @@ Implementer | Spec Reviewer | Quality Reviewer
 
 - <file path or boundary that must not change>
 
+Protected files must not be edited. They may be read only when also listed in
+the Context Manifest as `read-only reference`.
+
 ## Relevant Context
 
 <Only the plan, acceptance criteria, glossary terms, and constraints needed for
-this scoped task.>
+this scoped task. Include `LEARNINGS.md`, durable decisions, or global memory
+excerpts only when their trigger matches this task.>
 
 ## Context Manifest
 
-- `<path or artifact>`: <why this is relevant; read-only reference or owned edit>
+- `<path or artifact>`: <read-only reference | owned edit> - <why this is relevant>
 
 Do not include whole-project context dumps. Each manifest entry must explain why
-the worker needs it.
+the worker needs it. Do not include full `LEARNINGS.md` or global memory files;
+use targeted excerpts with the trigger that made them relevant.
 
 ## Required Proof
 

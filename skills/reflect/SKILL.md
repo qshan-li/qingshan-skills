@@ -66,6 +66,28 @@ Do not create every artifact by default. Use `STATE.md` only for temporary task
 continuity, `CONTEXT.md` only for glossary entries, and durable decision
 artifacts only for decisions that pass the three-gate rule.
 
+## Consumption Contract
+
+Every promoted artifact must have a future reader and trigger:
+
+| Artifact | Reader | Trigger |
+| --- | --- | --- |
+| `skills/<name>/SKILL.md` | The runtime or agent when the skill is invoked | The task routes to that skill |
+| Task artifact or `STATE.md` | `/plan`, `/execute`, and `/verify` | Current task state must survive context compression, handoff, fresh context, or multi-step execution |
+| `CONTEXT.md` | `/clarify`, `/plan`, `/execute`, `/verify`, and fresh-context packets | Terminology, naming, domain boundaries, or shared language can affect the task |
+| `LEARNINGS.md` or project retrospective | `/plan`, `/execute`, and `/verify` | The task touches a recurring project pitfall, project convention, verification command, or known trap |
+| ADRs, `DECISIONS.md`, or decision artifact | `/plan` and `/verify` | Architecture, toolchain, release, data, scope, or reversal choices can affect the work |
+| `~/.qingshan-skills/memory/learnings.jsonl` | Root bootstrap or the active workflow | A global memory entry trigger matches the task type, stack, risk, artifact, or failure mode |
+
+Do not write a lesson if no future reader and retrieval trigger can be stated.
+When a task depends on memory, record the referenced memory in the Task Handoff,
+plan, context manifest, or verification report rather than relying on raw
+conversation history.
+
+Global memory entries must include at least: `trigger`, `lesson`, `scope`,
+`evidence`, `date`, and `source`. Without a clear trigger, keep the learning
+project-local or do not persist it.
+
 ## Session History Retrieval
 
 Raw session history can be used as a read-only retrieval source when it helps
@@ -109,9 +131,10 @@ Record an ADR or durable decision only when all three are true:
 3. For a durable decision, record the decision, scope, rationale, rejected alternatives, and reversal conditions.
 4. For glossary entries or ADRs, apply the Glossary and ADR Gate.
 5. Choose the smallest durable artifact from the Promotion Artifact Map.
-6. Avoid duplicating facts already present in code or docs.
-7. Record the lesson or decision concisely.
-8. Verify the artifact still reads as a rule, glossary entry, or decision record, not a diary.
+6. Confirm the future reader and retrieval trigger from the Consumption Contract.
+7. Avoid duplicating facts already present in code or docs.
+8. Record the lesson or decision concisely.
+9. Verify the artifact still reads as a rule, glossary entry, or decision record, not a diary.
 
 ## Hard Rules
 
@@ -119,6 +142,8 @@ Record an ADR or durable decision only when all three are true:
 - Do not automatically promote raw session history into specs, journals, memory, or skill rules.
 - Do not store one-off observations.
 - Do not update skills without a concrete behavior to change.
+- Do not persist learning without a future reader and retrieval trigger.
+- Do not write global memory without `trigger`, `lesson`, `scope`, `evidence`, `date`, and `source`.
 - Do not let reflection replace verification.
 - Do not create knowledge-base noise.
 - Do not mix durable decisions with reusable lessons.
@@ -141,6 +166,7 @@ Record an ADR or durable decision only when all three are true:
 
 - Reusable lesson.
 - Future trigger.
+- Future reader and consumption artifact.
 - Retrieval source used, if raw session history affected the reflection.
 - Glossary entry when stable shared language was captured.
 - Durable Decision Log entry when a durable decision was made.

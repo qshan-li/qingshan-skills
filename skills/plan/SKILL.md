@@ -34,6 +34,9 @@ Turn shared understanding into ordered, verifiable work. The failure this preven
 
 Use a decision brief for every Taste or User Challenge decision. Mechanical decisions do not need a brief; resolve them using project conventions.
 
+Use the structure in `docs/templates/decision-brief.md` so decisions include the
+same fields across sessions and handoffs.
+
 Each decision brief must state:
 
 - the decision being made
@@ -55,16 +58,20 @@ Only record an ADR or durable decision when all three are true:
 - the choice would be surprising without context
 - the outcome came from a real trade-off
 
+When a user-approved decision passes this gate, record it before execution in the project's existing ADR or decision artifact. If the project has no existing convention, create or update root `DECISIONS.md`. Use the fields in `docs/templates/durable-decision.md`: decision, date, scope, rationale, alternatives rejected, and reversal conditions.
+
+If planning identifies a possible durable decision but approval, evidence, or one of the three gates is missing, do not record it as durable. State the deferral reason in the plan.
+
 ## Workflow
 
 1. Re-read the clarified goal and acceptance criteria.
 2. List files or modules likely affected and files that should remain untouched.
 3. Grade decisions:
    - Mechanical: choose using project conventions.
-   - Taste: batch and present with a Decision Brief.
-   - User Challenge: stop for explicit approval using a Decision Brief.
+   - Taste: batch and present with a Decision Brief using `docs/templates/decision-brief.md`.
+   - User Challenge: stop for explicit approval using a Decision Brief based on `docs/templates/decision-brief.md`.
 4. Decompose work into vertical slices with verification after each meaningful change.
-5. Identify any durable decisions that pass the three-gate rule.
+5. Record approved durable decisions that pass the three-gate rule, or explicitly defer them with a reason.
 6. Define rollback or failure handling when changes affect deploy, data, security, or architecture.
 7. End with a plan that can be executed without inventing missing requirements.
 
@@ -77,6 +84,8 @@ Only record an ADR or durable decision when all three are true:
 - Do not let the plan include unrelated cleanup.
 - Do not proceed if evidence required by the task is missing.
 - Do not split by technical layer when a thin end-to-end slice can be verified independently.
+- Do not leave approved durable decisions only in the conversation or plan text.
+- Do not create a durable decision record when any gate is missing.
 
 ## Rationalization Prevention
 
@@ -93,6 +102,7 @@ Only record an ADR or durable decision when all three are true:
 - Ordered tasks.
 - Affected and protected files/modules.
 - Decision grades, Decision Briefs, and unresolved approvals.
+- Durable decision artifact path and entry, or deferral reason.
 - Vertical slices and dependencies.
 - Validation strategy.
 - Rollback or failure-handling notes when relevant.

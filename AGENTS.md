@@ -1,10 +1,10 @@
 # qingshan-skills
 
-Personal AI-driven development methodology, distilled from gstack, Superpowers, GSD, and Grill Me.
+Personal AI-driven development methodology, distilled from gstack, Superpowers, GSD, and Matt Pocock's skills.
 
 ## Project Goal
 
-Build a personal skill library that integrates the best patterns from four famous AI coding frameworks into a cohesive, opinionated methodology. The result is not a copy or a wrapper — it is a **distillation** filtered through a specific engineering philosophy: minimal, surgical, TypeScript-first, verification-driven.
+Build a personal skill library that integrates the best patterns from four source skill systems into a cohesive, opinionated methodology. The result is not a copy or a wrapper — it is a **distillation** filtered through a specific engineering philosophy: minimal, surgical, TypeScript-first, verification-driven.
 
 ### What This Project Produces
 
@@ -36,18 +36,18 @@ The authoritative design lives at `docs/superpowers/specs/2026-06-16-qingshan-sk
 | **gstack** | [garrytan/gstack](https://github.com/garrytan/gstack) | Multi-role review pipeline, decision classification, proactive routing, `benefits-from` soft deps, ETHOS.md pattern, uniform SKILL.md chassis |
 | **Superpowers** | [obra/superpowers](https://github.com/obra/superpowers) | TDD iron rule, subagent coordinator/worker, CSO description field, rationalization prevention, brainstorming hard gate, skills-tested-like-code |
 | **GSD** | [open-gsd/get-shit-done-redux](https://github.com/open-gsd/get-shit-done-redux) | Context rot prevention, fresh 200k-token subagents, STATE.md/CONTEXT.md persistence, five-phase loop |
-| **Grill Me** | [mattpocock/skills](https://github.com/mattpocock/skills) | Relentless questioning, one question at a time, recommended answers, codebase-first exploration |
+| **Matt Pocock's skills** | [mattpocock/skills](https://github.com/mattpocock/skills) | Control-preserving posture, Grill Me's one-question-at-a-time inquiry, recommended answers, codebase-first exploration, shared language, sparse ADRs, feedback-loop-first debugging |
 
 See `docs/references.md` for full file interfaces, directory structures, and cross-reference mapping.
 
 ### How We Distinguish From the Sources
 
-| Dimension | gstack | Superpowers | GSD | **qingshan-skills** |
-|-----------|--------|-------------|-----|---------------------|
-| Scope | 23+ skills, browser, iOS, multi-agent | 14 skills, multi-harness | 5-phase framework | **6 focused skills** |
-| Philosophy | "Boil the Ocean" | "TDD always" | "Fresh context" | **"Surgical + Minimal"** |
-| Complexity | Heavy (70+ dirs) | Medium | Medium | **Lightweight** |
-| Constraint layer | ETHOS.md 3 principles | Rationalization tables | Context engineering | **CLAUDE.md 6 rules** |
+| Dimension | gstack | Superpowers | GSD | Matt Pocock's skills | **qingshan-skills** |
+|-----------|--------|-------------|-----|----------------------|---------------------|
+| Scope | 23+ skills, browser, iOS, multi-agent | 14 skills, multi-harness | 5-phase framework | 15 published skills, personal collection | **6 focused skills** |
+| Philosophy | "Boil the Ocean" | "TDD always" | "Fresh context" | "Real engineers, not vibe coding" | **"Surgical + Minimal"** |
+| Complexity | Heavy (70+ dirs) | Medium | Medium | Small and composable | **Lightweight** |
+| Constraint layer | ETHOS.md 3 principles | Rationalization tables | Context engineering | Shared language, sparse ADRs, feedback loops | **CLAUDE.md 6 rules** |
 
 ## Project Structure
 
@@ -61,7 +61,7 @@ qingshan-skills/
 ├── AGENTS.md                    # This file
 │
 ├── skills/
-│   ├── clarify/SKILL.md         # Goal/scope/constraint clarification (← Grill Me + Superpowers brainstorming)
+│   ├── clarify/SKILL.md         # Goal/scope/constraint clarification (← Matt Pocock's Grill Me + Superpowers brainstorming)
 │   ├── plan/SKILL.md            # Task decomposition + decision grading (← gstack autoplan + Superpowers writing-plans)
 │   ├── execute/SKILL.md         # All engineering changes; TDD default; Context Gate (← Superpowers subagent + GSD fresh context)
 │   ├── investigate/SKILL.md     # Root-cause investigation: no facts, no fix (← Superpowers debugging + gstack investigate)

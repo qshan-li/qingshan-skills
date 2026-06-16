@@ -6,11 +6,10 @@ qingshan-skills is organized by failure mode, not by source framework.
 
 | Source | Failure model | qingshan response |
 | --- | --- | --- |
-| Grill Me | The user and agent think they agree before they do | `/clarify` forces shared understanding |
 | gstack | The agent steals decisions or asks about trivial ones | `/plan` grades Mechanical, Taste, and User Challenge decisions |
 | Superpowers | The agent finds excuses to skip discipline | Every skill has hard rules and rationalization prevention |
 | GSD | Long sessions silently degrade reasoning quality | `/execute` includes a Context Gate and fresh-context option |
-| Matt Pocock's skills | Heavy process can take control away; agents lack shared language and feedback loops | qingshan stays small and composable, sharpens domain vocabulary, and favors tight feedback loops |
+| Matt Pocock's skills, especially Grill Me | Heavy process can take control away; the user and agent think they agree before they do; agents lack shared language and feedback loops | qingshan stays small and composable, `/clarify` forces shared understanding, sharpens domain vocabulary, and favors tight feedback loops |
 
 ## qingshan Constraints
 

@@ -4,7 +4,7 @@ Date: 2026-06-16
 
 ## Purpose
 
-qingshan-skills is a cross-agent software engineering methodology. It is not a copy of gstack, Superpowers, GSD, or Grill Me. It distills their strongest patterns into a smaller system optimized for personal engineering work:
+qingshan-skills is a cross-agent software engineering methodology. It is not a copy of gstack, Superpowers, GSD, or Matt Pocock's skills. It distills their strongest patterns into a smaller system optimized for personal engineering work:
 
 - minimal process unless risk requires more
 - surgical changes over broad refactors
@@ -20,9 +20,9 @@ The system must apply to software engineering work broadly, not only feature dev
 The system intentionally takes different pieces from each reference framework:
 
 - Superpowers provides the primary model for mandatory workflows, rationalization prevention, verification discipline, TDD, and the `/clarify` brainstorming flow.
-- Grill Me provides one-question-at-a-time inquiry, recommended answers, decision-tree exploration, and the rule that codebase-answerable questions should be answered by reading the code.
 - gstack provides proactive routing, decision classification, multi-perspective review, and release discipline.
 - GSD provides context-rot prevention, fresh-context execution, persistent artifacts for cross-session continuity, and the need to promote verified experience into reusable rules.
+- Matt Pocock's skills provide the control-preserving posture, small composable skill style, shared-language discipline, sparse ADR gate, feedback-loop-first debugging, behavior-first TDD, vertical-slice decomposition, and Grill Me's one-question-at-a-time inquiry with recommended answers.
 
 The system intentionally avoids the heavier parts of the references:
 
@@ -42,7 +42,7 @@ The source frameworks should not be copied by feature list. Their real value is 
 | gstack | AI steals user decisions by either asking about trivial choices or silently deciding important ones | `/plan` and the root router must grade decisions as Mechanical, Taste, or User Challenge |
 | Superpowers | Agents invent excuses to skip discipline when work feels simple, urgent, or obvious | The root `SKILL.md` must enforce routing before action; every workflow skill must include hard rules, rationalization prevention, and pressure tests |
 | GSD | Long sessions silently degrade reasoning quality, and useful experience is lost or over-generalized between projects | `/execute` must include a Context Gate, and `/reflect` must include a Memory Promotion Gate |
-| Grill Me | The agent and user often believe they share understanding before they actually do | `/clarify` must produce shared understanding before downstream planning or execution |
+| Matt Pocock's skills, especially Grill Me | Heavy process can take control away; the agent and user often believe they share understanding before they actually do; agents lack shared language and feedback loops | qingshan must stay small and composable; `/clarify` must produce shared understanding before downstream planning or execution; glossary and feedback-loop rules must reduce repeated misunderstanding |
 
 This turns the design from "a smaller bundle of four frameworks" into a failure-driven methodology:
 
@@ -222,7 +222,7 @@ Do not create every artifact by default. Low-risk work usually needs none of the
 
 ### Memory Promotion Gate
 
-`/reflect` is the only workflow that may promote experience between layers. Other skills may propose candidate lessons, but they should not directly write durable memory.
+`/reflect` is the only workflow that may promote experience between layers. This gate does not block project-local persistence that belongs to the current workflow: `/clarify` may write user-confirmed stable glossary terms to `CONTEXT.md`, and `/plan` may write user-approved durable decisions that pass the three-gate rule to the project's ADR or decision artifact.
 
 Before writing durable memory, the agent must answer:
 
@@ -260,7 +260,7 @@ Durable context should reduce context rot, not cause it. Skills should load only
 - `/execute` receives only lessons directly relevant to the scoped change.
 - Fresh workers receive a compact context excerpt, never a full memory dump.
 - `/verify` checks whether relevant lessons were honored and whether new candidate lessons emerged.
-- `/reflect` decides whether candidates stay local, become global, or sharpen a skill.
+- `/reflect` decides whether learning candidates stay local, become global, or sharpen a skill.
 
 Global memory must not duplicate user-level `AGENTS.md` or `CLAUDE.md` instructions. User instructions are behavioral defaults. User memory is reusable experience. Project context is repository-specific truth. Task state is temporary continuity.
 
@@ -289,7 +289,7 @@ Global memory must not duplicate user-level `AGENTS.md` or `CLAUDE.md` instructi
 - Medium risk: inspect context, ask focused questions when needed, compare two or three approaches, and record goals, non-goals, acceptance criteria, and risks.
 - High risk: perform the full brainstorming pattern: explore project context, ask questions one at a time, propose approaches with trade-offs and a recommendation, present a design for approval, write a spec, self-review the spec, and wait for user approval before planning.
 
-It should also inherit Grill Me rules:
+It should also inherit Matt Pocock's Grill Me rules:
 
 - ask one question at a time
 - provide a recommended answer when asking
@@ -440,7 +440,7 @@ Handoff:
 
 ### `/reflect`
 
-`/reflect` captures durable learning after work is complete. It must be selective. Its main job is not summarization; it is deciding whether verified experience should remain task-local, become project context, become project learning, become global memory, or sharpen a skill rule.
+`/reflect` captures durable learning after work is complete. It must be selective. Its main job is not summarization; it is deciding whether verified experience should remain task-local, become project context, become project learning, become global memory, or sharpen a skill rule. It may also backfill stable glossary entries or durable decisions that were not recorded during `/clarify` or `/plan`.
 
 Good reflection changes future behavior:
 
@@ -498,7 +498,7 @@ The implementation plan should produce:
 - six skill files under `skills/`
 - prompt templates only where fresh-context execution or review requires them
 - docs for philosophy and installation
-- context and memory promotion rules inside `/reflect`, with read rules referenced by `/clarify`, `/plan`, `/execute`, and `/verify`
+- context persistence rules inside `/clarify`, durable decision rules inside `/plan`, and memory promotion rules inside `/reflect`, with read rules referenced by `/clarify`, `/plan`, `/execute`, and `/verify`
 - structure checks for required skill sections
 - pressure tests for agent behavior under realistic failure scenarios
 

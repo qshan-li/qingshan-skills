@@ -1,7 +1,8 @@
 # Durable Decision Template
 
-Use only after `/reflect` confirms this is a durable decision, not a reusable
-lesson or session summary.
+Use after `/plan` records a user-approved durable decision, or after `/reflect`
+discovers an unrecorded durable decision. Do not use this for reusable lessons or
+session summaries.
 
 ## Decision
 

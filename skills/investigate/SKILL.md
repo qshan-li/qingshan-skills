@@ -42,6 +42,18 @@ When the loop is weak, improve it before hypothesizing:
 
 For medium or high-risk failures, form 3-5 ranked, falsifiable hypotheses before probing. Each probe should test one prediction and change one variable at a time.
 
+## Investigation Handoff
+
+Use `docs/templates/task-handoff.md` when investigation results must survive
+context compression, agent handoff, fresh-context execution, or a `/plan` or
+`/execute` handoff.
+
+Write the handoff to the project's existing task artifact when one exists. If
+there is no project convention and the handoff is needed for the current task,
+create or update root `STATE.md`. Persist only current-task evidence: symptom,
+expected behavior, reproduction or observation method, feedback loop limits,
+facts, narrowed surface, hypotheses with confidence, and recommended fix path.
+
 ## Workflow
 
 1. State the symptom and expected behavior.
@@ -50,7 +62,8 @@ For medium or high-risk failures, form 3-5 ranked, falsifiable hypotheses before
 4. Collect facts from tests, logs, metrics, traces, configuration, or code paths.
 5. Narrow the failing surface.
 6. Form ranked falsifiable root-cause hypotheses and test the strongest one.
-7. Recommend the smallest fix path.
+7. Persist an Investigation Handoff when the evidence or fix path must survive outside the conversation.
+8. Recommend the smallest fix path.
 
 Performance work must establish a baseline and repeatable measurement method. Deployment work must identify environment boundaries and failure evidence. Security and stability work must include a threat or failure model.
 
@@ -63,6 +76,7 @@ Performance work must establish a baseline and repeatable measurement method. De
 - Do not ignore failed verification; it is new evidence.
 - Do not proceed from a weak or unrelated feedback loop as if it reproduced the user's failure.
 - Do not test multiple variables in one probe when isolating root cause.
+- Do not leave medium/high-risk investigation evidence only in the conversation when handing off to `/plan`, `/execute`, or fresh context.
 
 ## Rationalization Prevention
 
@@ -82,6 +96,7 @@ Performance work must establish a baseline and repeatable measurement method. De
 - Narrowed failing surface.
 - Root-cause hypotheses and confidence.
 - Recommended fix path.
+- Investigation Handoff artifact path when one was needed, or the reason no handoff artifact was needed.
 
 ## Handoff
 

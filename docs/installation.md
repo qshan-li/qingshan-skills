@@ -58,9 +58,12 @@ recurring workflow artifacts:
 
 - `decision-brief.md`
 - `fresh-context-packet.md`
+- `task-handoff.md` for `/clarify` or `/investigate` results that must survive
+  context compression, agent handoff, or a `/plan` or `/execute` handoff
 - `release-checklist.md`
-- `durable-decision.md`
-- `context-glossary.md`
+- `durable-decision.md` for `/plan` approved durable decisions or `/reflect`
+  backfill of unrecorded durable decisions
+- `context-glossary.md` for `/clarify` creation of `CONTEXT.md`
 - `runtime-bootstrap.md`
 
 These templates are optional. Create an artifact only when the relevant workflow

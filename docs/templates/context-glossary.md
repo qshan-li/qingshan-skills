@@ -1,8 +1,11 @@
 # Context Glossary Template
 
-Use this template only when a repository needs stable shared vocabulary.
+Use this template when `/clarify` confirms stable shared vocabulary and the
+repository does not already have `CONTEXT.md`.
+
 `CONTEXT.md` must stay a glossary. Do not put implementation notes, task plans,
-decision rationale, or session summaries here.
+decision rationale, candidate terms, unresolved disagreements, or session
+summaries here.
 
 ## <Term>
 

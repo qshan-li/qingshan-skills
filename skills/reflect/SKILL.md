@@ -43,6 +43,23 @@ Promote learning only as far as the evidence supports:
 
 Do not promote one-off project facts into global rules.
 
+## Promotion Artifact Map
+
+Choose the smallest existing artifact that preserves the future behavior:
+
+| Layer | Use for | Target artifact |
+| --- | --- | --- |
+| Task state | Temporary progress for the current task | Existing task artifact, plan, or root `STATE.md` only when needed |
+| Project context | Stable repo-specific facts or commands | Existing `AGENTS.md` or `CLAUDE.md` section, or `CONTEXT.md` only for glossary terms |
+| Project learning | Recurring project pattern or pitfall | `LEARNINGS.md` or an existing project retrospective document |
+| Global memory | Repeated cross-project lesson with clear trigger conditions | `~/.qingshan-skills/memory/learnings.jsonl` |
+| Skill rule | Verified behavior change that should guide future agents | The relevant `skills/<name>/SKILL.md` body |
+| Durable decision | Settled architecture, scope, tool, vendor, release, or reversal choice | Existing ADR or decision artifact, or root `DECISIONS.md` when no convention exists |
+
+Do not create every artifact by default. Use `STATE.md` only for temporary task
+continuity, `CONTEXT.md` only for glossary entries, and durable decision
+artifacts only for decisions that pass the three-gate rule.
+
 ## Session History Retrieval
 
 Raw session history can be used as a read-only retrieval source when it helps
@@ -65,9 +82,13 @@ A durable decision is a settled architecture, scope, tool, vendor, release, or r
 
 When a durable decision reverses an earlier one, supersede the earlier decision instead of creating contradictory memory.
 
+Use this section when reflection discovers a durable decision that was not already recorded during planning. `/plan` records user-approved durable decisions before execution when they pass the three-gate rule.
+
 ## Glossary and ADR Gate
 
 Capture glossary entries only for stable domain terms or resolved ambiguities that future agents will reuse. Glossary entries must not include implementation details, task plans, scratch notes, or decision rationale.
+
+`/clarify` owns persistence of user-confirmed shared language during clarification. Use reflection for glossary entries only when verified work reveals a stable term or ambiguity that was not resolved earlier.
 
 Record an ADR or durable decision only when all three are true:
 
@@ -81,7 +102,7 @@ Record an ADR or durable decision only when all three are true:
 2. For a reusable lesson, state the future trigger and apply the Memory Promotion Gate.
 3. For a durable decision, record the decision, scope, rationale, rejected alternatives, and reversal conditions.
 4. For glossary entries or ADRs, apply the Glossary and ADR Gate.
-5. Choose the smallest durable artifact to update.
+5. Choose the smallest durable artifact from the Promotion Artifact Map.
 6. Avoid duplicating facts already present in code or docs.
 7. Record the lesson or decision concisely.
 8. Verify the artifact still reads as a rule, glossary entry, or decision record, not a diary.

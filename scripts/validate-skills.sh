@@ -174,9 +174,11 @@ require_file "docs/templates/fresh-context-packet.md"
 require_file "docs/templates/release-checklist.md"
 require_file "docs/templates/runtime-bootstrap.md"
 require_file "docs/templates/behavior-transcript.md"
+require_file "docs/templates/task-handoff.md"
 require_file "prompts/fresh-worker.md"
 require_file "prompts/spec-reviewer.md"
 require_file "prompts/quality-reviewer.md"
+require_file "prompts/adversarial-reviewer.md"
 require_file "scripts/validate-behavior-tests.sh"
 require_file "tests/behavior/README.md"
 
@@ -197,14 +199,24 @@ require_text "docs/testing.md" "## Layer 3: Transcript Behavior Tests"
 require_text "docs/testing.md" "ACP is a transport and host-integration layer"
 require_text "CONTEXT.md" "This file is a glossary only."
 require_text "README.md" "docs/templates/"
+require_text "skills/clarify/SKILL.md" "docs/templates/context-glossary.md"
+require_text "skills/clarify/SKILL.md" "docs/templates/task-handoff.md"
+require_text "skills/investigate/SKILL.md" "docs/templates/task-handoff.md"
+require_text "skills/plan/SKILL.md" "docs/templates/decision-brief.md"
+require_text "skills/plan/SKILL.md" "docs/templates/durable-decision.md"
+require_text "skills/verify/SKILL.md" "docs/templates/release-checklist.md"
+require_text "skills/verify/SKILL.md" "prompts/adversarial-reviewer.md"
+require_text "skills/reflect/SKILL.md" "Promotion Artifact Map"
 require_text "docs/templates/decision-brief.md" "## Approval"
 require_text "docs/templates/fresh-context-packet.md" "## Stop Conditions"
 require_text "docs/templates/release-checklist.md" "## Scope Review"
 require_text "docs/templates/runtime-bootstrap.md" "## Adapter Must Not"
 require_text "docs/templates/behavior-transcript.md" "## Signal evidence"
+require_text "docs/templates/task-handoff.md" "## Investigation Evidence"
 require_text "prompts/fresh-worker.md" "## Review Handoff"
 require_text "prompts/spec-reviewer.md" "## Inputs Required"
 require_text "prompts/quality-reviewer.md" "## Review Rules"
+require_text "prompts/adversarial-reviewer.md" "## Review Focus"
 require_text "tests/behavior/README.md" "scripts/validate-behavior-tests.sh"
 
 for skill in clarify plan execute investigate verify reflect; do
@@ -214,6 +226,7 @@ done
 for scenario in \
   simple-task-overprocessing \
   feature-ambiguity \
+  shared-language-persistence \
   user-decision-theft \
   bug-guesswork \
   performance-guesswork \
@@ -222,9 +235,13 @@ for scenario in \
   scope-creep \
   methodology-bypass \
   decision-brief \
+  plan-durable-decision-persistence \
+  clarify-plan-handoff-persistence \
+  investigation-handoff-persistence \
   release-stale-evidence \
   adversarial-review \
   durable-decision-log \
+  reflect-promotion-artifact-map \
   runtime-adapter-boundary \
   verification-scope-drift \
   context-manifest \

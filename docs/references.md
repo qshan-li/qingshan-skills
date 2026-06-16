@@ -2,7 +2,7 @@
 
 ## Source Skills
 
-These are the four skill frameworks that qingshan-skills draws from. Each contributes a distinct capability dimension.
+These are the four source skill systems that qingshan-skills draws from: gstack, Superpowers, GSD, and Matt Pocock's skills. Each contributes a distinct capability dimension. Grill Me is treated as a flagship pattern inside Matt Pocock's skills, not as a separate fourth source.
 
 ---
 
@@ -45,9 +45,11 @@ GSD has one problem consciousness: **AI quality silently degrades as a conversat
 
 - *One-liner:* **Other frameworks care about "making the AI do the right thing once." GSD cares about "making the AI keep doing the right thing."**
 
-### Grill Me — The Essence is **Nobody Knows What They Want**
+### Matt Pocock's skills — The Essence is **Control-Preserving Real Engineering**
 
-Grill Me is the most minimal of the four (the entire SKILL.md is four directives), but its insight is the most fundamental:
+Matt Pocock's skills supply the control-preserving posture and several concrete engineering patterns that qingshan-skills absorbs selectively: shared language, sparse ADRs, feedback-loop-first debugging, behavior-first TDD, vertical slices, and the Grill Me clarification loop.
+
+Grill Me is the most direct source for `/clarify` and its insight is the most fundamental:
 
 > **The most common failure mode is believing the agent understood you when it didn't.**
 
@@ -62,10 +64,10 @@ Every mechanism exists to force out the real requirement:
 ### How the Four Compose
 
 ```
-Grill Me    forces out "what we're really doing"   ← consensus layer
-GSD         ensures "keep doing it right"           ← context layer
-Superpowers enforces "do it by the rules"           ← discipline layer
-gstack      decides "who does what, when to stop"   ← orchestration layer
+Matt Pocock's skills / Grill Me  forces out "what we're really doing" and preserves engineer control   ← consensus/control layer
+GSD                              ensures "keep doing it right"                                        ← context layer
+Superpowers                      enforces "do it by the rules"                                        ← discipline layer
+gstack                           decides "who does what, when to stop"                                ← orchestration layer
 ```
 
 **qingshan-skills compresses these four layers into 6 skills** — `/clarify`, `/plan`, `/execute`, `/investigate`, `/verify`, `/reflect` — constrained by the "surgical + minimal" philosophy, rather than laying out all four frameworks' full feature sets side by side. TDD, review, and shipping are **not** top-level skills: TDD is the default execution mode inside `/execute`, review is a verification dimension inside `/verify`, and shipping is the release path after `/verify` passes. See `docs/superpowers/specs/2026-06-16-qingshan-skills-design.md` for the authoritative design.
@@ -913,7 +915,7 @@ qingshan-skills/
 │
 ├── skills/
 │   ├── clarify/
-│   │   └── SKILL.md             # Goal/scope/constraint clarification (← Grill Me + Superpowers brainstorming)
+│   │   └── SKILL.md             # Goal/scope/constraint clarification (← Matt Pocock's Grill Me + Superpowers brainstorming)
 │   ├── plan/
 │   │   └── SKILL.md             # Task decomposition + decision grading (← gstack autoplan + Superpowers writing-plans)
 │   ├── execute/
@@ -957,7 +959,7 @@ Common paths (from the design doc): small docs change → `/clarify → /execute
 |---------------------|------------|----------------------|
 | `SKILL.md` (root) | gstack root SKILL.md + Superpowers `using-superpowers` | Session-bootstrap enforcement, routing table by task type, risk-weighted entry, meta anti-bypass table |
 | `ETHOS.md` | gstack ETHOS.md + CLAUDE.md philosophy | Understand Before Acting, Risk Determines Process, Minimal/Surgical, Evidence Before Claims, Preserve Context Quality |
-| `skills/clarify/SKILL.md` | Grill Me + Superpowers brainstorming | One question at a time, recommended answers, decision-tree walk, codebase-first, brainstorming hard gate scaled by risk |
+| `skills/clarify/SKILL.md` | Matt Pocock's Grill Me + Superpowers brainstorming | One question at a time, recommended answers, decision-tree walk, codebase-first, brainstorming hard gate scaled by risk |
 | `skills/plan/SKILL.md` | gstack autoplan + Superpowers writing-plans | Decision grading (Mechanical/Taste/User Challenge), task decomposition, validation + rollback strategy |
 | `skills/execute/SKILL.md` | Superpowers subagent + TDD + GSD fresh context | Context Gate, TDD default for high-risk code, fresh-context workers, surgical edits |
 | `prompts/` | Superpowers implementer/spec-reviewer/code-quality prompts | Worker + reviewer prompts, only where fresh-context execution requires them |
@@ -983,6 +985,6 @@ Common paths (from the design doc): small docs change → `/clarify → /execute
 | `benefits-from` soft dependency | Skills reference each other without hard coupling | gstack |
 | Proactive routing table | User doesn't need to know which skill to invoke; natural language dispatches | gstack |
 | Surgical changes as constraint | Distinguishes from other frameworks — minimal touch is a hard rule, not a preference | Personal philosophy |
-| One question at a time | Avoid overwhelm; depth over breadth | Grill Me |
+| One question at a time | Avoid overwhelm; depth over breadth | Matt Pocock's Grill Me |
 | Hard gate before implementation | No code until design approved; even trivial projects | Superpowers brainstorming |
 | "No fixes without investigation" | Prevents symptom-fixing; forces root cause analysis | gstack investigate |

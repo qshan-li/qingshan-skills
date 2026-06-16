@@ -32,6 +32,10 @@ Prove the work before making claims. The failure this prevents is saying work is
 
 Release requests count as high-risk verification when they involve ship, deploy, publish, PR, merge, or release handoff. They require fresh evidence, scope review, review staleness check, and rollback or recovery notes when relevant.
 
+Use `docs/templates/release-checklist.md` for release-path verification so the
+claim, fresh evidence, scope review, release or handoff risk, and status are
+reported consistently.
+
 ## Scope Drift Detection
 
 Compare the intended work against the actual artifacts before claiming completion.
@@ -83,6 +87,10 @@ Trigger it for:
 
 The stance is production failure analysis: look for silent data corruption, privilege bypass, race conditions, swallowed errors, resource leaks, unsafe external-state assumptions, and incomplete rollback paths.
 
+Use `prompts/adversarial-reviewer.md` when a fresh reviewer or structured review
+prompt is available. If no separate reviewer can run, use the prompt as the
+local checklist and state that the review was self-run.
+
 ## Workflow
 
 1. Identify what claim is about to be made.
@@ -92,8 +100,9 @@ The stance is production failure analysis: look for silent data corruption, priv
 5. Compare results against acceptance criteria.
 6. Run Scope Drift Detection when a task statement, plan, or diff exists, including whether changed lines trace to the request.
 7. Use the Review Readiness Dashboard for medium-risk, high-risk, or release-path work.
-8. Run Adversarial Review for high-risk changes.
-9. State actual status with evidence and residual risk.
+8. Use `docs/templates/release-checklist.md` for release-path work.
+9. Run Adversarial Review for high-risk changes using `prompts/adversarial-reviewer.md` when available.
+10. State actual status with evidence and residual risk.
 
 ## Hard Rules
 

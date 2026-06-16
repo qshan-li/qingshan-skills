@@ -43,19 +43,22 @@ Do not write all tests first and then all implementation. That horizontal patter
    - Can the task be completed accurately in the current context?
    - Does it touch multiple modules, runtimes, or ownership boundaries?
    - Has the conversation been compressed or polluted by unrelated exploration?
+   - Would a context manifest make owned files, reference files, and proof clearer?
    - Would a fresh worker reduce risk more than it adds coordination cost?
-3. If context risk is high, use `prompts/fresh-worker.md` with a narrow task and explicit file ownership.
+3. If context risk is high, use `prompts/fresh-worker.md` with a narrow task, explicit file ownership, and a context manifest.
 4. For high-risk code changes, write one behavior-focused failing test before production code.
-5. Make the smallest change that satisfies the current task.
+5. Make the smallest change that satisfies the current task. Every changed line should trace to the task, required proof, or cleanup caused by this change.
 6. Run the specified verification.
 7. Report changed files, verification result, and unresolved concerns.
 
 ## Hard Rules
 
 - Do not edit outside the planned scope.
+- Do not keep a changed line that cannot be traced to the current task.
 - Do not introduce `any` in TypeScript code.
 - Do not swallow errors, ignore promises, or hide failures.
 - Do not refactor adjacent code unless the plan requires it.
+- Do not clean up pre-existing dead code; only remove orphaned imports, variables, or helpers created by the current change.
 - Do not keep code written before a required failing test.
 - Do not use fresh context for vague work; narrow the task first.
 - Do not couple tests to private implementation when a public behavior seam exists.
@@ -66,9 +69,11 @@ Do not write all tests first and then all implementation. That horizontal patter
 | Excuse | Reality |
 | --- | --- |
 | "This helper should be cleaned too" | That is scope creep unless required |
+| "This unused code is nearby" | Only orphaned cleanup caused by the current change is in scope |
 | "Tests after are enough" | Tests after prove less than tests first |
 | "The current context is fine" | Context risk is silent; run the gate |
 | "A broader abstraction is cleaner" | Cleaner is not a requirement |
+| "A senior engineer would appreciate the abstraction" | If the abstraction is not required by the task, it is over-engineering |
 | "I should write the full test suite first" | TDD needs feedback one behavior at a time |
 
 ## Outputs

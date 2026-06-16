@@ -43,6 +43,13 @@ Promote learning only as far as the evidence supports:
 
 Do not promote one-off project facts into global rules.
 
+## Session History Retrieval
+
+Raw session history can be used as a read-only retrieval source when it helps
+recover a prior decision, constraint, verification command, or repeated lesson.
+Retrieval does not decide the write-back destination. Any lesson, decision,
+glossary entry, or skill rule still must pass the Memory Promotion Gate.
+
 ## Durable Decision Log
 
 Treat durable decisions separately from reusable lessons.
@@ -82,6 +89,7 @@ Record an ADR or durable decision only when all three are true:
 ## Hard Rules
 
 - Do not write session journals.
+- Do not automatically promote raw session history into specs, journals, memory, or skill rules.
 - Do not store one-off observations.
 - Do not update skills without a concrete behavior to change.
 - Do not let reflection replace verification.
@@ -106,6 +114,7 @@ Record an ADR or durable decision only when all three are true:
 
 - Reusable lesson.
 - Future trigger.
+- Retrieval source used, if raw session history affected the reflection.
 - Glossary entry when stable shared language was captured.
 - Durable Decision Log entry when a durable decision was made.
 - Artifact updated or reason no update was needed.

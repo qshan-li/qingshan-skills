@@ -24,6 +24,13 @@ Implementer | Spec Reviewer | Quality Reviewer
 <Only the plan, acceptance criteria, glossary terms, and constraints needed for
 this scoped task.>
 
+## Context Manifest
+
+- `<path or artifact>`: <why this is relevant; read-only reference or owned edit>
+
+Do not include whole-project context dumps. Each manifest entry must explain why
+the worker needs it.
+
 ## Required Proof
 
 - <command, check, artifact, or manual proof>

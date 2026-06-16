@@ -65,6 +65,30 @@ Adapters must not:
 Runtime automation protects workflow boundaries; it does not drive the whole
 development process.
 
+## Workflow Breadcrumbs
+
+Adapters may provide workflow-state breadcrumbs when the host supports hooks or
+per-turn metadata. Breadcrumbs can record the selected route, current phase,
+missing prerequisite, active task artifact, or required next proof.
+
+Breadcrumbs may:
+
+- remind the agent which workflow skill is active
+- surface missing prerequisites before editing, releasing, or claiming completion
+- point to task-local artifacts such as a plan, context manifest, or verification
+  checklist
+- help a runtime load the right wrapper or prompt
+
+Breadcrumbs must not:
+
+- fork the meaning of any canonical workflow skill
+- make task creation mandatory for low-risk work
+- silently continue past User Challenge decisions
+- treat a hook, worker report, or manifest as completion proof
+
+Workflow breadcrumbs are an adapter convenience. The portable source of truth
+remains the root router, `ETHOS.md`, and the selected workflow skill.
+
 ## Bootstrap Wrapper
 
 Runtimes that do not load Agent Skills directly should use a wrapper based on

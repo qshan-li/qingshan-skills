@@ -45,6 +45,9 @@ Use the task statement, plan, acceptance criteria, commit messages, and diff whe
 - Unverifiable: external state or another repository must be checked manually.
 
 Scope drift does not automatically mean failure, but it must be visible before the final status.
+For Extra items, distinguish required orphan-only cleanup from unrelated cleanup.
+For fresh-context work, compare the context manifest, owned files, protected
+files, worker report, and actual diff.
 
 ## Review Readiness Dashboard
 
@@ -87,7 +90,7 @@ The stance is production failure analysis: look for silent data corruption, priv
 3. Run fresh verification or state why it cannot be run.
 4. Read the output and exit code.
 5. Compare results against acceptance criteria.
-6. Run Scope Drift Detection when a task statement, plan, or diff exists.
+6. Run Scope Drift Detection when a task statement, plan, or diff exists, including whether changed lines trace to the request.
 7. Use the Review Readiness Dashboard for medium-risk, high-risk, or release-path work.
 8. Run Adversarial Review for high-risk changes.
 9. State actual status with evidence and residual risk.
@@ -97,10 +100,12 @@ The stance is production failure analysis: look for silent data corruption, priv
 - Do not claim success without fresh evidence.
 - Do not treat partial verification as full proof.
 - Do not trust an implementer report without checking artifacts.
+- Do not treat worker reports or context manifests as proof without checking the referenced diff, command, or artifact.
 - Do not ignore warnings that affect the changed surface.
 - Do not say "should", "probably", or "looks good" as completion proof.
 - Do not ship, deploy, merge, publish, or create PR handoff without release-path verification.
 - Do not hide missing, extra, changed, or unverifiable work behind passing tests.
+- Do not accept unrelated cleanup as orphan-only cleanup unless the current change created the orphan.
 
 ## Rationalization Prevention
 
@@ -121,6 +126,7 @@ The stance is production failure analysis: look for silent data corruption, priv
 - Scope Drift Detection status.
 - Review Readiness Dashboard when risk justifies it.
 - Adversarial Review result or reason skipped.
+- Context manifest and worker artifact review when fresh context was used.
 - Scope and quality review notes.
 - Residual risks or unverified items.
 

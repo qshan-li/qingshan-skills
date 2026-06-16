@@ -629,6 +629,277 @@ Not directly used in qingshan-skills, but the "hidden decision surfacing" and "c
 
 ---
 
+### 6. Supplementary: Trellis - Repo-Native Agent Harness
+
+- **Repo**: https://github.com/mindfold-ai/Trellis
+- **Author**: Mindfold LLC
+- **npm**: `@mindfoldhq/trellis`
+- **License**: AGPL-3.0-only
+- **Language**: TypeScript-first monorepo with Python runtime hooks/scripts and Markdown agent templates
+- **Stars**: ~10.5k
+- **Install**: `npm install -g @mindfoldhq/trellis@latest`, then `trellis init -u <developer-name>`
+
+#### What It Is
+
+Trellis is an "out-of-the-box engineering framework for AI coding." Its central move is to persist the working context that coding agents usually lose: project specs, task artifacts, per-developer journals, sub-agent manifests, and platform integration files all live in or near the repository.
+
+The product thesis overlaps with GSD's context-rot concern, but Trellis is more concrete and runtime-oriented. It generates a `.trellis/` project layer plus platform-specific files for Claude Code, Codex, Cursor, OpenCode, Gemini, Kiro, Qoder, CodeBuddy, Copilot, Droid, Pi, Reasonix, and other agent surfaces. The local repo becomes the source of truth; platform integrations inject that truth back into the AI session.
+
+Trellis is useful to qingshan-skills as a supplementary reference, not as a fifth source in the authoritative design. Its value is in its concrete implementation of repo-local specs, task artifacts, context injection, multi-agent worker channels, and session memory.
+
+#### File Structure
+
+```
+trellis/
+├── README.md / README_CN.md
+├── AGENTS.md                   # Trellis-managed repo instructions + GitNexus notes in the source repo
+├── CLAUDE.md                   # Contributor guidance
+├── package.json                # pnpm workspace root
+├── pnpm-workspace.yaml
+├── LICENSE                     # AGPL-3.0-only
+│
+├── packages/
+│   ├── cli/                    # @mindfoldhq/trellis CLI package
+│   │   ├── bin/trellis.js
+│   │   ├── src/
+│   │   │   ├── cli/            # CLI entrypoint
+│   │   │   ├── commands/       # init, update, workflow, mem, channel, uninstall
+│   │   │   ├── configurators/  # per-platform setup
+│   │   │   ├── migrations/     # manifest migrations
+│   │   │   ├── templates/      # generated .trellis + platform files
+│   │   │   └── utils/
+│   │   ├── test/               # Vitest coverage for commands/templates
+│   │   └── scripts/            # release, manifest, template copy scripts
+│   │
+│   └── core/                   # @mindfoldhq/trellis-core SDK
+│       ├── src/
+│       │   ├── channel/        # event-sourced multi-agent channel runtime
+│       │   ├── mem/            # local session-history search/extraction
+│       │   ├── task/           # task paths, schema, records, phases
+│       │   └── testing/
+│       └── test/
+│
+├── .claude/ .codex/ .cursor/ .opencode/ .pi/
+├── .trellis/                   # Trellis dogfoods its generated project layer
+├── assets/
+├── docs-site/
+├── drafts/
+└── marketplace/
+```
+
+#### Generated Project Layer
+
+The important artifact is what `trellis init` writes into a user repository:
+
+```
+.trellis/
+├── workflow.md                 # phase model, routing rules, workflow-state breadcrumbs
+├── config.yaml                 # hooks, channel limits, Codex dispatch mode, registry sources
+├── spec/                       # package/layer-scoped coding specs and thinking guides
+├── tasks/
+│   └── MM-DD-slug/
+│       ├── task.json           # status, branch, scope, parent/child metadata
+│       ├── prd.md              # requirements and acceptance criteria
+│       ├── design.md           # optional technical design
+│       ├── implement.md        # optional execution plan
+│       ├── implement.jsonl     # curated context manifest for implement agents
+│       └── check.jsonl         # curated context manifest for check agents
+├── workspace/<developer>/      # deliberate journals and session indexes
+├── agents/
+│   ├── implement.md            # platform-agnostic channel runtime worker
+│   └── check.md                # platform-agnostic channel runtime reviewer
+└── scripts/
+    ├── task.py                 # task lifecycle and context manifests
+    ├── get_context.py          # package/spec/workflow context loader
+    ├── add_session.py          # workspace journal append
+    └── hooks/                  # lifecycle hooks such as Linear sync
+```
+
+Platform directories then adapt the same project layer to each AI tool:
+
+```
+.agents/skills/                 # shared bundled Trellis skills
+.codex/skills/                  # Codex-specific skill wrappers
+.codex/agents/                  # trellis-research / implement / check agents
+.claude/agents/                 # Claude sub-agent definitions
+.cursor/agents/
+.opencode/plugins/
+.github/prompts/
+...
+```
+
+#### Workflow Model
+
+Trellis' README describes a 4-phase loop:
+
+1. **Plan** - `trellis-brainstorm` clarifies requirements one question at a time, writes `prd.md`, and curates `implement.jsonl` / `check.jsonl` context.
+2. **Implement** - `trellis-implement` writes code from the task artifacts and injected specs.
+3. **Verify** - `trellis-check` reviews the diff against specs and task artifacts, then runs lint, type-check, and tests.
+4. **Finish** - final check, spec update, task archive, and workspace journal update.
+
+The generated `workflow.md` expands this into three operational phases: Plan, Execute, Finish. A key implementation detail is the `[workflow-state:*]` block contract: hooks parse those blocks to inject per-turn breadcrumbs. If a required workflow step is missing from the breadcrumb, agents silently skip it; Trellis treats that as a testable runtime contract.
+
+#### Bundled Skills and Agents
+
+Trellis ships both workflow skills and runtime workers:
+
+| Surface | Role |
+|---------|------|
+| `brainstorm` | Turn a request into task artifacts; one question at a time; inspect repo evidence before asking |
+| `before-dev` | Load task artifacts and applicable `.trellis/spec/` guidelines before writing code |
+| `check` | Inspect diffs, read specs, run lint/typecheck/tests, and fix mechanical issues |
+| `update-spec` | Promote implementation learnings into executable code-spec documents |
+| `trellis-meta` | Explain and modify the local Trellis architecture safely |
+| `trellis-channel` | Use `trellis channel` for durable multi-agent collaboration and forums |
+| `trellis-session-insight` | Search/extract local Claude/Codex conversation history via `trellis mem` |
+| `trellis-implement` agent | Worker that implements from PRD/design/implement/spec context; cannot commit |
+| `trellis-check` agent | Worker that reviews uncommitted diffs against specs and can self-fix mechanical issues; cannot commit |
+
+#### Multi-Agent Channel Runtime
+
+Trellis v0.6 adds `trellis channel`, a local event-sourced collaboration runtime. Channel state is stored outside the project tree under `~/.trellis/channels/<project>/<channel>/events.jsonl`, with file-locked sequence numbers, durable idempotency keys, worker lifecycle management, forum/thread channels, interrupt/kill commands, and raw message inspection.
+
+This is more runtime-heavy than qingshan-skills needs, but it is a concrete reference for:
+
+- durable worker inboxes instead of ephemeral prompt handoffs
+- operator-visible progress inspection (`messages --raw`, thread/forum views)
+- separating generated channel runtime agents under `.trellis/agents/` from per-platform sub-agent wrappers
+- making the main session own commits while worker agents implement or check
+
+#### Memory Model
+
+Trellis separates deliberate project memory from raw session history:
+
+- `.trellis/spec/` holds project-wide executable coding contracts.
+- `.trellis/tasks/` holds task-local PRD/design/implementation/review context.
+- `.trellis/workspace/<developer>/` holds written journals and indexes.
+- `trellis mem` reads raw Claude Code and Codex JSONL logs already on disk, slices them by phase (`brainstorm`, `implement`, `all`), and never uploads them.
+
+The `trellis-session-insight` skill is intentionally a capability skill, not a forced workflow: it teaches when to retrieve past dialogue, but leaves write-back destination to the live task. This matches qingshan-skills' `/reflect` concern: useful knowledge needs a promotion gate so session noise does not become global rules.
+
+#### Key Patterns to Extract
+
+| Pattern | Description | Target Skill |
+|---------|-------------|--------------|
+| Repo-native project layer | `.trellis/` makes specs, tasks, workflow, scripts, and journals first-class repo artifacts | `/execute`, `/reflect` |
+| Spec injection by package/layer | Agents discover package/layer specs before editing instead of relying on remembered conventions | `/execute`, `/verify` |
+| Task-local context manifests | `implement.jsonl` / `check.jsonl` curate exact files for sub-agents | `/execute`, `/verify` |
+| Workflow-state breadcrumbs | Per-turn hooks parse `workflow.md` status blocks to keep agents in the right phase | Root SKILL.md |
+| Main owns commits | Implement/check workers cannot commit, push, or merge; main session owns final integration | `/execute`, `/verify` |
+| Spec update as finish step | Learned contracts are promoted after implementation, with code-spec depth for infra/cross-layer changes | `/reflect` |
+| Session memory as retrieval capability | `trellis mem` is read-only raw history; write-back is contextual, not automatic | `/reflect` |
+| Channel event log | Multi-agent collaboration can be made inspectable and durable through JSONL event logs | Future runtime reference |
+| Platform adapters from one source | One template system emits skills, agents, hooks, prompts, and settings for many AI tools | Installation / runtime adapter design |
+
+#### What qingshan-skills Should Not Absorb
+
+qingshan-skills should not become Trellis:
+
+- Do not add a mandatory `.trellis/` runtime or generated platform-file system to this project unless explicitly redesigning installation and runtime scope.
+- Do not make task creation mandatory for every small change; qingshan-skills keeps risk-weighted process.
+- Do not absorb a full event-sourced channel runtime; reference it only if fresh-context handoffs become insufficient.
+- Do not replace `/reflect` with automatic spec updates. qingshan-skills keeps a selective memory promotion gate.
+- Do not copy Trellis' platform-specific template catalog wholesale. This project's design remains six focused skills plus a small prompt surface.
+
+The useful takeaway is operational: Trellis shows how to turn "the agent should remember project standards" into files, manifests, hooks, workers, and tests. qingshan-skills should borrow that concreteness only where it strengthens the existing minimal, surgical, verification-driven flow.
+
+---
+
+### 7. Supplementary: Andrej Karpathy Skills - Four-Principle Behavior Guardrail
+
+- **Repo**: https://github.com/multica-ai/andrej-karpathy-skills
+- **Author**: forrestchang / multica-ai
+- **License**: MIT (declared in plugin metadata and README)
+- **Language**: Markdown instruction files, Claude plugin metadata, Cursor rule
+- **Stars**: ~176k
+- **Install**: Claude Code plugin marketplace (`/plugin marketplace add forrestchang/andrej-karpathy-skills`, then `/plugin install andrej-karpathy-skills@karpathy-skills`) or copy/append `CLAUDE.md`
+
+#### What It Is
+
+andrej-karpathy-skills is a tiny instruction repo built around a single `CLAUDE.md`, a Claude Code skill wrapper, and a Cursor rule. It distills Andrej Karpathy's public critique of LLM coding agents into four behavior constraints:
+
+| Principle | Failure It Prevents |
+|-----------|---------------------|
+| Think Before Coding | Silent assumptions, hidden confusion, missing tradeoffs |
+| Simplicity First | Over-abstraction, speculative features, bloated APIs |
+| Surgical Changes | Drive-by refactors, style drift, unrelated edits |
+| Goal-Driven Execution | Vague "make it work" loops without concrete proof |
+
+Its shape is intentionally small: no task system, no sub-agent runtime, no persistent memory, no installer logic beyond plugin metadata and copied instruction files. The value is the compression: it names the same failure modes qingshan-skills cares about in a form that can fit into one root instruction file or one reusable skill.
+
+#### File Structure
+
+```
+andrej-karpathy-skills/
+├── README.md                   # English overview, install, four principles
+├── README.zh.md                # Chinese overview
+├── CLAUDE.md                   # The portable root instruction payload
+├── CURSOR.md                   # Cursor setup notes
+├── EXAMPLES.md                 # Wrong-vs-right examples for each principle
+├── .claude-plugin/
+│   ├── plugin.json             # Claude Code plugin metadata
+│   └── marketplace.json        # Marketplace package metadata
+├── .cursor/
+│   └── rules/
+│       └── karpathy-guidelines.mdc  # alwaysApply Cursor project rule
+└── skills/
+    └── karpathy-guidelines/
+        └── SKILL.md            # Reusable skill version of CLAUDE.md
+```
+
+#### Instruction Format
+
+The same payload appears in three forms:
+
+| Surface | Purpose |
+|---------|---------|
+| `CLAUDE.md` | Per-project root guidance, meant to be copied or merged into existing instructions |
+| `skills/karpathy-guidelines/SKILL.md` | Claude Code plugin skill with `license: MIT` frontmatter |
+| `.cursor/rules/karpathy-guidelines.mdc` | Cursor rule with `alwaysApply: true` |
+
+The skill description is broader than Superpowers-style CSO: it says when to use the guideline and summarizes the behavioral intent. That is acceptable for this repo because the entire skill body is short and contains no multi-step procedure to accidentally skip.
+
+#### Examples as Pressure Tests
+
+`EXAMPLES.md` is the most useful supporting artifact. It gives concrete wrong-vs-right examples for:
+
+- hidden assumptions in "export user data"
+- multiple possible meanings of "make search faster"
+- over-abstraction in a discount calculation
+- speculative features in preference persistence
+- drive-by refactoring while fixing one validator bug
+- style drift while adding logging
+- vague authentication fixes without success criteria
+- multi-step rate limiting with verification checkpoints
+- reproducing a duplicate-score sorting bug before fixing it
+
+These examples are directly reusable as pressure scenarios for qingshan-skills tests because they make the failure observable: an agent either asks, simplifies, limits the diff, and verifies, or it does not.
+
+#### Key Patterns to Extract
+
+| Pattern | Description | Target Skill |
+|---------|-------------|--------------|
+| Four-rule compression | Understand first, keep it simple, change surgically, verify the goal | `ETHOS.md`, root `SKILL.md` |
+| Senior-engineer overcomplication test | If a senior engineer would call it overcomplicated, simplify before shipping | `/execute` |
+| Every changed line traces to request | Simple, reviewable rule for scope control | `/execute`, `/verify` |
+| Orphan-only cleanup | Remove only unused code caused by the current change, not pre-existing dead code | `/execute` |
+| Imperative-to-goal transform | Convert "do X" into success criteria and verification loop | `/clarify`, `/plan`, `/execute` |
+| Wrong-vs-right examples | Use examples as behavior tests for methodology bypass and scope creep | Tests / pressure scenarios |
+| Multi-surface portability | Same guidance can ship as root instructions, skill, or Cursor rule | Installation / runtime adapter notes |
+
+#### Relationship to qingshan-skills
+
+This repo largely converges with qingshan-skills' own philosophy. It reinforces the existing core rules rather than adding a new workflow layer:
+
+- **Think Before Coding** maps to `/clarify` and the root "understand before acting" contract.
+- **Simplicity First** maps to the minimal-solution and anti-overengineering rules in `/execute`.
+- **Surgical Changes** maps to scope drift prevention and reviewable diffs.
+- **Goal-Driven Execution** maps to task acceptance criteria, TDD when risk warrants it, and `/verify`.
+
+qingshan-skills should not copy the whole text verbatim because the local `AGENTS.md`, `ETHOS.md`, and skill bodies already encode these principles with stronger project-specific routing and verification gates. The useful addition is to treat this repo as a concise external benchmark: if a qingshan-skills rule becomes more complicated than these four principles without adding verification power, it is probably drifting.
+
+---
+
 ## Planned Project Structure
 
 ```

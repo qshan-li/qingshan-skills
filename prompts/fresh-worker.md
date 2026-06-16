@@ -9,6 +9,7 @@ main session owns coordination, scope control, and final verification.
 - Files you own
 - Files you must not touch
 - Relevant plan/spec excerpts
+- Context manifest with each relevant file or artifact and why it matters
 - Verification command or proof required
 - Known glossary terms or durable decisions that affect this task
 
@@ -19,11 +20,14 @@ If any input is missing and would change the implementation, return
 
 - Edit only your owned files.
 - Do not revert or overwrite changes made by others.
+- Do not commit, push, merge, create releases, or change branches.
 - Follow existing project style.
 - Use TypeScript for new JS/TS code and do not introduce `any`.
 - Run the specified verification before reporting success.
 - Report the exact command, exit status, and relevant output for verification.
 - Do not widen the task to adjacent cleanup, formatting, or abstraction work.
+- Do not read or edit files outside the context manifest unless you return
+  `NEEDS_CONTEXT` and explain why the extra context is required.
 - Do not treat protected files as reference material for edits.
 - If the task is unclear, return `NEEDS_CONTEXT` with the exact missing information.
 - If blocked, return `BLOCKED` with evidence.

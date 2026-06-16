@@ -226,7 +226,10 @@ for scenario in \
   adversarial-review \
   durable-decision-log \
   runtime-adapter-boundary \
-  verification-scope-drift; do
+  verification-scope-drift \
+  context-manifest \
+  orphan-only-cleanup \
+  over-abstraction; do
   validate_pressure_scenario "tests/pressure-scenarios/${scenario}.md"
 done
 

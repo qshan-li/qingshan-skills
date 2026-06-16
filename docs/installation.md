@@ -2,6 +2,8 @@
 
 qingshan-skills is runtime-neutral. Install it by making this repository available to the agent runtime that reads skills.
 
+The canonical skill files are runtime-neutral and use only `name` and `description` frontmatter. Runtime-specific fields, plugin manifests, hooks, UI metadata, or rules wrappers belong in an adapter layer, not in the core `SKILL.md` files. See [runtime-adapters.md](runtime-adapters.md).
+
 ## Claude Code and Codex
 
 Use the sync script from the repository root:
@@ -38,6 +40,13 @@ For runtimes that scan a personal skill folder, symlink the repository:
 ```bash
 ln -s /path/to/qingshan-skills ~/.agents/skills/qingshan-skills
 ```
+
+## Cursor and other runtimes
+
+For runtimes that do not read Agent Skills directly, expose the root `SKILL.md`
+and six workflow skills through that runtime's rule or prompt mechanism. Keep the
+adapter as a wrapper: it should load or summarize the canonical skills, not fork
+their workflow semantics.
 
 ## Verify
 

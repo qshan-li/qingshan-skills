@@ -172,6 +172,8 @@ bash scripts/sync-global-skills.sh
 
 脚本会把 `qingshan-skills`、`clarify`、`plan`、`execute`、`investigate`、`verify`、`reflect` 链接到 Claude Code 与 Codex 的全局 skill 目录。移动仓库后重新运行即可；若目标位置已存在且冲突，加 `--force` 可先把旧目标移到备份再链接。其他运行时与详细选项见 [`docs/installation.md`](docs/installation.md)。
 
+核心 `SKILL.md` 只保留跨运行时通用的 `name` 与 `description` frontmatter。Claude Code、Codex、Cursor 等工具的专属字段、插件 manifest、hooks、规则包装或 UI 元数据属于运行时适配层，不应写进核心 skill。边界见 [`docs/runtime-adapters.md`](docs/runtime-adapters.md)。
+
 ## 验证
 
 ```bash

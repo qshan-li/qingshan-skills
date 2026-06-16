@@ -28,6 +28,15 @@ description_line() {
   grep -m 1 '^description: ' "$path" || true
 }
 
+frontmatter_body() {
+  local path="$1"
+  awk '
+    NR == 1 && $0 == "---" { in_frontmatter = 1; next }
+    in_frontmatter && $0 == "---" { exit }
+    in_frontmatter { print }
+  ' "$path"
+}
+
 validate_frontmatter() {
   local path="$1"
   local description
@@ -41,6 +50,10 @@ validate_frontmatter() {
 
   if grep -Eiq '^description: .*\b(step|workflow|first|then)\b' "$path"; then
     fail "$path description contains workflow shortcut language"
+  fi
+
+  if frontmatter_body "$path" | grep -Ev '^(name: [a-z0-9-]+|description: .*)$' | grep -q .; then
+    fail "$path core skill frontmatter must only use portable name and description fields"
   fi
 }
 
@@ -87,6 +100,7 @@ require_file "ETHOS.md"
 require_file "README.md"
 require_file "docs/philosophy.md"
 require_file "docs/installation.md"
+require_file "docs/runtime-adapters.md"
 
 validate_root_skill "SKILL.md"
 
@@ -97,6 +111,7 @@ require_text "skills/verify/SKILL.md" "Scope Drift Detection"
 require_text "skills/verify/SKILL.md" "Review Readiness Dashboard"
 require_text "skills/verify/SKILL.md" "Adversarial Review"
 require_text "skills/reflect/SKILL.md" "Durable Decision Log"
+require_text "docs/runtime-adapters.md" "Runtime-specific fields, manifests, hooks, and UI metadata belong outside the"
 
 for skill in clarify plan execute investigate verify reflect; do
   validate_skill "skills/${skill}/SKILL.md"
@@ -116,6 +131,7 @@ for scenario in \
   release-stale-evidence \
   adversarial-review \
   durable-decision-log \
+  runtime-adapter-boundary \
   verification-scope-drift; do
   validate_pressure_scenario "tests/pressure-scenarios/${scenario}.md"
 done

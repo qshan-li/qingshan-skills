@@ -47,6 +47,18 @@ Treat `CONTEXT.md` as a glossary only: stable domain terms and resolved ambiguit
 7. For medium/high risk, present two or three approaches with tradeoffs and a recommendation.
 8. End with either a lightweight target statement or an approved design.
 
+## Question Stop Rule
+
+Keep asking only while an unresolved answer can change the goal, non-goals, constraints, acceptance criteria, shared language, or a high-impact user decision.
+
+Stop asking and move to the next workflow when the remaining choices are mechanical, reversible, taste-level decisions that can be batched, or facts the codebase and docs can answer.
+
+## User Input Channel
+
+Use the strongest interactive channel available in the current runtime: a native user-input action when one exists, otherwise a normal conversational question. Do not hard-code platform-specific tool names into this skill contract.
+
+If the runtime cannot surface interactive input, stop with the single blocking question and a recommended answer instead of guessing.
+
 ## Hard Rules
 
 - Do not implement before the target and validation path are clear.

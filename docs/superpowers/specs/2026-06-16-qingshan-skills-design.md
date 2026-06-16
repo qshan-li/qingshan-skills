@@ -138,6 +138,36 @@ Each skill body should contain:
 
 The root `SKILL.md` has a different job from the six workflow skills. It should include routing, risk-weighted entry, and a meta rationalization table for bypassing the whole methodology. It should not duplicate each workflow's detailed procedure.
 
+## Runtime Adapter Boundary
+
+The canonical methodology lives in the root `SKILL.md` and the six workflow
+`skills/*/SKILL.md` files. These files should use only the portable Agent Skills
+frontmatter shared by Claude Code, Codex, and similar runtimes:
+
+```yaml
+---
+name: <skill-name>
+description: Use when <trigger conditions only>
+---
+```
+
+Runtime-specific schema belongs in adapter files, not in canonical skills.
+Examples include Claude Code tool declarations, forked context or subagent
+fields, Codex plugin manifests, Codex UI metadata, MCP dependency declarations,
+hooks, and Cursor rule wrappers.
+
+Adapters may improve installation, invocation, UI metadata, tool permissions,
+or lifecycle enforcement. They must not fork workflow semantics. There should
+not be separate Claude, Codex, and Cursor versions of `/clarify`, `/plan`,
+`/execute`, `/investigate`, `/verify`, or `/reflect` unless a future design
+review explicitly accepts that duplication.
+
+The current local-install adapter is `scripts/sync-global-skills.sh`, which
+links the canonical skills into Claude Code and Codex skill directories.
+Plugin manifests such as `.claude-plugin/plugin.json` or
+`.codex-plugin/plugin.json` should be added only when there is a real
+distribution or bundled-capability need.
+
 ## Core Ethos
 
 These principles belong in `ETHOS.md` and should be referenced by every skill.
@@ -265,6 +295,10 @@ It should also inherit Grill Me rules:
 - provide a recommended answer when asking
 - walk the decision tree in dependency order
 - inspect the codebase instead of asking questions the code can answer
+
+It should keep asking only while the answer can change the goal, non-goals, constraints, acceptance criteria, shared language, or a high-impact user decision. Once the remaining choices are mechanical, reversible, taste-level, or answerable from the codebase and docs, `/clarify` should stop asking and hand off to the next workflow.
+
+Runtime-specific user-input mechanisms are an adapter detail, not part of the skill contract. If a host provides a native user-input action, `/clarify` may use it; otherwise it should ask a normal conversational question. If the host cannot surface interactive input, it should stop with one blocking question and a recommended answer rather than guessing.
 
 Outputs:
 

@@ -17,6 +17,12 @@ require_section() {
   grep -q "^## ${section}$" "$path" || fail "$path missing section: $section"
 }
 
+require_text() {
+  local path="$1"
+  local text="$2"
+  grep -qF "$text" "$path" || fail "$path missing required text: $text"
+}
+
 description_line() {
   local path="$1"
   grep -m 1 '^description: ' "$path" || true
@@ -53,6 +59,20 @@ validate_skill() {
   require_section "$path" "Handoff"
 }
 
+validate_root_skill() {
+  local path="$1"
+  validate_frontmatter "$path"
+
+  require_section "$path" "Purpose"
+  require_section "$path" "Bootstrap Enforcement"
+  require_section "$path" "Routing"
+  require_section "$path" "Risk Gate"
+  require_section "$path" "Decision Grading"
+  require_section "$path" "Pipeline"
+  require_section "$path" "Hard Rules"
+  require_section "$path" "Rationalization Prevention"
+}
+
 validate_pressure_scenario() {
   local path="$1"
   require_file "$path"
@@ -68,7 +88,15 @@ require_file "README.md"
 require_file "docs/philosophy.md"
 require_file "docs/installation.md"
 
-validate_frontmatter "SKILL.md"
+validate_root_skill "SKILL.md"
+
+require_text "SKILL.md" "Ship, deploy, publish, PR, merge, release"
+require_text "SKILL.md" "/verify"
+require_text "skills/plan/SKILL.md" "Decision Brief"
+require_text "skills/verify/SKILL.md" "Scope Drift Detection"
+require_text "skills/verify/SKILL.md" "Review Readiness Dashboard"
+require_text "skills/verify/SKILL.md" "Adversarial Review"
+require_text "skills/reflect/SKILL.md" "Durable Decision Log"
 
 for skill in clarify plan execute investigate verify reflect; do
   validate_skill "skills/${skill}/SKILL.md"
@@ -82,7 +110,13 @@ for scenario in \
   performance-guesswork \
   context-rot \
   verification-shortcut \
-  scope-creep; do
+  scope-creep \
+  methodology-bypass \
+  decision-brief \
+  release-stale-evidence \
+  adversarial-review \
+  durable-decision-log \
+  verification-scope-drift; do
   validate_pressure_scenario "tests/pressure-scenarios/${scenario}.md"
 done
 

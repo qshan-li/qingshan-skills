@@ -30,6 +30,12 @@ Make scoped changes without drifting from the plan, over-engineering, or letting
 | Medium | Follow the plan step-by-step and verify at meaningful checkpoints |
 | High | Run the Context Gate; use TDD for code; use fresh context when risk justifies it |
 
+## TDD Slice Discipline
+
+For required TDD, work one behavior at a time: one failing test, one minimal implementation, then the next behavior. Tests should verify observable behavior through public interfaces, not private implementation details.
+
+Do not write all tests first and then all implementation. That horizontal pattern locks in imagined behavior before feedback from the code exists.
+
 ## Workflow
 
 1. Re-read the plan, constraints, protected files, and validation requirements.
@@ -39,7 +45,7 @@ Make scoped changes without drifting from the plan, over-engineering, or letting
    - Has the conversation been compressed or polluted by unrelated exploration?
    - Would a fresh worker reduce risk more than it adds coordination cost?
 3. If context risk is high, use `prompts/fresh-worker.md` with a narrow task and explicit file ownership.
-4. For high-risk code changes, write the failing test before production code.
+4. For high-risk code changes, write one behavior-focused failing test before production code.
 5. Make the smallest change that satisfies the current task.
 6. Run the specified verification.
 7. Report changed files, verification result, and unresolved concerns.
@@ -52,6 +58,8 @@ Make scoped changes without drifting from the plan, over-engineering, or letting
 - Do not refactor adjacent code unless the plan requires it.
 - Do not keep code written before a required failing test.
 - Do not use fresh context for vague work; narrow the task first.
+- Do not couple tests to private implementation when a public behavior seam exists.
+- Do not batch all tests ahead of implementation for multi-behavior work.
 
 ## Rationalization Prevention
 
@@ -61,6 +69,7 @@ Make scoped changes without drifting from the plan, over-engineering, or letting
 | "Tests after are enough" | Tests after prove less than tests first |
 | "The current context is fine" | Context risk is silent; run the gate |
 | "A broader abstraction is cleaner" | Cleaner is not a requirement |
+| "I should write the full test suite first" | TDD needs feedback one behavior at a time |
 
 ## Outputs
 

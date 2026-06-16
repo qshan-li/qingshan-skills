@@ -8,6 +8,10 @@ Know the goal, constraints, acceptance criteria, and non-goals before changing f
 
 Low-risk work uses light process. High-risk, ambiguous, cross-cutting, or irreversible work uses stronger process. The workflow can shrink, but the hard rules cannot.
 
+## Preserve Engineer Control
+
+qingshan-skills provides the smallest process layer that protects the work. It should preserve user and engineer control instead of owning the whole development process.
+
 ## Minimal Surgical Change
 
 Change only what the current task requires. Do not perform unrelated refactors, cleanup, formatting churn, compatibility work, or speculative configuration.
@@ -40,3 +44,4 @@ Decompose large work. Use fresh context or subagents when the current session th
 - Do not switch package managers without explicit instruction.
 - Do not write compatibility layers for old environments unless required.
 - Do not automate high-impact product, architecture, or irreversible decisions that belong to the user.
+- Do not let process machinery replace engineering judgment.

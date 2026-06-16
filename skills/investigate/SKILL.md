@@ -30,14 +30,27 @@ Establish facts before fixes. The failure this prevents is changing code based o
 | Medium | Collect logs, tests, traces, or code-path evidence before planning |
 | High | Build a repeatable reproduction or baseline and state confidence before fixes |
 
+## Feedback Loop
+
+The first investigation task is to build or identify a pass/fail signal the agent can run. Prefer a fast, deterministic loop that reproduces the user's symptom, not a nearby failure.
+
+When the loop is weak, improve it before hypothesizing:
+
+- make it faster by narrowing setup or scope
+- make the signal sharper by asserting the exact symptom
+- make it more deterministic by controlling time, randomness, filesystem, or network inputs
+
+For medium or high-risk failures, form 3-5 ranked, falsifiable hypotheses before probing. Each probe should test one prediction and change one variable at a time.
+
 ## Workflow
 
 1. State the symptom and expected behavior.
-2. Reproduce or observe the failure.
-3. Collect facts from tests, logs, metrics, traces, configuration, or code paths.
-4. Narrow the failing surface.
-5. Form a root-cause hypothesis and test it.
-6. Recommend the smallest fix path.
+2. Build or identify the fastest reliable feedback loop available.
+3. Reproduce or observe the failure through that loop.
+4. Collect facts from tests, logs, metrics, traces, configuration, or code paths.
+5. Narrow the failing surface.
+6. Form ranked falsifiable root-cause hypotheses and test the strongest one.
+7. Recommend the smallest fix path.
 
 Performance work must establish a baseline and repeatable measurement method. Deployment work must identify environment boundaries and failure evidence. Security and stability work must include a threat or failure model.
 
@@ -48,6 +61,8 @@ Performance work must establish a baseline and repeatable measurement method. De
 - Do not optimize without a baseline.
 - Do not call a symptom the root cause.
 - Do not ignore failed verification; it is new evidence.
+- Do not proceed from a weak or unrelated feedback loop as if it reproduced the user's failure.
+- Do not test multiple variables in one probe when isolating root cause.
 
 ## Rationalization Prevention
 
@@ -57,13 +72,15 @@ Performance work must establish a baseline and repeatable measurement method. De
 | "The fix is obvious" | Obvious fixes still need reproduction |
 | "Benchmarks take too long" | Performance work without baselines is guessing |
 | "Logs are noisy" | Find the signal before editing |
+| "One plausible hypothesis is enough" | Single-hypothesis debugging anchors too early |
 
 ## Outputs
 
 - Reproduction or observation method.
+- Feedback loop quality and limits.
 - Facts collected.
 - Narrowed failing surface.
-- Root-cause hypothesis and confidence.
+- Root-cause hypotheses and confidence.
 - Recommended fix path.
 
 ## Handoff

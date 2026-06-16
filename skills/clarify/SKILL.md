@@ -30,6 +30,12 @@ Create shared understanding before planning or execution. The failure this preve
 | Medium | Compare options, recommend one, record goal, non-goals, risks, acceptance criteria |
 | High | Use full brainstorming: explore context, ask one question at a time, compare approaches, present design, write spec, wait for approval |
 
+## Shared Language
+
+When a task depends on domain terms, read existing `CONTEXT.md`, `CONTEXT-MAP.md`, or ADRs if they exist. Challenge overloaded or conflicting terms, propose precise canonical vocabulary, and cross-check user claims against code or docs when possible.
+
+Treat `CONTEXT.md` as a glossary only: stable domain terms and resolved ambiguities. It is not a spec, scratch pad, implementation note, or decision log.
+
 ## Workflow
 
 1. Read relevant files, docs, and recent state before asking.
@@ -37,8 +43,9 @@ Create shared understanding before planning or execution. The failure this preve
 3. Identify goal, non-goals, constraints, and acceptance criteria.
 4. Ask only one question at a time when code cannot answer it.
 5. Provide a recommended answer with each question.
-6. For medium/high risk, present two or three approaches with tradeoffs and a recommendation.
-7. End with either a lightweight target statement or an approved design.
+6. Resolve terminology ambiguities before turning them into requirements.
+7. For medium/high risk, present two or three approaches with tradeoffs and a recommendation.
+8. End with either a lightweight target statement or an approved design.
 
 ## Hard Rules
 
@@ -47,6 +54,7 @@ Create shared understanding before planning or execution. The failure this preve
 - Do not ask multiple questions at once.
 - Do not hide high-impact decisions inside implementation details.
 - Do not create a formal spec for low-risk work unless risk increases.
+- Do not treat fuzzy domain language as harmless when it affects behavior, naming, or acceptance criteria.
 
 ## Rationalization Prevention
 
@@ -62,6 +70,7 @@ Create shared understanding before planning or execution. The failure this preve
 - Task type and risk level.
 - Goal and non-goals.
 - Constraints and acceptance criteria.
+- Shared-language terms or ambiguities that should be captured later.
 - Open decisions classified by importance.
 - Approved design or lightweight target statement.
 

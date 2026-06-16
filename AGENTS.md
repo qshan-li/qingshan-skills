@@ -22,7 +22,7 @@ Build a personal skill library that integrates the best patterns from four famou
    - Shipping is the release path after `/verify` passes
 
 3. **Root infrastructure**:
-   - `SKILL.md` — root routing table by task type + behavioral contract
+   - `SKILL.md` — session-bootstrap routing enforcement + behavioral contract
    - `ETHOS.md` — core principles referenced by every skill
    - `prompts/` — fresh-context worker/reviewer prompts, only where needed
    - `docs/` — philosophy, installation guide, references, design spec
@@ -56,7 +56,7 @@ qingshan-skills/
 ├── CLAUDE.md                    # Project instructions (→ this file)
 ├── LICENSE                      # MIT
 ├── README.md                    # Overview and installation
-├── SKILL.md                     # Root skill: routing table by task type + behavioral contract
+├── SKILL.md                     # Root skill: session-bootstrap routing enforcement
 ├── ETHOS.md                     # Core principles referenced by every skill
 ├── AGENTS.md                    # This file
 │

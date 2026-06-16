@@ -24,6 +24,8 @@ This single move cures two diseases at once: **decision fatigue** (asking about 
 
 - *Secondary essence:* `benefits-from` soft dependencies wire skills into a `Think → Plan → Build → Review → Test → Ship → Reflect` pipeline where each step's output is the next step's input.
 
+For qingshan-skills, the approved gstack absorption is deliberately narrower than gstack itself. The system should absorb Decision Briefs, scope drift detection, review readiness dashboards, adversarial review, release gates inside `/verify`, durable decision logs, and soft dependencies. It should not absorb the full role catalog, telemetry/runtime preamble, automatic version bumping, changelog generation, PR creation, or "Boil the Ocean" as an implementation principle.
+
 ### Superpowers — The Essence is **Anti-Shortcut Discipline**
 
 The surface is TDD + subagents. The real insight: **agents, like humans under pressure, invent excuses to skip discipline.** Two layers of resistance:
@@ -479,6 +481,8 @@ The distinguishing feature. Heavy research, planning, and execution "runs in fre
 
 Structured artifacts that "survive session boundaries" as shared memory across sessions. `CONTEXT.md` exists at repo root. The framework maintains these files automatically as the project progresses through phases.
 
+For qingshan-skills, `STATE.md` and `CONTEXT.md` are treated as project-local continuity tools, not as the whole learning system. Cross-project learning requires a promotion pipeline: task state → project context → project learning → global memory → skill rule. `/reflect` is the gate that decides which layer a verified lesson belongs in and prevents one-off project facts from polluting future projects.
+
 #### Key Patterns to Extract
 
 | Pattern | Description | Target Skill |
@@ -486,75 +490,129 @@ Structured artifacts that "survive session boundaries" as shared memory across s
 | Five-phase loop | Discuss → Plan → Execute → Verify → Ship | Overall pipeline |
 | Fresh context subagents | 200k-token clean context per executor | `/execute` |
 | STATE.md / CONTEXT.md | Persistent artifacts surviving session boundaries | `/execute`, `/reflect` |
+| Reflect / learn promotion | Convert verified project experience into conditional cross-project rules | `/reflect` |
 | Verification step | Built-in quality gate before shipping | `/verify` |
 | Cross-runtime installer | One installer handles all AI coding tools | Installation |
 | Context rot prevention | The core insight: degrade gracefully or prevent degradation | All skills |
 
 ---
 
-### 4. Grill Me — Socratic Design Inquiry
+### 4. Matt Pocock's skills — Skills For Real Engineers
 
-- **Repo**: https://github.com/mattpocock/skills (skill at `skills/productivity/grill-me/SKILL.md`)
-- **Author**: Matt Pocock
-- **Install**: `npx skills@latest add mattpocock/skills`
+- **Repo**: https://github.com/mattpocock/skills
+- **Author**: Matt Pocock (Total TypeScript)
+- **License**: MIT
+- **Plugin name**: `mattpocock-skills` (15 published skills)
+- **Install**: `npx skills@latest add mattpocock/skills` (skills.sh installer), then run `/setup-matt-pocock-skills` once per repo to configure the issue tracker, triage-label vocabulary, and domain-doc layout the engineering skills consume
 
 #### What It Is
 
-`/grill-me` is a skill that "interviews the user exhaustively about a plan or design until mutual understanding is achieved, resolving each branch of the decision tree."
+A personal collection of agent skills pitched as **"skills for real engineers — not vibe coding."** The explicit positioning is the opposite of GSD/BMAD/Spec-Kit: those frameworks *own the process*, which "takes away your control and makes bugs in the process hard to resolve." These skills are instead **small, easy to adapt, composable, model-agnostic**, and grounded in conventional engineering fundamentals.
 
-The most common failure mode is **misalignment** — you think the agent understands what you want, but it doesn't. The fix is a "grilling session" where the agent asks detailed questions *before* coding begins.
+The README is organized around **four failure modes** the skills exist to fix — a useful map of the whole repo:
 
-> "No-one knows exactly what they want" — David Thomas & Andrew Hunt
+| Failure mode | Root cause | Fix (skill) |
+|--------------|-----------|-------------|
+| The agent didn't do what I want | Misalignment — you thought it understood, it didn't | `/grill-me`, `/grill-with-docs` (grilling session before coding) |
+| The agent is way too verbose | No shared language; agent reinvents jargon each turn | `/grill-with-docs` building a `CONTEXT.md` glossary (DDD ubiquitous language) |
+| The code doesn't work | No feedback loops; agent flies blind | `/tdd` (red-green-refactor), `/diagnose` (debugging loop) |
+| We built a ball of mud | Agents accelerate software entropy | `/to-prd`, `/zoom-out`, `/improve-codebase-architecture` (care about design, deep modules) |
 
-The engineering variant `/grill-with-docs` extends this by also building a shared language (`CONTEXT.md`) and ADRs.
+The repo **dogfoods its own advice**: its root `CONTEXT.md` is a worked example of the ubiquitous-language technique, pinning down terms like *Issue tracker*, *Issue*, and *Triage role* and explicitly recording resolved ambiguities (e.g. retiring "backlog" as overloaded).
 
-#### The SKILL.md (Full Content)
+#### File Structure
 
-The entire skill is remarkably concise — just four directives:
+Skills are organized into six **bucket folders** with a strict promotion rule (`CLAUDE.md`): every skill in `engineering/`, `productivity/`, or `misc/` must appear in both the top-level `README.md` and `.claude-plugin/plugin.json`; skills in `personal/`, `in-progress/`, or `deprecated/` must appear in neither.
+
+```
+mattpocock/skills/
+├── README.md                   # Four-failure-mode narrative + skill reference
+├── CLAUDE.md                   # Bucket promotion rules
+├── CONTEXT.md                  # Dogfooded ubiquitous-language glossary
+├── LICENSE                     # MIT
+├── .claude-plugin/plugin.json  # Registry of the 15 published skills
+├── docs/adr/                   # Repo's own ADRs
+├── scripts/                    # link-skills.sh, list-skills.sh
+└── skills/
+    ├── engineering/   (10)     # Daily code work
+    ├── productivity/  (5)      # Daily non-code workflow
+    ├── misc/          (4)      # Kept around, rarely used
+    ├── personal/      (2)      # Tied to author's setup, not promoted
+    ├── in-progress/   (4)      # Drafts (review, writing-*)
+    └── deprecated/    (4)      # No longer used
+```
+
+#### The 15 Published Skills
+
+| Bucket | Skill | Purpose |
+|--------|-------|---------|
+| engineering | `diagnose` | Disciplined diagnosis loop: reproduce → minimise → hypothesise → instrument → fix → regression-test |
+| engineering | `grill-with-docs` | Grilling that challenges the plan against the domain model, sharpens terminology, updates `CONTEXT.md`/ADRs inline |
+| engineering | `triage` | Triage issues through a state machine driven by triage roles |
+| engineering | `improve-codebase-architecture` | Find deepening opportunities, informed by `CONTEXT.md` + `docs/adr/` |
+| engineering | `setup-matt-pocock-skills` | Scaffold the per-repo config (issue tracker, triage labels, doc layout) other skills consume |
+| engineering | `tdd` | Red-green-refactor, one vertical slice at a time |
+| engineering | `to-issues` | Break a plan/spec/PRD into independently-grabbable issues via tracer-bullet vertical slices |
+| engineering | `to-prd` | Turn the current conversation into a PRD published to the issue tracker |
+| engineering | `zoom-out` | Ask the agent for broader context / a higher-level perspective on unfamiliar code |
+| engineering | `prototype` | Throwaway prototype to flesh out a design (terminal app for state/logic, or multiple UI variations) |
+| productivity | `caveman` | Ultra-compressed communication; ~75% fewer tokens, full technical accuracy |
+| productivity | `grill-me` | Relentless interview about a plan/design until every branch of the decision tree is resolved |
+| productivity | `handoff` | Compact the conversation into a handoff document for another agent |
+| productivity | `teach` | Teach a skill/concept over multiple sessions using the cwd as a stateful workspace |
+| productivity | `write-a-skill` | Create new skills with structure, progressive disclosure, and bundled resources |
+| misc | `git-guardrails-claude-code` | Claude Code hooks blocking dangerous git commands before they execute |
+| misc | `migrate-to-shoehorn` | Migrate test files from `as` assertions to @total-typescript/shoehorn |
+| misc | `scaffold-exercises` | Create exercise directory structures (sections/problems/solutions/explainers) |
+| misc | `setup-pre-commit` | Husky pre-commit hooks with lint-staged, Prettier, type check, tests |
+
+`personal/` (`edit-article`, `obsidian-vault`), `in-progress/` (`review`, `writing-beats`/`-fragments`/`-shape`), and `deprecated/` (`design-an-interface`, `qa`, `request-refactor-plan`, `ubiquitous-language`) are intentionally excluded from the published set.
+
+#### Flagship: `/grill-me` and `/grill-with-docs`
+
+These are the author's most popular skills and qingshan-skills' direct source for `/clarify`. The entire `/grill-me` body is four directives:
 
 ```yaml
 ---
 name: grill-me
-description: >
-  A skill that interviews the user exhaustively about a plan or design
-  until mutual understanding is achieved, resolving each branch of the
-  decision tree. Use when the user wants to stress-test a plan, get
-  questioned on their design, or says "grill me".
+description: Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me".
 ---
 
-Interview me relentlessly about every aspect of this plan until we
-reach a shared understanding. Walk down each branch of the design tree,
-resolving dependencies between decisions one-by-one. For every question,
-provide a recommended answer.
+Interview me relentlessly about every aspect of this plan until we reach a
+shared understanding. Walk down each branch of the design tree, resolving
+dependencies between decisions one-by-one. For each question, provide your
+recommended answer.
 
-Ask questions one at a time.
+Ask the questions one at a time.
 
 If a question can be answered by exploring the codebase, explore the
 codebase instead.
 ```
+
+`/grill-with-docs` is the same grilling session plus an inline documentation layer:
+
+- **`CONTEXT.md` is a glossary and nothing else** — "totally devoid of implementation details," not a spec or scratch pad. Terms are captured the moment they are resolved, never batched. A root `CONTEXT-MAP.md` extends this to repos with multiple bounded contexts.
+- **ADRs are offered sparingly** — only when all three hold: *hard to reverse*, *surprising without context*, and *the result of a real trade-off*. If any is missing, skip the ADR.
+- **Challenge, sharpen, cross-reference** — call out terms that conflict with the glossary, propose precise canonical terms for fuzzy language, and surface contradictions between stated behavior and the actual code.
 
 #### Key Patterns to Extract
 
 | Pattern | Description | Target Skill |
 |---------|-------------|--------------|
 | Relentless questioning | Don't accept vague requirements; walk the decision tree | `/clarify` |
-| One question at a time | Avoid overwhelm; depth over breadth | `/clarify` |
-| Recommended answers | Provide a suggested answer per question to reduce friction | `/clarify` |
+| One question at a time | Depth over breadth; avoid overwhelm | `/clarify` |
+| Recommended answers | Attach a suggested answer per question to lower answer cost | `/clarify` |
 | Codebase-first | If answerable by exploring code, do that instead of asking | `/clarify` |
-| Decision tree resolution | Resolve dependencies between decisions one-by-one | `/clarify` |
+| Decision-tree resolution | Resolve dependencies between decisions one-by-one | `/clarify` |
+| Shared-language glossary (`CONTEXT.md`) | A pure glossary cuts verbosity and aids navigation session after session | `/clarify`, `/reflect` |
+| ADR three-gate rule | Record a decision only when hard-to-reverse ∧ surprising ∧ a real trade-off | `/plan`, `/reflect` |
+| Feedback-loop-first diagnosis | Build a fast, deterministic pass/fail signal before hypothesizing | `/investigate` |
+| Ranked falsifiable hypotheses | Avoid anchoring on the first plausible cause | `/investigate` |
+| Behavior-first TDD | Test observable behavior through public interfaces, one behavior at a time | `/execute` |
+| Tracer-bullet decomposition | Break work into independently verifiable vertical slices | `/plan`, `/execute` |
+| Architecture deepening | Resist the "ball of mud"; seek deep modules informed by the domain language | Reference for `/plan`, `/reflect` |
 
-#### Related Skills from the Same Author
-
-| Skill | Purpose |
-|-------|---------|
-| `/grill-with-docs` | Engineering variant: builds CONTEXT.md + ADRs alongside the interview |
-| `/improve-codebase-architecture` | Architecture improvement |
-| `/tdd` | Test-driven development |
-| `/to-issues` | Convert discussion to GitHub issues |
-| `/to-prd` | Convert discussion to PRD |
-| `/triage` | Bug triage |
-| `/diagnose` | Systematic diagnosis |
-| `/zoom-out` | Step back and see the bigger picture |
+qingshan-skills absorbs Matt Pocock's control-preserving posture and selected engineering rules: grilling and shared language, sparse ADR capture, feedback-loop-first debugging, behavior-first TDD, and vertical-slice decomposition. It does **not** absorb the whole issue tracker, triage, PRD, prototype, or architecture-report workflow; those remain reference material because qingshan's 6-skill design stays deliberately small and composable.
 
 ---
 
@@ -578,7 +636,7 @@ qingshan-skills/
 ├── CLAUDE.md                    # Project instructions (→ AGENTS.md)
 ├── LICENSE                      # MIT
 ├── README.md                    # Overview and installation
-├── SKILL.md                     # Root skill: routing table + behavioral contract
+├── SKILL.md                     # Root skill: session-bootstrap routing enforcement
 ├── ETHOS.md                     # Core principles referenced by every skill
 ├── AGENTS.md                    # Skill catalog and contributor guide
 │
@@ -626,7 +684,7 @@ Common paths (from the design doc): small docs change → `/clarify → /execute
 
 | qingshan-skills File | Draws From | Key Interface Elements |
 |---------------------|------------|----------------------|
-| `SKILL.md` (root) | gstack root SKILL.md + Superpowers `using-superpowers` | Routing table by task type, risk-weighted entry, behavioral contract |
+| `SKILL.md` (root) | gstack root SKILL.md + Superpowers `using-superpowers` | Session-bootstrap enforcement, routing table by task type, risk-weighted entry, meta anti-bypass table |
 | `ETHOS.md` | gstack ETHOS.md + CLAUDE.md philosophy | Understand Before Acting, Risk Determines Process, Minimal/Surgical, Evidence Before Claims, Preserve Context Quality |
 | `skills/clarify/SKILL.md` | Grill Me + Superpowers brainstorming | One question at a time, recommended answers, decision-tree walk, codebase-first, brainstorming hard gate scaled by risk |
 | `skills/plan/SKILL.md` | gstack autoplan + Superpowers writing-plans | Decision grading (Mechanical/Taste/User Challenge), task decomposition, validation + rollback strategy |
@@ -634,7 +692,7 @@ Common paths (from the design doc): small docs change → `/clarify → /execute
 | `prompts/` | Superpowers implementer/spec-reviewer/code-quality prompts | Worker + reviewer prompts, only where fresh-context execution requires them |
 | `skills/investigate/SKILL.md` | Superpowers systematic-debugging + gstack investigate | No facts no fix; reproduce → evidence → narrow → hypothesis → test; baseline for perf |
 | `skills/verify/SKILL.md` | Superpowers verification-before-completion + gstack review | Task-type-specific proof, review as a dimension, acceptance-criteria status |
-| `skills/reflect/SKILL.md` | gstack retro + learn | Selective durable learning; reject chronological/generic noise |
+| `skills/reflect/SKILL.md` | gstack retro + learn + GSD context artifacts | Memory Promotion Gate; selective durable learning; reject chronological/generic noise and wrong generalization |
 
 ## Key Design Decisions
 
@@ -642,8 +700,15 @@ Common paths (from the design doc): small docs change → `/clarify → /execute
 |----------|-----------|--------|
 | `description` = trigger only | Prevents agent from reading description as shortcut, skipping full skill body | Superpowers CSO |
 | Rationalization prevention tables | Agents find excuses to skip discipline; enumerate and counter each one | Superpowers |
+| Root bootstrap enforcement | Workflow skills do not trigger themselves; the root skill checks each request before action | Superpowers `using-superpowers` |
 | Decision classification (Mechanical/Taste/Challenge) | Prevents decision fatigue AND decision theft | gstack autoplan |
+| Decision Briefs | Turns non-mechanical decisions into recommendation, alternatives, trade-offs, reversibility, and coverage differences | gstack AskUserQuestion format |
+| Scope Drift Detection | Prevents passing tests from hiding missing, extra, changed, or unverifiable work | gstack review |
+| Review Readiness Dashboard | Makes verification evidence and stale checks visible before release handoff | gstack ship |
+| Adversarial Review | Finds production failure modes that friendly review and CI can miss | gstack review |
 | Fresh subagent per task | Prevents context rot; coordinator keeps orchestration, workers get clean context | GSD + Superpowers |
+| Memory promotion pipeline | Prevents project-local facts from becoming bad global rules; promotes repeated or high-risk lessons back into skills | GSD + gstack learn |
+| Durable Decision Log | Keeps settled architecture, scope, tool, vendor, release, or reversal choices separate from reusable lessons | gstack decision memory |
 | `benefits-from` soft dependency | Skills reference each other without hard coupling | gstack |
 | Proactive routing table | User doesn't need to know which skill to invoke; natural language dispatches | gstack |
 | Surgical changes as constraint | Distinguishes from other frameworks — minimal touch is a hard rule, not a preference | Personal philosophy |

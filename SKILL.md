@@ -7,9 +7,20 @@ description: Use when coordinating software engineering work through qingshan-sk
 
 ## Purpose
 
-Route software engineering work through the smallest workflow that can still protect correctness, user decisions, and verification quality.
+Act as the session bootstrap for qingshan-skills: route software engineering work through the smallest workflow that can still protect correctness, user decisions, and verification quality.
 
 Read `ETHOS.md` before applying any core skill. Its non-negotiables override convenience.
+
+## Bootstrap Enforcement
+
+Apply this root skill before responding to or acting on any software engineering request.
+
+1. Classify the request shape.
+2. Select the entry skill from Routing.
+3. Set the lightest risk level that still protects the work.
+4. Apply the selected workflow before clarifying, investigating, planning, editing, verifying, or claiming completion.
+
+If no workflow skill applies, answer directly. If a workflow skill might apply, route first. Low risk reduces ceremony; it does not bypass routing or hard rules.
 
 ## Routing
 
@@ -20,6 +31,7 @@ Read `ETHOS.md` before applying any core skill. Its non-negotiables override con
 | Clarified goal that needs decomposition, sequencing, rollback, or validation strategy | `/plan` | Hidden decisions and scope drift need control |
 | Planned code, config, docs, or tooling change | `/execute` | Edits must stay scoped and context-safe |
 | Any completion, fixed, passing, optimized, or ready claim | `/verify` | Claims require fresh proof |
+| Ship, deploy, publish, PR, merge, release | `/verify` | Release requests need fresh proof, scope review, and rollback or recovery notes before handoff |
 | Completed work with reusable learning | `/reflect` | Durable lessons should update future behavior |
 
 ## Risk Gate
@@ -31,6 +43,8 @@ Read `ETHOS.md` before applying any core skill. Its non-negotiables override con
 | High | Full relevant flow, with `/investigate` first when evidence is required |
 
 Risk increases when work is cross-module, irreversible, user-facing, security-sensitive, deployment-related, performance-related, or poorly understood.
+
+Risk controls workflow weight, not whether the methodology applies.
 
 ## Decision Grading
 
@@ -56,6 +70,12 @@ TDD, review, and ship are embedded disciplines:
 - Review is part of `/verify`.
 - Ship happens only after `/verify` passes.
 
+Use soft dependencies to reduce risk without forcing ceremony:
+
+- `/execute` benefits from `/investigate` when the task starts from a bug, incident, performance issue, deployment failure, or security concern.
+- `/verify` benefits from `/plan` when acceptance criteria, task boundaries, rollback, or release risk exist.
+- `/reflect` benefits from `/verify` because only verified outcomes should become durable learning or durable decisions.
+
 ## Hard Rules
 
 - Keep changes surgical.
@@ -65,3 +85,15 @@ TDD, review, and ship are embedded disciplines:
 - Do not swallow errors or ignore promises.
 - Do not claim completion without verification output.
 - Do not use fresh context as a substitute for clear task boundaries.
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+| --- | --- |
+| "This is too simple to route." | Simple work still needs the lightest valid route; skip heavyweight planning, not the root check. |
+| "The user wants speed, so skip process." | Speed changes workflow weight. It does not remove understanding, scope control, evidence, or verification. |
+| "I need to inspect files before choosing." | Choose the entry skill first; that skill tells you how much inspection is justified. |
+| "The fix is obvious." | Obvious fixes still need the correct entry: `/investigate` for failures, `/clarify` for ambiguous work, `/execute` for scoped edits. |
+| "I'll edit now and verify later." | Planned code, config, docs, or tooling changes enter `/execute` before edits and `/verify` before completion claims. |
+| "The user named a downstream skill, so prerequisites do not matter." | Follow explicit user direction, but surface missing upstream facts or decisions before irreversible work. |
+| "Hooks or runtime rules will enforce this." | Hooks may harden mechanical checks. The portable enforcement layer is this root skill. |

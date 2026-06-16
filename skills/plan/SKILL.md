@@ -30,25 +30,53 @@ Turn shared understanding into ordered, verifiable work. The failure this preven
 | Medium | Create ordered tasks, risks, boundaries, and validation plan |
 | High | Add rollback or failure-handling path and stop for User Challenge decisions |
 
+## Decision Brief
+
+Use a decision brief for every Taste or User Challenge decision. Mechanical decisions do not need a brief; resolve them using project conventions.
+
+Each decision brief must state:
+
+- the decision being made
+- why it matters now
+- the recommended option
+- alternatives with trade-offs
+- whether the choice is reversible
+- completeness or coverage differences when options differ by scope
+
+Batch Taste decisions when possible. Stop on User Challenge decisions before execution.
+
+## Vertical Slices and Durable Decisions
+
+Prefer thin vertical slices: each task should deliver a narrow, end-to-end path that is independently verifiable. Avoid horizontal plans that split work by layer unless the work is truly infrastructure-only.
+
+Only record an ADR or durable decision when all three are true:
+
+- the decision is hard to reverse
+- the choice would be surprising without context
+- the outcome came from a real trade-off
+
 ## Workflow
 
 1. Re-read the clarified goal and acceptance criteria.
 2. List files or modules likely affected and files that should remain untouched.
 3. Grade decisions:
    - Mechanical: choose using project conventions.
-   - Taste: batch and present with a recommendation.
-   - User Challenge: stop for explicit approval.
-4. Decompose work into small tasks with verification after each meaningful change.
-5. Define rollback or failure handling when changes affect deploy, data, security, or architecture.
-6. End with a plan that can be executed without inventing missing requirements.
+   - Taste: batch and present with a Decision Brief.
+   - User Challenge: stop for explicit approval using a Decision Brief.
+4. Decompose work into vertical slices with verification after each meaningful change.
+5. Identify any durable decisions that pass the three-gate rule.
+6. Define rollback or failure handling when changes affect deploy, data, security, or architecture.
+7. End with a plan that can be executed without inventing missing requirements.
 
 ## Hard Rules
 
 - Do not plan around missing acceptance criteria.
 - Do not convert User Challenge decisions into Mechanical decisions.
+- Do not ask vague open-ended questions when a Decision Brief is required.
 - Do not add future-proofing, compatibility layers, or abstractions without current need.
 - Do not let the plan include unrelated cleanup.
 - Do not proceed if evidence required by the task is missing.
+- Do not split by technical layer when a thin end-to-end slice can be verified independently.
 
 ## Rationalization Prevention
 
@@ -58,12 +86,14 @@ Turn shared understanding into ordered, verifiable work. The failure this preven
 | "This cleanup is nearby" | Nearby is not in scope |
 | "A generic abstraction will help later" | Later is not a requirement |
 | "Rollback is obvious" | If failure is expensive, rollback must be explicit |
+| "The user can just choose a direction" | Taste and User Challenge decisions need a recommendation, trade-offs, and reversibility |
 
 ## Outputs
 
 - Ordered tasks.
 - Affected and protected files/modules.
-- Decision grades and unresolved approvals.
+- Decision grades, Decision Briefs, and unresolved approvals.
+- Vertical slices and dependencies.
 - Validation strategy.
 - Rollback or failure-handling notes when relevant.
 

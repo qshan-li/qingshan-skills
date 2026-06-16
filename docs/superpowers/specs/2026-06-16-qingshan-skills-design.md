@@ -22,7 +22,7 @@ The system intentionally takes different pieces from each reference framework:
 - Superpowers provides the primary model for mandatory workflows, rationalization prevention, verification discipline, TDD, and the `/clarify` brainstorming flow.
 - Grill Me provides one-question-at-a-time inquiry, recommended answers, decision-tree exploration, and the rule that codebase-answerable questions should be answered by reading the code.
 - gstack provides proactive routing, decision classification, multi-perspective review, and release discipline.
-- GSD provides context-rot prevention, fresh-context execution, and persistent artifacts for cross-session continuity.
+- GSD provides context-rot prevention, fresh-context execution, persistent artifacts for cross-session continuity, and the need to promote verified experience into reusable rules.
 
 The system intentionally avoids the heavier parts of the references:
 
@@ -40,8 +40,8 @@ The source frameworks should not be copied by feature list. Their real value is 
 | Source | Core failure model | qingshan adaptation |
 | --- | --- | --- |
 | gstack | AI steals user decisions by either asking about trivial choices or silently deciding important ones | `/plan` and the root router must grade decisions as Mechanical, Taste, or User Challenge |
-| Superpowers | Agents invent excuses to skip discipline when work feels simple, urgent, or obvious | Every skill must include hard rules, rationalization prevention, and pressure tests |
-| GSD | Long sessions silently degrade reasoning quality, and the user cannot reliably feel it happening | `/execute` must include a Context Gate that decides when to use fresh context or subagents |
+| Superpowers | Agents invent excuses to skip discipline when work feels simple, urgent, or obvious | The root `SKILL.md` must enforce routing before action; every workflow skill must include hard rules, rationalization prevention, and pressure tests |
+| GSD | Long sessions silently degrade reasoning quality, and useful experience is lost or over-generalized between projects | `/execute` must include a Context Gate, and `/reflect` must include a Memory Promotion Gate |
 | Grill Me | The agent and user often believe they share understanding before they actually do | `/clarify` must produce shared understanding before downstream planning or execution |
 
 This turns the design from "a smaller bundle of four frameworks" into a failure-driven methodology:
@@ -72,9 +72,11 @@ TDD, review, and shipping are not top-level skills:
 
 This keeps the top-level vocabulary small while preserving the important disciplines. The skills are organized by failure mode, not by source framework.
 
+The root `SKILL.md` is not a seventh workflow skill. It is the session-bootstrap enforcement layer that makes the six workflows fire: on each software engineering request, it classifies the request shape, selects the lightest safe workflow, and blocks common rationalizations for skipping the methodology wholesale.
+
 ## Task Taxonomy
 
-The root skill should route work by task type, then select the necessary workflow weight.
+The root skill should run before task work, route by task type, then select the necessary workflow weight.
 
 | Task type | Default entry | Key constraint |
 | --- | --- | --- |
@@ -134,6 +136,8 @@ Each skill body should contain:
 - Outputs: artifacts or statements required before handoff
 - Handoff: likely next skills and prohibited shortcuts
 
+The root `SKILL.md` has a different job from the six workflow skills. It should include routing, risk-weighted entry, and a meta rationalization table for bypassing the whole methodology. It should not duplicate each workflow's detailed procedure.
+
 ## Core Ethos
 
 These principles belong in `ETHOS.md` and should be referenced by every skill.
@@ -164,7 +168,71 @@ Bugs require reproduction. Performance work requires a baseline. Deployment work
 
 ### Preserve Context Quality
 
-Large work should be decomposed. Complex execution should use fresh context or subagents. Critical state and decisions should be written to artifacts when they will matter across sessions.
+Large work should be decomposed. Complex execution should use fresh context or subagents. Critical state and decisions should be written to artifacts when they will matter across sessions. Verified experience should be promoted only when it is reusable, conditional, and unlikely to pollute future work.
+
+## Context and Learning Lifecycle
+
+GSD's `STATE.md` and `CONTEXT.md` solve project-local continuity, but qingshan-skills also needs cross-project learning. The system should treat context as a promotion pipeline, not as one unbounded memory bucket.
+
+```text
+task state -> project context -> project learning -> global memory -> skill rule
+```
+
+Each layer has a different purpose:
+
+| Layer | Purpose | Typical artifact |
+| --- | --- | --- |
+| Task state | Preserve temporary progress for a long task | task artifact, plan, or `STATE.md` only when needed |
+| Project context | Preserve stable repo-specific facts and constraints | existing `AGENTS.md` / `CLAUDE.md` section, or `CONTEXT.md` when the project needs one |
+| Project learning | Preserve lessons that matter inside this repo but are not yet safely global | `LEARNINGS.md` or an existing project retrospective document |
+| Global memory | Preserve conditional, cross-project engineering lessons | user-level memory such as `~/.qingshan-skills/memory/learnings.jsonl` |
+| Skill rule | Turn repeated or high-risk lessons into default behavior | the relevant `SKILL.md` body |
+
+Do not create every artifact by default. Low-risk work usually needs none of them. Use the smallest existing artifact that preserves the future behavior.
+
+### Memory Promotion Gate
+
+`/reflect` is the only workflow that may promote experience between layers. Other skills may propose candidate lessons, but they should not directly write durable memory.
+
+Before writing durable memory, the agent must answer:
+
+1. Is this only temporary task state?
+2. Is this a stable project fact or constraint?
+3. Is this a project-specific lesson that may recur in the same repo?
+4. Can this be generalized across projects with a clear trigger condition?
+5. Could the lesson be wrong in a different environment?
+6. Is there evidence, verification output, or repeated experience behind it?
+7. Is this high-frequency or high-risk enough to update a skill rule instead of leaving it in memory?
+
+Global memory entries must be conditional rules, not chronological summaries. Preferred shape:
+
+```json
+{
+  "type": "technical_pattern",
+  "tags": ["electron", "intranet", "auto-update"],
+  "trigger": "When designing Electron auto-update for intranet or offline deployments",
+  "recommendation": "Use a server-hosted update manifest, package integrity checks, staged rollout, and rollback path.",
+  "avoid": ["public update channel assumptions", "updates without rollback", "missing package verification"],
+  "evidence": "Derived from a verified intranet deployment constraint.",
+  "confidence": "high",
+  "status": "active"
+}
+```
+
+The trigger is mandatory. Without a trigger, the lesson is too vague to reuse safely.
+
+### Context Read Rules
+
+Durable context should reduce context rot, not cause it. Skills should load only the smallest relevant context:
+
+- `/clarify` reads project context and relevant global lessons when they can affect goals, constraints, or hidden decisions.
+- `/plan` reads lessons that affect architecture, risk, validation, rollback, or user decision boundaries.
+- `/execute` receives only lessons directly relevant to the scoped change.
+- Fresh workers receive a compact context excerpt, never a full memory dump.
+- `/verify` checks whether relevant lessons were honored and whether new candidate lessons emerged.
+- `/reflect` decides whether candidates stay local, become global, or sharpen a skill.
+
+Global memory must not duplicate user-level `AGENTS.md` or `CLAUDE.md` instructions. User instructions are behavioral defaults. User memory is reusable experience. Project context is repository-specific truth. Task state is temporary continuity.
 
 ## Non-Negotiables
 
@@ -338,7 +406,7 @@ Handoff:
 
 ### `/reflect`
 
-`/reflect` captures durable learning after work is complete. It must be selective.
+`/reflect` captures durable learning after work is complete. It must be selective. Its main job is not summarization; it is deciding whether verified experience should remain task-local, become project context, become project learning, become global memory, or sharpen a skill rule.
 
 Good reflection changes future behavior:
 
@@ -358,12 +426,17 @@ Bad reflection is noise:
 Outputs:
 
 - concise learning entry
+- target layer: task state, project context, project learning, global memory, skill rule, or no write
+- trigger condition for any global memory
+- evidence or reason for confidence
 - target artifact to update, if any
 - reason the learning is reusable
 
 Handoff:
 
-- update project context, documentation, or skill content only when the learning is durable enough to justify it
+- update project context, documentation, global memory, or skill content only when the learning passes the Memory Promotion Gate
+- keep lessons local when they are repo-specific and cannot be safely generalized
+- reject or defer lessons whose trigger is vague, evidence is weak, or risk of wrong generalization is high
 
 ## Default Flow
 
@@ -386,11 +459,12 @@ Common paths:
 
 The implementation plan should produce:
 
-- root `SKILL.md` with routing table and behavioral contract
+- root `SKILL.md` as session-bootstrap enforcement skill with routing table, risk-weighted entry, and meta anti-bypass rationalization table
 - `ETHOS.md`
 - six skill files under `skills/`
 - prompt templates only where fresh-context execution or review requires them
 - docs for philosophy and installation
+- context and memory promotion rules inside `/reflect`, with read rules referenced by `/clarify`, `/plan`, `/execute`, and `/verify`
 - structure checks for required skill sections
 - pressure tests for agent behavior under realistic failure scenarios
 
@@ -406,8 +480,12 @@ Required pressure scenarios:
 - Bug guesswork: a bug report should enter `/investigate` and collect evidence before editing.
 - Performance guesswork: a performance request should establish a baseline before optimization.
 - Context rot: a large cross-module task should trigger the `/execute` Context Gate and consider fresh context.
+- Memory pollution: a one-off project fact should not be promoted into global memory without a reusable trigger.
+- Wrong generalization: an environment-specific lesson should be rewritten as a conditional rule or kept project-local.
+- Skill reinforcement: a repeated or high-risk lesson should be proposed as a skill-rule update instead of staying only in memory.
 - Verification shortcut: an agent should not claim completion without command output or task-specific proof.
 - Scope creep: an agent should reject unrelated cleanup during a focused change.
+- Methodology bypass: an apparently simple, urgent, or obvious task should still enter the lightest applicable workflow instead of skipping the root routing check.
 
 These tests do not need to simulate every runtime. They should verify the methodology's behavioral contract: when the agent is tempted to skip discipline, the skill text pulls it back.
 

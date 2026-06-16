@@ -12,7 +12,7 @@
 
 ## File Structure
 
-- Create: `SKILL.md` — root routing table and behavioral contract.
+- Create: `SKILL.md` — session-bootstrap routing enforcement and behavioral contract.
 - Create: `ETHOS.md` — shared principles and non-negotiables.
 - Create: `LICENSE` — MIT license declared by the project catalog.
 - Create: `README.md` — project overview and quick start.
@@ -132,7 +132,7 @@ description: Use when coordinating software engineering work through qingshan-sk
 ---
 ```
 
-The body must include routing by task type, risk gates, the six-skill pipeline, decision grading, and a rule to read `ETHOS.md` before applying any core skill.
+The body must include bootstrap enforcement, routing by task type, risk gates, the six-skill pipeline, decision grading, a meta anti-bypass table, and a rule to read `ETHOS.md` before applying any core skill.
 
 - [ ] **Step 3: Create `README.md`, `docs/philosophy.md`, and `docs/installation.md`**
 

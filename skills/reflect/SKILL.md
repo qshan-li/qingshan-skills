@@ -31,14 +31,53 @@ Capture durable learning without polluting the knowledge base. The failure this 
 | Medium | Capture concise project or verification learning when it will recur |
 | High | Update the appropriate artifact when the lesson changes future behavior |
 
+## Memory Promotion Gate
+
+Promote learning only as far as the evidence supports:
+
+- Task state: temporary progress for the current task.
+- Project context: stable repo-specific facts or commands.
+- Project learning: recurring project pattern or pitfall.
+- Global memory: repeated cross-project lesson with clear trigger conditions.
+- Skill rule: verified behavior change that should guide future agents.
+
+Do not promote one-off project facts into global rules.
+
+## Durable Decision Log
+
+Treat durable decisions separately from reusable lessons.
+
+A durable decision is a settled architecture, scope, tool, vendor, release, or reversal choice that future sessions should not silently re-litigate. Record:
+
+- decision
+- date
+- scope
+- rationale
+- alternatives rejected
+- reversal conditions
+
+When a durable decision reverses an earlier one, supersede the earlier decision instead of creating contradictory memory.
+
+## Glossary and ADR Gate
+
+Capture glossary entries only for stable domain terms or resolved ambiguities that future agents will reuse. Glossary entries must not include implementation details, task plans, scratch notes, or decision rationale.
+
+Record an ADR or durable decision only when all three are true:
+
+- the decision is hard to reverse
+- the choice would be surprising without context
+- the outcome came from a real trade-off
+
 ## Workflow
 
-1. Identify the reusable lesson.
-2. State the future trigger: when should this lesson matter?
-3. Choose the smallest durable artifact to update.
-4. Avoid duplicating facts already present in code or docs.
-5. Record the lesson concisely.
-6. Verify the artifact still reads as a rule, not a diary.
+1. Identify whether the outcome is a reusable lesson, a durable decision, both, or neither.
+2. For a reusable lesson, state the future trigger and apply the Memory Promotion Gate.
+3. For a durable decision, record the decision, scope, rationale, rejected alternatives, and reversal conditions.
+4. For glossary entries or ADRs, apply the Glossary and ADR Gate.
+5. Choose the smallest durable artifact to update.
+6. Avoid duplicating facts already present in code or docs.
+7. Record the lesson or decision concisely.
+8. Verify the artifact still reads as a rule, glossary entry, or decision record, not a diary.
 
 ## Hard Rules
 
@@ -47,6 +86,10 @@ Capture durable learning without polluting the knowledge base. The failure this 
 - Do not update skills without a concrete behavior to change.
 - Do not let reflection replace verification.
 - Do not create knowledge-base noise.
+- Do not mix durable decisions with reusable lessons.
+- Do not create contradictory decision records; supersede reversals explicitly.
+- Do not put implementation details or plans into glossary entries.
+- Do not create ADRs for reversible, unsurprising, or no-trade-off choices.
 
 ## Rationalization Prevention
 
@@ -56,11 +99,15 @@ Capture durable learning without polluting the knowledge base. The failure this 
 | "This might matter someday" | Someday is not a trigger |
 | "Summaries help memory" | Durable rules help future behavior |
 | "The skill should mention everything" | Skills should stay focused and searchable |
+| "This decision is also a lesson" | Decisions preserve chosen direction; lessons preserve reusable behavior |
+| "This term might be useful" | Glossary entries need stable reuse, not possible future relevance |
 
 ## Outputs
 
 - Reusable lesson.
 - Future trigger.
+- Glossary entry when stable shared language was captured.
+- Durable Decision Log entry when a durable decision was made.
 - Artifact updated or reason no update was needed.
 - Any skill improvement required.
 

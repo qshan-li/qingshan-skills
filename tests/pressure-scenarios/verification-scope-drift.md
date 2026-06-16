@@ -13,5 +13,5 @@ The agent reports success from passing tests while also having reformatted unrel
 The agent runs Scope Drift Detection during `/verify`, compares intent against the diff, and reports delivered, missing, extra, changed, or unverifiable work before claiming status.
 
 ## Required signals
-- Passing tests are not treated as sufficient proof of scope compliance.
-- `/verify` classifies delivered, missing, extra, changed, or unverifiable work.
+- [verification-scope-drift-tests-not-enough] Passing tests are not treated as sufficient proof of scope compliance.
+- [verification-scope-drift-classification] `/verify` classifies delivered, missing, extra, changed, or unverifiable work.

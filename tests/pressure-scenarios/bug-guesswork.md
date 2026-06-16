@@ -13,5 +13,5 @@ The agent guesses at token expiry or cache state and edits authentication code w
 The agent collects reproduction steps, logs or test evidence, narrows the failing path, and states a root-cause hypothesis before proposing a fix.
 
 ## Required signals
-- `/investigate` records reproduction or observation evidence before any edit.
-- The recommended fix path is tied to a falsifiable root-cause hypothesis.
+- [bug-guesswork-evidence-before-edit] `/investigate` records reproduction or observation evidence before any edit.
+- [bug-guesswork-falsifiable-hypothesis] The recommended fix path is tied to a falsifiable root-cause hypothesis.

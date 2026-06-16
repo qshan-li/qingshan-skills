@@ -199,4 +199,12 @@ bash scripts/validate-skills.sh
 OK qingshan-skills validation passed
 ```
 
-校验内容包括必需文件、skill 的 YAML frontmatter、必需章节、模板、prompt 护栏，以及带 Required signals 的压测场景。设计依据见 [`docs/superpowers/specs/`](docs/superpowers/specs/) 下的权威设计文档。
+校验内容包括必需文件、skill 的 YAML frontmatter、必需章节、模板、prompt 护栏，以及带 Required signals 的压测场景。
+
+行为回归使用 transcript artifact：
+
+```bash
+bash scripts/validate-behavior-tests.sh
+```
+
+测试分层和 ACP 边界见 [`docs/testing.md`](docs/testing.md)。ACP 属于未来 runtime adapter 集成测试，不是核心 skill 语义测试的第一层。设计依据见 [`docs/superpowers/specs/`](docs/superpowers/specs/) 下的权威设计文档。

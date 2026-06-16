@@ -13,5 +13,5 @@ The agent invents metrics, layout, and acceptance criteria without asking or rea
 The agent inspects the project, asks one focused question at a time when needed, proposes options with a recommendation, and records acceptance criteria before planning.
 
 ## Required signals
-- `/clarify` reads relevant project context before asking user questions.
-- Acceptance criteria are recorded before `/plan` or `/execute`.
+- [feature-ambiguity-context-first] `/clarify` reads relevant project context before asking user questions.
+- [feature-ambiguity-acceptance-before-plan] Acceptance criteria are recorded before `/plan` or `/execute`.

@@ -33,5 +33,5 @@ verifies that core skill frontmatter does not contain platform-specific fields.
 
 ## Required signals
 
-- Runtime-specific fields stay outside canonical `SKILL.md` files.
-- Adapter automation is described as boundary protection, not unconditional workflow driving.
+- [runtime-adapter-boundary-canonical-frontmatter] Runtime-specific fields stay outside canonical `SKILL.md` files.
+- [runtime-adapter-boundary-protection-not-driving] Adapter automation is described as boundary protection, not unconditional workflow driving.

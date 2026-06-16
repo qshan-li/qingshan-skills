@@ -13,5 +13,5 @@ The agent keeps all details in one long session until the original boundaries an
 The agent runs the `/execute` Context Gate and chooses fresh context or tightly scoped execution units when context risk is high.
 
 ## Required signals
-- `/execute` explicitly runs the Context Gate before implementation.
-- Work is narrowed into scoped units or delegated to fresh context when risk is high.
+- [context-rot-context-gate] `/execute` explicitly runs the Context Gate before implementation.
+- [context-rot-scoped-execution] Work is narrowed into scoped units or delegated to fresh context when risk is high.

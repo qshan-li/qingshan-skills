@@ -1,0 +1,72 @@
+---
+name: clarify
+description: Use when a software engineering task has unclear goals, scope, constraints, acceptance criteria, tradeoffs, or user-facing decisions
+---
+
+# clarify
+
+## Purpose
+
+Create shared understanding before planning or execution. The failure this prevents is acting on a task the agent only thinks it understands.
+
+## When to Use
+
+- New features, refactors, project structure work, deployment changes, docs, or developer-experience work with unclear intent.
+- Requests with missing acceptance criteria, non-goals, constraints, or user-facing tradeoffs.
+- Medium or high-risk work where multiple reasonable approaches exist.
+- Any task where the codebase cannot answer a necessary decision.
+
+## When NOT to Use
+
+- A low-risk task already has a clear target and validation path.
+- The task is a bug, failing test, performance issue, security issue, or deployment failure that needs evidence first. Use `/investigate`.
+- The user is asking for a code review or completion proof. Use `/verify`.
+
+## Risk Gate
+
+| Risk | Clarify behavior |
+| --- | --- |
+| Low | Inspect context, confirm target and validation path, proceed |
+| Medium | Compare options, recommend one, record goal, non-goals, risks, acceptance criteria |
+| High | Use full brainstorming: explore context, ask one question at a time, compare approaches, present design, write spec, wait for approval |
+
+## Workflow
+
+1. Read relevant files, docs, and recent state before asking.
+2. State the task type and risk level.
+3. Identify goal, non-goals, constraints, and acceptance criteria.
+4. Ask only one question at a time when code cannot answer it.
+5. Provide a recommended answer with each question.
+6. For medium/high risk, present two or three approaches with tradeoffs and a recommendation.
+7. End with either a lightweight target statement or an approved design.
+
+## Hard Rules
+
+- Do not implement before the target and validation path are clear.
+- Do not ask questions the codebase can answer.
+- Do not ask multiple questions at once.
+- Do not hide high-impact decisions inside implementation details.
+- Do not create a formal spec for low-risk work unless risk increases.
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+| --- | --- |
+| "This is obvious" | Obvious to the agent is not shared understanding |
+| "I can decide later" | Hidden decisions become scope drift |
+| "Asking slows us down" | One precise question is cheaper than rework |
+| "I read enough" | If acceptance criteria are missing, understanding is incomplete |
+
+## Outputs
+
+- Task type and risk level.
+- Goal and non-goals.
+- Constraints and acceptance criteria.
+- Open decisions classified by importance.
+- Approved design or lightweight target statement.
+
+## Handoff
+
+- Use `/plan` for medium/high-risk work or tasks needing decomposition.
+- Use `/execute` for low-risk work with clear validation.
+- Use `/investigate` when evidence is required before design.

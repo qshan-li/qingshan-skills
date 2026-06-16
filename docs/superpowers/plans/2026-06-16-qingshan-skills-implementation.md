@@ -14,7 +14,10 @@
 
 - Create: `SKILL.md` — root routing table and behavioral contract.
 - Create: `ETHOS.md` — shared principles and non-negotiables.
+- Create: `LICENSE` — MIT license declared by the project catalog.
 - Create: `README.md` — project overview and quick start.
+- Track: `CLAUDE.md` — pointer to `AGENTS.md`.
+- Modify: `.gitignore` — ignore local imported reference skill directories.
 - Create: `docs/philosophy.md` — methodology explanation.
 - Create: `docs/installation.md` — cross-agent installation notes.
 - Create: `skills/clarify/SKILL.md` — shared-understanding workflow.
@@ -107,9 +110,12 @@ Expected: FAIL because root docs and six skill files do not exist yet.
 **Files:**
 - Create: `SKILL.md`
 - Create: `ETHOS.md`
+- Create: `LICENSE`
 - Create: `README.md`
 - Create: `docs/philosophy.md`
 - Create: `docs/installation.md`
+- Track: `CLAUDE.md`
+- Modify: `.gitignore`
 
 - [ ] **Step 1: Create `ETHOS.md`**
 
@@ -131,6 +137,10 @@ The body must include routing by task type, risk gates, the six-skill pipeline, 
 - [ ] **Step 3: Create `README.md`, `docs/philosophy.md`, and `docs/installation.md`**
 
 Keep them concise. README explains what the library is and lists the six skills. Philosophy explains the four source failure models and qingshan constraints. Installation explains copying or symlinking the repo into agent-specific skill directories without assuming one runtime.
+
+- [ ] **Step 4: Track project root hygiene files**
+
+Track `CLAUDE.md` as the agent pointer to `AGENTS.md`, create MIT `LICENSE`, and update `.gitignore` so local `.agents/` and `.claude/` reference copies cannot be accidentally committed.
 
 ## Task 3: Add Core Skills
 
@@ -288,6 +298,6 @@ Expected: no whitespace errors; diff only includes planned files.
 Run:
 
 ```bash
-git add SKILL.md ETHOS.md README.md AGENTS.md docs scripts skills prompts tests
+git add .gitignore AGENTS.md CLAUDE.md ETHOS.md LICENSE README.md SKILL.md docs scripts skills prompts tests
 git commit -m "Implement qingshan skill library"
 ```

@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+fail() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+require_file() {
+  local path="$1"
+  [[ -f "$path" ]] || fail "missing required file: $path"
+}
+
+require_section() {
+  local path="$1"
+  local section="$2"
+  grep -q "^## ${section}$" "$path" || fail "$path missing section: $section"
+}
+
+description_line() {
+  local path="$1"
+  grep -m 1 '^description: ' "$path" || true
+}
+
+validate_frontmatter() {
+  local path="$1"
+  local description
+
+  [[ "$(sed -n '1p' "$path")" == "---" ]] || fail "$path missing opening YAML frontmatter"
+  grep -q '^name: [a-z0-9-]\+$' "$path" || fail "$path missing valid name field"
+
+  description="$(description_line "$path")"
+  [[ -n "$description" ]] || fail "$path missing description field"
+  [[ "$description" == description:\ Use\ when* ]] || fail "$path description must start with: Use when"
+
+  if grep -Eiq '^description: .*\b(step|workflow|first|then)\b' "$path"; then
+    fail "$path description contains workflow shortcut language"
+  fi
+}
+
+validate_skill() {
+  local path="$1"
+  validate_frontmatter "$path"
+
+  require_section "$path" "Purpose"
+  require_section "$path" "When to Use"
+  require_section "$path" "When NOT to Use"
+  require_section "$path" "Risk Gate"
+  require_section "$path" "Workflow"
+  require_section "$path" "Hard Rules"
+  require_section "$path" "Rationalization Prevention"
+  require_section "$path" "Outputs"
+  require_section "$path" "Handoff"
+}
+
+validate_pressure_scenario() {
+  local path="$1"
+  require_file "$path"
+  require_section "$path" "Trigger"
+  require_section "$path" "Expected route"
+  require_section "$path" "Shortcut risk"
+  require_section "$path" "Pass condition"
+}
+
+require_file "SKILL.md"
+require_file "ETHOS.md"
+require_file "README.md"
+require_file "docs/philosophy.md"
+require_file "docs/installation.md"
+
+validate_frontmatter "SKILL.md"
+
+for skill in clarify plan execute investigate verify reflect; do
+  validate_skill "skills/${skill}/SKILL.md"
+done
+
+for scenario in \
+  simple-task-overprocessing \
+  feature-ambiguity \
+  user-decision-theft \
+  bug-guesswork \
+  performance-guesswork \
+  context-rot \
+  verification-shortcut \
+  scope-creep; do
+  validate_pressure_scenario "tests/pressure-scenarios/${scenario}.md"
+done
+
+echo "OK qingshan-skills validation passed"

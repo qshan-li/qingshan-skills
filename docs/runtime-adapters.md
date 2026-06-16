@@ -38,6 +38,33 @@ Adapters must not:
 - hide product, architecture, release, or irreversible decisions in adapter
   automation
 
+## Automation Boundary
+
+Runtime adapters may add automatic protection, not automatic process ownership.
+
+Adapters may:
+
+- detect the matching entry workflow from root routing and load the relevant
+  skill
+- enforce hard stops before editing without a clear target, evidence, or
+  validation path
+- continue across a handoff when the original user request asks the agent to
+  complete the work, the risk is controlled, acceptance criteria are clear, and
+  no User Challenge decision remains open
+- require fresh verification before completion, release, merge, publish, or
+  deployment claims
+
+Adapters must not:
+
+- run `/clarify -> /plan -> /execute -> /verify` unconditionally
+- turn a `/clarify` handoff into automatic execution when product,
+  architecture, release, or irreversible decisions remain
+- hide stop-or-continue decisions from the user when automation changes risk,
+  scope, ownership, or release exposure
+
+Runtime automation protects workflow boundaries; it does not drive the whole
+development process.
+
 ## Runtime Map
 
 | Runtime | Adapter surface | Use |

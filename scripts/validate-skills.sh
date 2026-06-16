@@ -112,6 +112,8 @@ require_text "skills/verify/SKILL.md" "Review Readiness Dashboard"
 require_text "skills/verify/SKILL.md" "Adversarial Review"
 require_text "skills/reflect/SKILL.md" "Durable Decision Log"
 require_text "docs/runtime-adapters.md" "Runtime-specific fields, manifests, hooks, and UI metadata belong outside the"
+require_text "docs/runtime-adapters.md" "## Automation Boundary"
+require_text "docs/runtime-adapters.md" "Runtime automation protects workflow boundaries; it does not drive the whole"
 
 for skill in clarify plan execute investigate verify reflect; do
   validate_skill "skills/${skill}/SKILL.md"

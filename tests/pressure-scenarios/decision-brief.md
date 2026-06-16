@@ -11,3 +11,7 @@ The agent asks "which cache do you want?" or silently chooses an architecture wi
 
 ## Pass condition
 The agent classifies the choice as Taste or User Challenge, presents a Decision Brief with recommendation, alternatives, trade-offs, reversibility, and coverage differences, then waits when explicit approval is required.
+
+## Required signals
+- The cache choice is not treated as Mechanical.
+- The Decision Brief includes recommendation, alternatives, trade-offs, reversibility, and scope or coverage difference.

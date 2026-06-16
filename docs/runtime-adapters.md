@@ -65,6 +65,21 @@ Adapters must not:
 Runtime automation protects workflow boundaries; it does not drive the whole
 development process.
 
+## Bootstrap Wrapper
+
+Runtimes that do not load Agent Skills directly should use a wrapper based on
+`docs/templates/runtime-bootstrap.md`.
+
+The wrapper should:
+
+- load root `SKILL.md` before software engineering task work
+- load `ETHOS.md` before applying a workflow skill
+- select the lightest safe workflow from root routing
+- load only the selected workflow skill until a handoff requires another one
+
+This wrapper is an adapter. It must not copy and edit the canonical workflow
+skills for a specific runtime.
+
 ## Runtime Map
 
 | Runtime | Adapter surface | Use |

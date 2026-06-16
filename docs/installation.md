@@ -48,6 +48,24 @@ and six workflow skills through that runtime's rule or prompt mechanism. Keep th
 adapter as a wrapper: it should load or summarize the canonical skills, not fork
 their workflow semantics.
 
+Use [templates/runtime-bootstrap.md](templates/runtime-bootstrap.md) as the
+minimal wrapper shape when a runtime needs explicit load-order instructions.
+
+## Templates
+
+The repository includes lightweight templates under [templates/](templates/) for
+recurring workflow artifacts:
+
+- `decision-brief.md`
+- `fresh-context-packet.md`
+- `release-checklist.md`
+- `durable-decision.md`
+- `context-glossary.md`
+- `runtime-bootstrap.md`
+
+These templates are optional. Create an artifact only when the relevant workflow
+needs it.
+
 ## Verify
 
 After installation, run:
@@ -56,4 +74,6 @@ After installation, run:
 bash scripts/validate-skills.sh
 ```
 
-The validator checks required files, skill frontmatter, required sections, and pressure scenarios.
+The validator checks required files, skill frontmatter, required sections,
+templates, prompt guardrails, and pressure scenarios with required behavior
+signals.

@@ -30,3 +30,8 @@ The agent preserves the canonical skill contract as `name`, `description`, and
 portable workflow body; documents any runtime-specific behavior as an adapter;
 distinguishes automatic protection from automatic process ownership; and
 verifies that core skill frontmatter does not contain platform-specific fields.
+
+## Required signals
+
+- Runtime-specific fields stay outside canonical `SKILL.md` files.
+- Adapter automation is described as boundary protection, not unconditional workflow driving.

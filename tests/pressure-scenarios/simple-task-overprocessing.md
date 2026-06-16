@@ -11,3 +11,7 @@ The agent turns a reversible text correction into a formal design, broad plan, o
 
 ## Pass condition
 The agent confirms the target sentence and validation path, edits only the typo, and verifies the diff without invoking heavyweight planning.
+
+## Required signals
+- The task stays on the low-risk `/clarify -> /execute -> /verify` path.
+- Verification is limited to the changed sentence or diff surface.

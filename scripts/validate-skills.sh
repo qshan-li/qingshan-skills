@@ -23,6 +23,28 @@ require_text() {
   grep -qF "$text" "$path" || fail "$path missing required text: $text"
 }
 
+section_bullet_count() {
+  local path="$1"
+  local section="$2"
+
+  awk -v section="## ${section}" '
+    $0 == section { in_section = 1; next }
+    in_section && /^## / { exit }
+    in_section && /^- / { count++ }
+    END { print count + 0 }
+  ' "$path"
+}
+
+require_section_bullets() {
+  local path="$1"
+  local section="$2"
+  local minimum="$3"
+  local count
+
+  count="$(section_bullet_count "$path" "$section")"
+  [[ "$count" -ge "$minimum" ]] || fail "$path section ${section} needs at least ${minimum} bullet(s)"
+}
+
 description_line() {
   local path="$1"
   grep -m 1 '^description: ' "$path" || true
@@ -93,14 +115,26 @@ validate_pressure_scenario() {
   require_section "$path" "Expected route"
   require_section "$path" "Shortcut risk"
   require_section "$path" "Pass condition"
+  require_section "$path" "Required signals"
+  require_section_bullets "$path" "Required signals" 2
 }
 
 require_file "SKILL.md"
 require_file "ETHOS.md"
+require_file "CONTEXT.md"
 require_file "README.md"
 require_file "docs/philosophy.md"
 require_file "docs/installation.md"
 require_file "docs/runtime-adapters.md"
+require_file "docs/templates/context-glossary.md"
+require_file "docs/templates/decision-brief.md"
+require_file "docs/templates/durable-decision.md"
+require_file "docs/templates/fresh-context-packet.md"
+require_file "docs/templates/release-checklist.md"
+require_file "docs/templates/runtime-bootstrap.md"
+require_file "prompts/fresh-worker.md"
+require_file "prompts/spec-reviewer.md"
+require_file "prompts/quality-reviewer.md"
 
 validate_root_skill "SKILL.md"
 
@@ -113,7 +147,17 @@ require_text "skills/verify/SKILL.md" "Adversarial Review"
 require_text "skills/reflect/SKILL.md" "Durable Decision Log"
 require_text "docs/runtime-adapters.md" "Runtime-specific fields, manifests, hooks, and UI metadata belong outside the"
 require_text "docs/runtime-adapters.md" "## Automation Boundary"
+require_text "docs/runtime-adapters.md" "## Bootstrap Wrapper"
 require_text "docs/runtime-adapters.md" "Runtime automation protects workflow boundaries; it does not drive the whole"
+require_text "CONTEXT.md" "This file is a glossary only."
+require_text "README.md" "docs/templates/"
+require_text "docs/templates/decision-brief.md" "## Approval"
+require_text "docs/templates/fresh-context-packet.md" "## Stop Conditions"
+require_text "docs/templates/release-checklist.md" "## Scope Review"
+require_text "docs/templates/runtime-bootstrap.md" "## Adapter Must Not"
+require_text "prompts/fresh-worker.md" "## Review Handoff"
+require_text "prompts/spec-reviewer.md" "## Inputs Required"
+require_text "prompts/quality-reviewer.md" "## Review Rules"
 
 for skill in clarify plan execute investigate verify reflect; do
   validate_skill "skills/${skill}/SKILL.md"

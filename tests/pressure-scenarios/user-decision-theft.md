@@ -11,3 +11,7 @@ The agent treats an architecture direction as a mechanical implementation detail
 
 ## Pass condition
 The agent classifies the architecture change as a User Challenge decision and stops for explicit approval before implementation.
+
+## Required signals
+- REST-to-GraphQL is classified as User Challenge, not Mechanical.
+- Execution stops before implementation until explicit approval exists.

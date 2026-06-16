@@ -11,3 +11,7 @@ The agent rewrites code based on intuition without measuring current latency, qu
 
 ## Pass condition
 The agent establishes a repeatable baseline metric and uses the same measurement method after the change.
+
+## Required signals
+- `/investigate` establishes a baseline before optimization.
+- Post-change verification uses the same measurement method as the baseline.

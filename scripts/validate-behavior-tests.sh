@@ -64,6 +64,17 @@ contains_line() {
   grep -qxF "$expected"
 }
 
+scenario_has_transcript() {
+  local expected="$1"
+  local transcript
+
+  for transcript in "${transcripts[@]}"; do
+    [[ "$(section_value "$transcript" "Scenario")" == "$expected" ]] && return 0
+  done
+
+  return 1
+}
+
 validate_transcript() {
   local path="$1"
   local scenario
@@ -108,4 +119,26 @@ for transcript in "${transcripts[@]}"; do
   validate_transcript "$transcript"
 done
 
-echo "OK qingshan-skills behavior tests validation passed"
+critical_scenarios=(
+  simple-task-overprocessing
+  clarify-plan-handoff-persistence
+  investigation-handoff-persistence
+  context-manifest
+  release-stale-evidence
+  adversarial-review
+  plan-durable-decision-persistence
+  reflect-promotion-artifact-map
+)
+
+for scenario in "${critical_scenarios[@]}"; do
+  scenario_has_transcript "$scenario" || fail "missing behavior transcript for critical scenario: $scenario"
+done
+
+scenario_count="$(find tests/pressure-scenarios -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')"
+covered_count="$(
+  for transcript in "${transcripts[@]}"; do
+    section_value "$transcript" "Scenario"
+  done | sort -u | wc -l | tr -d ' '
+)"
+
+echo "OK qingshan-skills behavior tests validation passed (${covered_count}/${scenario_count} scenarios covered)"

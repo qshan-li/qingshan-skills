@@ -9,6 +9,12 @@ description: Use when a software engineering task has unclear goals, scope, cons
 
 Create shared understanding before planning or execution. The failure this prevents is acting on a task the agent only thinks it understands.
 
+## Direct Invocation
+
+Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
+root routing assumptions and shared non-negotiables before continuing; direct
+invocation changes the entry point, not the hard rules.
+
 ## When to Use
 
 - New features, refactors, project structure work, deployment changes, docs, or developer-experience work with unclear intent.

@@ -221,7 +221,17 @@ require_text "tests/behavior/README.md" "scripts/validate-behavior-tests.sh"
 
 for skill in clarify plan execute investigate verify reflect; do
   validate_skill "skills/${skill}/SKILL.md"
+  require_text "skills/${skill}/SKILL.md" 'Direct invocation must still honor root `SKILL.md` and `ETHOS.md`.'
 done
+
+require_text "skills/plan/SKILL.md" "docs/templates/task-handoff.md"
+require_text "skills/execute/SKILL.md" "docs/templates/task-handoff.md"
+require_text "skills/execute/SKILL.md" "docs/templates/fresh-context-packet.md"
+require_text "skills/verify/SKILL.md" "prompts/spec-reviewer.md"
+require_text "skills/verify/SKILL.md" "prompts/quality-reviewer.md"
+require_text "docs/templates/decision-brief.md" "Mechanical decisions must not use this template"
+require_text "docs/templates/release-checklist.md" "## Review Staleness"
+require_text "docs/templates/release-checklist.md" "## Commit Or PR Hygiene"
 
 for scenario in \
   simple-task-overprocessing \

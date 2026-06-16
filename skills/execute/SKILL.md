@@ -9,6 +9,12 @@ description: Use when implementing a planned software engineering change, refact
 
 Make scoped changes without drifting from the plan, over-engineering, or letting context quality decay.
 
+## Direct Invocation
+
+Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
+root routing assumptions and shared non-negotiables before continuing; direct
+invocation changes the entry point, not the hard rules.
+
 ## When to Use
 
 - A task has a clear target, boundaries, and validation path.
@@ -36,16 +42,28 @@ For required TDD, work one behavior at a time: one failing test, one minimal imp
 
 Do not write all tests first and then all implementation. That horizontal pattern locks in imagined behavior before feedback from the code exists.
 
+## Handoff and Context Inputs
+
+Before editing, read the plan plus any Task Handoff artifact produced from
+`docs/templates/task-handoff.md`, or root `STATE.md` when no project task
+artifact exists. The inputs must name the goal, owned files, protected
+boundaries, acceptance criteria, and required proof.
+
+When context risk justifies a fresh worker, create a packet with
+`docs/templates/fresh-context-packet.md` and pair it with `prompts/fresh-worker.md`.
+The packet must include owned files, protected files, a context manifest, stop
+conditions, and required proof.
+
 ## Workflow
 
-1. Re-read the plan, constraints, protected files, and validation requirements.
+1. Re-read the plan, any Task Handoff artifact, constraints, protected files, and validation requirements.
 2. Run the Context Gate:
    - Can the task be completed accurately in the current context?
    - Does it touch multiple modules, runtimes, or ownership boundaries?
    - Has the conversation been compressed or polluted by unrelated exploration?
    - Would a context manifest make owned files, reference files, and proof clearer?
    - Would a fresh worker reduce risk more than it adds coordination cost?
-3. If context risk is high, use `prompts/fresh-worker.md` with a narrow task, explicit file ownership, and a context manifest.
+3. If context risk is high, use `docs/templates/fresh-context-packet.md` and `prompts/fresh-worker.md` with a narrow task, explicit file ownership, and a context manifest.
 4. For high-risk code changes, write one behavior-focused failing test before production code.
 5. Make the smallest change that satisfies the current task. Every changed line should trace to the task, required proof, or cleanup caused by this change.
 6. Run the specified verification.

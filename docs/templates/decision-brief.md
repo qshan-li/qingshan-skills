@@ -30,4 +30,4 @@ brief.
 
 ## Approval
 
-<Mechanical, Taste, or User Challenge. For User Challenge, stop until explicit approval exists.>
+<Taste or User Challenge. Mechanical decisions must not use this template. For User Challenge, stop until explicit approval exists.>

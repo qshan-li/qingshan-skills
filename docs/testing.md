@@ -45,6 +45,7 @@ The validator checks artifact completeness only:
 - the verdict is `PASS`, `FAIL`, or `BLOCKED`
 - every required signal has evidence
 - no transcript references unknown signal IDs
+- critical workflow scenarios have at least one transcript
 
 It does not judge prose quality or perform NLP matching. That keeps the test
 stable and reviewable.

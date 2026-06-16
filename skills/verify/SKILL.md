@@ -9,6 +9,12 @@ description: Use when about to claim software engineering work is complete, fixe
 
 Prove the work before making claims. The failure this prevents is saying work is done because it looks right.
 
+## Direct Invocation
+
+Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
+root routing assumptions and shared non-negotiables before continuing; direct
+invocation changes the entry point, not the hard rules.
+
 ## When to Use
 
 - Before saying complete, fixed, passing, shipped, optimized, documented, or ready.
@@ -30,7 +36,10 @@ Prove the work before making claims. The failure this prevents is saying work is
 | Medium | Run tests, type/build checks, and acceptance checks relevant to the change |
 | High | Add task-specific proof such as regression tests, performance comparison, dry run, Scope Drift Detection, Adversarial Review, rollback review, or security residual risk |
 
-Release requests count as high-risk verification when they involve ship, deploy, publish, PR, merge, or release handoff. They require fresh evidence, scope review, review staleness check, and rollback or recovery notes when relevant.
+Release requests count as high-risk verification when they involve ship, deploy,
+publish, PR, merge, or release handoff. They require fresh evidence, scope
+review, review staleness, rollback or recovery notes when relevant, and commit
+or PR hygiene checks when the repository supports them.
 
 Use `docs/templates/release-checklist.md` for release-path verification so the
 claim, fresh evidence, scope review, release or handoff risk, and status are
@@ -71,6 +80,14 @@ Use task-relevant rows only:
 
 Each row must say one of: fresh evidence, stale evidence, skipped with reason, blocked, or not applicable.
 
+## Fresh-Context Review
+
+When fresh context or worker output was used, run spec review with
+`prompts/spec-reviewer.md` and quality review with `prompts/quality-reviewer.md`,
+or use those prompts as local checklists and state that the review was self-run.
+Do not accept a worker report until the referenced diff, command, or artifact has
+been checked.
+
 ## Adversarial Review
 
 Run an adversarial review for high-risk changes, or state why it could not run.
@@ -101,8 +118,9 @@ local checklist and state that the review was self-run.
 6. Run Scope Drift Detection when a task statement, plan, or diff exists, including whether changed lines trace to the request.
 7. Use the Review Readiness Dashboard for medium-risk, high-risk, or release-path work.
 8. Use `docs/templates/release-checklist.md` for release-path work.
-9. Run Adversarial Review for high-risk changes using `prompts/adversarial-reviewer.md` when available.
-10. State actual status with evidence and residual risk.
+9. For fresh-context work, run spec and quality review using `prompts/spec-reviewer.md` and `prompts/quality-reviewer.md`, or state why the review was self-run or blocked.
+10. Run Adversarial Review for high-risk changes using `prompts/adversarial-reviewer.md` when available.
+11. State actual status with evidence and residual risk.
 
 ## Hard Rules
 
@@ -135,7 +153,7 @@ local checklist and state that the review was self-run.
 - Scope Drift Detection status.
 - Review Readiness Dashboard when risk justifies it.
 - Adversarial Review result or reason skipped.
-- Context manifest and worker artifact review when fresh context was used.
+- Context manifest, worker artifact review, spec review, and quality review when fresh context was used.
 - Scope and quality review notes.
 - Residual risks or unverified items.
 

@@ -9,6 +9,12 @@ description: Use when completed software engineering work reveals reusable lesso
 
 Capture durable learning without polluting the knowledge base. The failure this prevents is repeating avoidable mistakes.
 
+## Direct Invocation
+
+Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
+root routing assumptions and shared non-negotiables before continuing; direct
+invocation changes the entry point, not the hard rules.
+
 ## When to Use
 
 - Work revealed a recurring trap, invariant, verification command, or project-specific rule.

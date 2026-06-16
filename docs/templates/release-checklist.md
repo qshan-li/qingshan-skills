@@ -14,6 +14,12 @@ requests. This is not a separate `/ship` workflow.
 - build: fresh evidence | stale evidence | skipped with reason | blocked | not applicable
 - manual smoke check: fresh evidence | stale evidence | skipped with reason | blocked | not applicable
 
+## Review Staleness
+
+- implementation review: fresh evidence | stale evidence | skipped with reason | blocked | not applicable
+- scope review: fresh evidence | stale evidence | skipped with reason | blocked | not applicable
+- release approval or handoff owner: fresh evidence | stale evidence | skipped with reason | blocked | not applicable
+
 ## Scope Review
 
 - Delivered:
@@ -21,6 +27,13 @@ requests. This is not a separate `/ship` workflow.
 - Extra:
 - Changed:
 - Unverifiable:
+
+## Commit Or PR Hygiene
+
+- branch status:
+- uncommitted changes:
+- commit range or PR diff:
+- linked issue, changelog, or release note:
 
 ## Release Or Handoff Risk
 

@@ -9,6 +9,12 @@ description: Use when diagnosing bugs, failing tests, deployment failures, perfo
 
 Establish facts before fixes. The failure this prevents is changing code based on guesses.
 
+## Direct Invocation
+
+Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
+root routing assumptions and shared non-negotiables before continuing; direct
+invocation changes the entry point, not the hard rules.
+
 ## When to Use
 
 - Bug reports, failing tests, regressions, intermittent failures, or unclear symptoms.

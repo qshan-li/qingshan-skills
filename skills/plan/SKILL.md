@@ -9,6 +9,12 @@ description: Use when a clarified software engineering goal needs task decomposi
 
 Turn shared understanding into ordered, verifiable work. The failure this prevents is scope drift plus silent decision theft.
 
+## Direct Invocation
+
+Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
+root routing assumptions and shared non-negotiables before continuing; direct
+invocation changes the entry point, not the hard rules.
+
 ## When to Use
 
 - A clarified goal needs multiple steps or files.
@@ -62,9 +68,16 @@ When a user-approved decision passes this gate, record it before execution in th
 
 If planning identifies a possible durable decision but approval, evidence, or one of the three gates is missing, do not record it as durable. State the deferral reason in the plan.
 
+## Handoff Input
+
+When planning follows `/clarify` or `/investigate`, read the current task
+artifact produced from `docs/templates/task-handoff.md`, or root `STATE.md` when
+no project task artifact exists. Treat missing acceptance criteria, required
+evidence, or unresolved User Challenge decisions as stop conditions.
+
 ## Workflow
 
-1. Re-read the clarified goal and acceptance criteria.
+1. Re-read the clarified goal, acceptance criteria, and any Task Handoff artifact.
 2. List files or modules likely affected and files that should remain untouched.
 3. Grade decisions:
    - Mechanical: choose using project conventions.

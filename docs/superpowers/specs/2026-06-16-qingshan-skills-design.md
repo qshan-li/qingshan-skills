@@ -33,6 +33,24 @@ The system intentionally avoids the heavier parts of the references:
 - no top-level skill for every sub-process
 - no workflow ceremony for tasks whose risk does not justify it
 
+## Source Failure Model
+
+The source frameworks should not be copied by feature list. Their real value is the failure model each one exposes.
+
+| Source | Core failure model | qingshan adaptation |
+| --- | --- | --- |
+| gstack | AI steals user decisions by either asking about trivial choices or silently deciding important ones | `/plan` and the root router must grade decisions as Mechanical, Taste, or User Challenge |
+| Superpowers | Agents invent excuses to skip discipline when work feels simple, urgent, or obvious | Every skill must include hard rules, rationalization prevention, and pressure tests |
+| GSD | Long sessions silently degrade reasoning quality, and the user cannot reliably feel it happening | `/execute` must include a Context Gate that decides when to use fresh context or subagents |
+| Grill Me | The agent and user often believe they share understanding before they actually do | `/clarify` must produce shared understanding before downstream planning or execution |
+
+This turns the design from "a smaller bundle of four frameworks" into a failure-driven methodology:
+
+- consensus layer: force out what is actually being done
+- orchestration layer: protect decisions and sequence work
+- discipline layer: prevent shortcuts
+- context layer: preserve reasoning quality over time
+
 ## Core Structure
 
 The top-level system has six skills:
@@ -52,7 +70,7 @@ TDD, review, and shipping are not top-level skills:
 - Review is a verification dimension inside `/verify`.
 - Ship is the release path after `/verify` passes.
 
-This keeps the top-level vocabulary small while preserving the important disciplines.
+This keeps the top-level vocabulary small while preserving the important disciplines. The skills are organized by failure mode, not by source framework.
 
 ## Task Taxonomy
 
@@ -224,6 +242,17 @@ Handoff:
 
 `/execute` performs all engineering changes, not only feature development. It must preserve scope and project style.
 
+Before editing, `/execute` must pass a Context Gate:
+
+- Can the task be completed accurately in the current context?
+- Does the task touch multiple modules, runtimes, or ownership boundaries?
+- Is the plan long enough that execution details may crowd out the original intent?
+- Is the work independent enough to delegate safely?
+- Has the conversation been compressed, interrupted, or filled with unrelated exploration?
+- Would a fresh worker reduce risk more than it adds coordination cost?
+
+If the answer indicates context risk, `/execute` should use fresh context or subagents. The main session keeps the plan, constraints, and review responsibility; workers receive only the task, relevant context, boundaries, and verification requirements. Fresh context is a reliability tool, not an excuse to fragment simple work.
+
 For high-risk code changes, TDD is the default:
 
 1. write the failing test
@@ -362,6 +391,24 @@ The implementation plan should produce:
 - six skill files under `skills/`
 - prompt templates only where fresh-context execution or review requires them
 - docs for philosophy and installation
-- tests or validation checks for skill structure and required sections
+- structure checks for required skill sections
+- pressure tests for agent behavior under realistic failure scenarios
+
+## Skill Pressure Tests
+
+Skills should be tested like code. A useful test starts with a scenario where an agent would naturally take the wrong shortcut, then verifies that the skill prevents it.
+
+Required pressure scenarios:
+
+- Simple task over-processing: a typo or small docs fix should not trigger a heavyweight plan.
+- Feature ambiguity: a vague feature request should enter `/clarify` instead of direct implementation.
+- User decision theft: an architecture or product trade-off should be classified as Taste or User Challenge, not silently decided.
+- Bug guesswork: a bug report should enter `/investigate` and collect evidence before editing.
+- Performance guesswork: a performance request should establish a baseline before optimization.
+- Context rot: a large cross-module task should trigger the `/execute` Context Gate and consider fresh context.
+- Verification shortcut: an agent should not claim completion without command output or task-specific proof.
+- Scope creep: an agent should reject unrelated cleanup during a focused change.
+
+These tests do not need to simulate every runtime. They should verify the methodology's behavioral contract: when the agent is tempted to skip discipline, the skill text pulls it back.
 
 The previous eight-skill outline is superseded by this six-skill structure. A future split requires explicit design review and user approval.

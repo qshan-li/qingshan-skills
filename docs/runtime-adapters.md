@@ -121,16 +121,17 @@ skills for a specific runtime.
 
 | Runtime | Adapter surface | Use |
 | --- | --- | --- |
-| Claude Code | `~/.claude/skills`, optional `.claude-plugin/plugin.json`, Claude-specific wrappers | Local skill loading and optional Claude-only enhancements such as tool declarations, hooks, forked context, or subagents |
-| Codex | `$CODEX_HOME/skills`, `.agents/skills`, optional `.codex-plugin/plugin.json`, optional `agents/openai.yaml` | Local skill loading, plugin distribution, UI metadata, invocation policy, and dependency declarations |
-| Cursor | Project rules or prompt wrapper | Make the root router and six workflows visible to Cursor without changing the canonical Agent Skills files |
+| Claude Code | `~/.claude/skills`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Local skill loading, plugin marketplace distribution, optional Claude-only enhancements such as tool declarations, hooks, forked context, or subagents |
+| Codex | `$CODEX_HOME/skills`, `.codex-plugin/plugin.json` | Local skill loading, plugin distribution, UI metadata, invocation policy, and dependency declarations |
+| Cursor | `.cursor/rules/qingshan-skills.mdc` | Project rules with `alwaysApply: true` providing root router, ETHOS, and all six workflow skill summaries |
+| Generic agents | `~/.agents/skills` | Local skill loading for runtimes that scan a personal skill folder (OpenCode, Gemini CLI, etc.) |
 
 ## Current Scope
 
-The repository currently supports local Claude Code and Codex installation through
-`scripts/sync-global-skills.sh`. That script links the canonical skill folders
-into both runtimes.
+The repository supports Claude Code, Codex, Cursor, and generic agent runtimes:
 
-Do not add `.claude-plugin` or `.codex-plugin` until there is a real
-distribution need, such as publishing a plugin, bundling MCP configuration,
-declaring hooks, or sharing a stable package with other users.
+- **Claude Code and Codex**: `scripts/sync-global-skills.sh` or `./setup` links the canonical skill folders into both runtimes. Plugin manifests (`.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`) enable marketplace and plugin-system distribution.
+- **Cursor**: `.cursor/rules/qingshan-skills.mdc` provides a complete summary of the methodology as a project rule.
+- **Generic agents**: `./setup` links skills into `~/.agents/skills/` for runtimes that scan that directory.
+
+Runtime-specific fields, manifests, hooks, and UI metadata remain outside the canonical `SKILL.md` files.

@@ -1,0 +1,40 @@
+{
+  "name": "qingshan-skills",
+  "description": "Lightweight software development methodology for AI coding agents: risk-graded workflows, surgical changes, fresh context, and verify-before-conclude",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "liqingshan"
+  },
+  "homepage": "https://github.com/qshan-li/qingshan-skills",
+  "repository": "https://github.com/qshan-li/qingshan-skills",
+  "keywords": [
+    "skills",
+    "methodology",
+    "tdd",
+    "workflow",
+    "verification",
+    "engineering"
+  ],
+  "skills": [
+    "./skills/qingshan-skills",
+    "./skills/clarify",
+    "./skills/plan",
+    "./skills/execute",
+    "./skills/investigate",
+    "./skills/verify",
+    "./skills/reflect"
+  ],
+  "interface": {
+    "displayName": "qingshan-skills",
+    "shortDescription": "Risk-graded workflows, surgical changes, and verify-before-conclude for coding agents",
+    "category": "Coding",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "defaultPrompts": [
+      "I have a software engineering task to work on.",
+      "Help me fix a bug in this project.",
+      "I need to plan a feature implementation."
+    ],
+    "websiteUrl": "https://github.com/qshan-li/qingshan-skills"
+  }
+}

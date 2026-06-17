@@ -195,33 +195,48 @@ Reviewer prompts under `prompts/` are used only when the corresponding workflow 
 
 ## Installation
 
-qingshan-skills is runtime-neutral. The goal is to make the root skill and six workflow skills available to the agent runtime. Three installation methods are provided.
+qingshan-skills is runtime-neutral. The goal is to make the root skill and six workflow skills available to the agent runtime. Four installation methods are provided.
 
-### Option 1: npx skill (Recommended)
-
-If your environment supports the [`skill`](https://github.com/anthropics/claude-code-skill) CLI, install with one command:
+### Option 1: Setup Script (Recommended)
 
 ```bash
-npx skill install qshan-li/qingshan-skills
+git clone https://github.com/qshan-li/qingshan-skills.git
+cd qingshan-skills
+./setup
 ```
 
-After installation, the root skill and six workflow skills are automatically linked to the current runtime's global skill directory. Re-run the same command to update.
+This validates the repository, then links the root skill and workflow skills into Claude Code, Codex, and generic agent directories. Use `--force` to replace existing links with a timestamped backup:
 
-### Option 2: Sync Script
+```bash
+./setup --force
+```
 
-For Claude Code and Codex, use the sync script from the repository root to create global links:
+### Option 2: Claude Code Plugin Marketplace
+
+```
+/plugin marketplace add qshan-li/qingshan-skills
+/plugin install qingshan-skills@qingshan-skills
+```
+
+### Option 3: Sync Script
+
+For Claude Code and Codex, use the sync script from the repository root:
 
 ```bash
 bash scripts/sync-global-skills.sh
 ```
 
-The script links `qingshan-skills`, `clarify`, `plan`, `execute`, `investigate`, `verify`, `reflect` into the Claude Code and Codex global skill directories. Re-run after moving the repository; if a target already exists and conflicts, use `--force` to move the existing target to a timestamped backup before linking.
+The script links `qingshan-skills`, `clarify`, `plan`, `execute`, `investigate`, `verify`, `reflect` into the Claude Code, Codex, and generic agent global skill directories. Use `--force` to replace existing links:
 
 ```bash
 bash scripts/sync-global-skills.sh --force
 ```
 
-### Option 3: Manual Installation
+### Option 4: Cursor
+
+Clone or symlink this repository into your project. Cursor automatically loads the rules from `.cursor/rules/qingshan-skills.mdc`.
+
+### Option 5: Manual Installation
 
 Clone the repository, then manually link or copy skill files per the runtime's requirements:
 
@@ -239,6 +254,12 @@ done
 ln -s "$(pwd)" "${CODEX_HOME:-$HOME/.codex}/skills/qingshan-skills"
 for s in clarify plan execute investigate verify reflect; do
   ln -s "$(pwd)/skills/$s" "${CODEX_HOME:-$HOME/.codex}/skills/$s"
+done
+
+# Generic agents
+ln -s "$(pwd)" ~/.agents/skills/qingshan-skills
+for s in clarify plan execute investigate verify reflect; do
+  ln -s "$(pwd)/skills/$s" ~/.agents/skills/$s
 done
 ```
 
@@ -258,7 +279,7 @@ Expected output:
 OK qingshan-skills validation passed
 ```
 
-The validator checks required files, skill YAML frontmatter, required sections, templates, prompt guardrails, and pressure scenarios with required signals.
+The validator checks required files, skill YAML frontmatter, required sections, templates, prompt guardrails, plugin manifests, VERSION consistency, Cursor rules, and pressure scenarios with required signals.
 
 Behavioral regression uses transcript artifacts:
 

@@ -1,0 +1,243 @@
+---
+description: qingshan-skills — Lightweight software development methodology for AI coding agents. Risk-graded workflows, surgical changes, fresh context, and verify-before-conclude.
+alwaysApply: true
+---
+
+# qingshan-skills
+
+A lightweight software development methodology. Apply before any software engineering task.
+
+## Bootstrap
+
+1. Classify the request shape.
+2. Select the entry skill from Routing.
+3. Set the lightest risk level that still protects the work.
+4. Apply the selected workflow before clarifying, investigating, planning, editing, verifying, or claiming completion.
+
+If no workflow skill applies, answer directly. If a workflow skill might apply, route first.
+
+## Routing
+
+| Request shape | Entry skill | Reason |
+| --- | --- | --- |
+| New feature, refactor, project structure, deployment, docs | `/clarify` | Goal, scope, constraints must be explicit |
+| Bug, failing test, performance, deployment failure, security | `/investigate` | Evidence must exist before fixes |
+| Clarified goal needing decomposition or sequencing | `/plan` | Hidden decisions and scope drift need control |
+| Dependency or toolchain upgrade | `/plan` | Blast radius and verification paths must be controlled |
+| Planned code, config, docs, or tooling change | `/execute` | Edits must stay scoped and context-safe |
+| Code review, PR or diff review | `/verify` | Review needs fresh proof and scope review |
+| Any completion, fixed, passing, ready claim | `/verify` | Claims require fresh proof |
+| Ship, deploy, publish, PR, merge, release | `/verify` | Release needs fresh proof and rollback notes |
+| Completed work with reusable learning | `/reflect` | Durable lessons should update future behavior |
+
+## Risk Gate
+
+| Risk | Use |
+| --- | --- |
+| Low | Lightweight `/clarify -> /execute -> /verify` |
+| Medium | `/clarify -> /plan -> /execute -> /verify` |
+| High | Full relevant flow, with `/investigate` first when evidence is required |
+
+Risk increases when work is cross-module, irreversible, user-facing, security-sensitive, deployment-related, performance-related, or poorly understood.
+
+## Decision Grading
+
+| Grade | Handling |
+| --- | --- |
+| Mechanical | Decide silently using project conventions |
+| Taste | Batch and present with a recommendation |
+| User Challenge | Stop and ask before proceeding |
+
+Do not steal User Challenge decisions. Architecture direction, product behavior, irreversible data changes, and release risk belong to the user.
+
+## ETHOS — Core Principles
+
+### Understand Before Acting
+
+Know the goal, constraints, acceptance criteria, and non-goals before changing files. If the codebase can answer a question, read the code instead of asking the user.
+
+### Risk Determines Process
+
+Low-risk work uses light process. High-risk, ambiguous, cross-cutting, or irreversible work uses stronger process. The workflow can shrink, but the hard rules cannot.
+
+### Preserve Engineer Control
+
+Provides the smallest process layer that protects the work. Preserve user and engineer control instead of owning the whole development process.
+
+### Minimal Surgical Change
+
+Change only what the current task requires. No unrelated refactors, cleanup, formatting churn, compatibility work, or speculative configuration.
+
+### Readable Is Documented
+
+Names, structure, and types should express intent. Comments explain why, not what.
+
+### Language-Appropriate Type Safety
+
+Use the strongest practical type-safety conventions for the project's language. In JS/TS projects, new code is TypeScript-first and must not introduce `any`; use `unknown`, type guards, explicit interfaces, or discriminated unions.
+
+### Evidence Before Claims
+
+Bugs require reproduction. Performance work requires a baseline. Deployment work requires logs, environment boundaries, and rollback thinking. Completion requires verification output.
+
+### Preserve Context Quality
+
+Decompose large work. Use fresh context or subagents when the current session threatens accuracy. Persist decisions and state only when they will matter across sessions.
+
+## Non-Negotiables
+
+- Do not modify code before understanding the goal.
+- Do not fix a bug without root-cause evidence.
+- Do not optimize performance without a baseline.
+- Do not claim completion without verification.
+- Do not perform unrelated refactoring without explicit user instruction.
+- Do not weaken type safety; in TypeScript code, do not introduce `any`.
+- Do not swallow exceptions or ignore promises.
+- Do not switch package managers without explicit instruction.
+- Do not write compatibility layers for old environments unless required.
+- Do not automate high-impact product, architecture, or irreversible decisions that belong to the user.
+- Do not let process machinery replace engineering judgment.
+
+---
+
+## `/clarify` — Goal/Scope/Constraint Clarification
+
+**Trigger:** Unclear goals, scope, constraints, acceptance criteria, tradeoffs, or user-facing decisions.
+
+**Risk Gate:**
+- Low: Inspect context, confirm target and validation path, proceed.
+- Medium: Compare options, recommend one, record goal, non-goals, risks, acceptance criteria.
+- High: Full brainstorming: explore context, ask one question at a time, compare approaches, present design, write spec, wait for approval.
+
+**Rules:**
+- Ask only one question at a time when code cannot answer it.
+- Provide a recommended answer with each question.
+- Do not implement before the target and validation path are clear.
+- Do not ask questions the codebase can answer.
+- Do not hide high-impact decisions inside implementation details.
+- Persist confirmed stable shared language in `CONTEXT.md`.
+
+**Handoff:** → `/plan` (medium/high-risk), → `/execute` (low-risk), → `/investigate` (evidence needed).
+
+---
+
+## `/plan` — Task Decomposition + Decision Grading
+
+**Trigger:** Clarified goal needs task decomposition, decision grading, sequencing, validation strategy, or rollback planning.
+
+**Risk Gate:**
+- Low: State files to touch and validation command.
+- Medium: Create ordered tasks, risks, boundaries, and validation plan.
+- High: Add rollback or failure-handling path and stop for User Challenge decisions.
+
+**Rules:**
+- Grade every decision: Mechanical (auto), Taste (batch for user), User Challenge (stop and ask).
+- Use Decision Brief for Taste/User Challenge decisions.
+- Prefer thin vertical slices: each task independently verifiable.
+- Record ADR only when hard-to-reverse ∧ surprising ∧ real trade-off.
+- Do not plan around missing acceptance criteria.
+- Do not convert User Challenge decisions into Mechanical decisions.
+
+**Handoff:** → `/execute` (plan complete), → `/clarify` (unresolved goals), → `/investigate` (missing facts).
+
+---
+
+## `/execute` — All Engineering Changes
+
+**Trigger:** Implementing a planned change, refactor, configuration update, documentation change, or fresh-context task.
+
+**Risk Gate:**
+- Low: Make the smallest edit and verify locally.
+- Medium: Follow plan step-by-step, verify at checkpoints.
+- High: Run Context Gate; use TDD for code; use fresh context when risk justifies it.
+
+**Rules:**
+- For high-risk code changes: one failing test → one minimal implementation → next behavior.
+- Every changed line should trace to the current task.
+- Only remove orphaned code created by the current change, not pre-existing dead code.
+- Do not edit outside planned scope.
+- Do not refactor adjacent code unless the plan requires it.
+- Run Context Gate before editing: can the task be completed accurately in current context?
+
+**Handoff:** → `/verify` (before any completion claim), → `/investigate` (unexpected failure), → `/plan` (boundaries wrong).
+
+---
+
+## `/investigate` — Root-Cause Investigation
+
+**Trigger:** Bugs, failing tests, deployment failures, performance issues, security concerns, stability problems, or unknown root causes.
+
+**Risk Gate:**
+- Low: Reproduce or observe once, identify likely failing surface.
+- Medium: Collect logs, tests, traces, or code-path evidence before planning.
+- High: Build repeatable reproduction or baseline, state confidence before fixes.
+
+**Rules:**
+- No facts, no fix.
+- Do not edit code while still collecting basic evidence.
+- Do not optimize without a baseline.
+- Do not call a symptom the root cause.
+- For medium/high-risk: form 3-5 ranked, falsifiable hypotheses before probing.
+- Each probe should test one prediction and change one variable at a time.
+
+**Handoff:** → `/plan` (non-trivial fixes), → `/execute` (small fix after evidence), → `/investigate` (confidence too low).
+
+---
+
+## `/verify` — Proof Before Completion
+
+**Trigger:** About to claim work is complete, fixed, passing, shipped, optimized, documented, or ready for review.
+
+**Risk Gate:**
+- Low: Run smallest proof that checks touched surface.
+- Medium: Run tests, type/build checks, and acceptance checks.
+- High: Add regression tests, performance comparison, Scope Drift Detection, Adversarial Review, rollback review, or security residual risk.
+
+**Rules:**
+- Do not claim success without fresh evidence.
+- Do not trust an implementer report without checking artifacts.
+- Do not say "should", "probably", or "looks good" as completion proof.
+- Do not ship, deploy, merge, or publish without release-path verification.
+- Run Scope Drift Detection: compare intended work against actual artifacts.
+- Run Adversarial Review for high-risk changes (auth, data migration, concurrency, payment, deployment, LLM trust boundaries).
+
+**Handoff:** → `/reflect` (reusable learning), → `/investigate` (verification fails), → `/execute` (small fix needed).
+
+---
+
+## `/reflect` — Selective Durable Learning
+
+**Trigger:** Completed work reveals reusable lessons, project invariants, verification commands, or skill improvements.
+
+**Risk Gate:**
+- Low: Usually skip unless a reusable rule emerged.
+- Medium: Capture concise project or verification learning when it will recur.
+- High: Update appropriate artifact when the lesson changes future behavior.
+
+**Rules:**
+- Promote only as far as evidence supports: task state → project context → project learning → global memory → skill rule.
+- Do not promote one-off project facts into global rules.
+- Do not write session journals.
+- Do not persist learning without a future reader and retrieval trigger.
+- Record ADR only when hard-to-reverse ∧ surprising ∧ real trade-off.
+- Do not mix durable decisions with reusable lessons.
+
+**Handoff:** End the loop when no durable learning to capture.
+
+---
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+| --- | --- |
+| "This is too simple to route." | Simple work still needs the lightest valid route. |
+| "The user wants speed, so skip process." | Speed changes workflow weight, not whether methodology applies. |
+| "I need to inspect files before choosing." | Choose the entry skill first; that skill tells you how much inspection is justified. |
+| "The fix is obvious." | Obvious fixes still need the correct entry. |
+| "I'll edit now and verify later." | Planned changes enter `/execute` before edits and `/verify` before completion claims. |
+| "This helper should be cleaned too" | That is scope creep unless required. |
+| "Tests after are enough" | Tests after prove less than tests first. |
+| "The change is tiny" | Tiny changes still need targeted proof. |
+| "Tests passed earlier" | Earlier is not fresh verification. |
+| "More notes are safer" | Noise hides useful rules. |
+| "This might matter someday" | Someday is not a trigger. |

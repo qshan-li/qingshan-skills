@@ -159,10 +159,35 @@ validate_unique_signal_ids() {
   [[ -z "$duplicates" ]] || fail "duplicate Required signals id(s): ${duplicates}"
 }
 
+validate_json() {
+  local path="$1"
+  require_file "$path"
+  if command -v jq >/dev/null 2>&1; then
+    jq empty "$path" 2>/dev/null || fail "$path: invalid JSON"
+  elif command -v python3 >/dev/null 2>&1; then
+    python3 -c "import json; json.load(open('$path'))" 2>/dev/null || fail "$path: invalid JSON"
+  else
+    echo "WARN: skipping JSON validation for $path (no jq or python3)" >&2
+  fi
+}
+
+validate_plugin_manifest() {
+  local path="$1"
+  validate_json "$path"
+  jq -e '.name' "$path" >/dev/null 2>&1 || fail "$path: missing 'name' field"
+  jq -e '.description' "$path" >/dev/null 2>&1 || fail "$path: missing 'description' field"
+  jq -e '.version' "$path" >/dev/null 2>&1 || fail "$path: missing 'version' field"
+}
+
 require_file "SKILL.md"
 require_file "ETHOS.md"
 require_file "CONTEXT.md"
 require_file "README.md"
+require_file "VERSION"
+require_file ".claude-plugin/plugin.json"
+require_file ".claude-plugin/marketplace.json"
+require_file ".codex-plugin/plugin.json"
+require_file ".cursor/rules/qingshan-skills.mdc"
 require_file "docs/philosophy.md"
 require_file "docs/installation.md"
 require_file "docs/runtime-adapters.md"
@@ -185,6 +210,21 @@ require_file "tests/behavior/README.md"
 require_file "tests/runtime-smoke/README.md"
 
 validate_root_skill "SKILL.md"
+
+validate_plugin_manifest ".claude-plugin/plugin.json"
+validate_plugin_manifest ".claude-plugin/marketplace.json"
+validate_plugin_manifest ".codex-plugin/plugin.json"
+
+require_text ".cursor/rules/qingshan-skills.mdc" "alwaysApply: true"
+
+# Validate VERSION format and consistency with plugin manifests
+version="$(cat VERSION | tr -d '[:space:]')"
+[[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "VERSION must be semver (x.y.z), got: ${version}"
+
+claude_version="$(jq -r '.version' .claude-plugin/plugin.json)"
+codex_version="$(jq -r '.version' .codex-plugin/plugin.json)"
+[[ "$version" == "$claude_version" ]] || fail "VERSION (${version}) != .claude-plugin/plugin.json version (${claude_version})"
+[[ "$version" == "$codex_version" ]] || fail "VERSION (${version}) != .codex-plugin/plugin.json version (${codex_version})"
 
 require_text "SKILL.md" "Ship, deploy, publish, PR, merge, release"
 require_text "SKILL.md" "Code review, PR or diff review"

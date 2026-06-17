@@ -59,6 +59,17 @@ qingshan-skills/
 ├── SKILL.md                     # Root skill: session-bootstrap routing enforcement
 ├── ETHOS.md                     # Core principles referenced by every skill
 ├── AGENTS.md                    # This file
+├── VERSION                      # Semantic version
+├── setup                        # One-command installer for all runtimes
+│
+├── .claude-plugin/
+│   ├── plugin.json              # Claude Code plugin manifest
+│   └── marketplace.json         # Claude Code marketplace manifest
+├── .codex-plugin/
+│   └── plugin.json              # Codex plugin manifest
+├── .cursor/
+│   └── rules/
+│       └── qingshan-skills.mdc  # Cursor rules (alwaysApply)
 │
 ├── skills/
 │   ├── clarify/SKILL.md         # Goal/scope/constraint clarification (← Matt Pocock's Grill Me + Superpowers brainstorming)
@@ -78,6 +89,8 @@ qingshan-skills/
     ├── references.md            # Source skill deep-dive
     ├── philosophy.md            # Methodology philosophy
     ├── installation.md          # Installation guide
+    ├── runtime-adapters.md      # Runtime adapter boundary
+    ├── testing.md               # Testing layers
     └── superpowers/specs/2026-06-16-qingshan-skills-design.md   # Authoritative design
 ```
 

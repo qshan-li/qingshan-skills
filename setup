@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# qingshan-skills installer
+# Links the canonical skills into Claude Code, Codex, and generic agent directories.
+
 skill_links=(
   "qingshan-skills:."
   "clarify:skills/clarify"
@@ -11,6 +14,7 @@ skill_links=(
   "reflect:skills/reflect"
 )
 force=false
+skip_validation=false
 
 fail() {
   echo "ERROR: $*" >&2
@@ -19,26 +23,25 @@ fail() {
 
 usage() {
   cat <<'USAGE'
-Usage: bash scripts/sync-global-skills.sh [--force]
+Usage: ./setup [options]
 
-Install this repository's root skill and workflow skills for Claude Code,
-Codex, and generic agent runtimes.
+Install qingshan-skills for Claude Code, Codex, and generic agent runtimes.
 
 Options:
-  --force   Move an existing conflicting target aside before linking this repo.
-  -h, --help
-            Show this help.
+  --force         Move existing conflicting targets aside before linking.
+  --skip-validation  Skip the structure validation step.
+  -h, --help      Show this help.
 
 Environment:
-  CLAUDE_SKILLS_DIR   Override Claude Code skills directory.
-  CODEX_SKILLS_DIR    Override Codex skills directory.
+  CLAUDE_SKILLS_DIR   Override Claude Code skills directory (default: ~/.claude/skills).
+  CODEX_SKILLS_DIR    Override Codex skills directory (default: ~/.codex/skills).
   CODEX_HOME          Used when CODEX_SKILLS_DIR is not set.
-  AGENTS_SKILLS_DIR   Override generic agent skills directory.
+  AGENTS_SKILLS_DIR   Override generic agent skills directory (default: ~/.agents/skills).
 USAGE
 }
 
 repo_root() {
-  cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P
+  cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P
 }
 
 next_backup_path() {
@@ -73,35 +76,37 @@ install_link() {
     current_target="$(readlink -f "$link_path" 2>/dev/null || true)"
 
     if [[ "$current_target" == "$source_dir" ]]; then
-      echo "${runtime}: already linked at ${link_path}"
+      echo "  ${runtime}: already linked at ${link_path}"
       return
     fi
 
     if [[ "$force" != true ]]; then
-      fail "${runtime}: ${link_path} already points elsewhere. Re-run with --force to replace it."
+      echo "  ${runtime}: skipped ${link_path} (already points elsewhere, use --force to replace)"
+      return
     fi
 
     backup_path="$(next_backup_path "$link_path")"
     mv "$link_path" "$backup_path"
     ln -s "$source_dir" "$link_path"
-    echo "${runtime}: replaced existing symlink and saved backup at ${backup_path}"
+    echo "  ${runtime}: replaced existing symlink, backup at ${backup_path}"
     return
   fi
 
   if [[ -e "$link_path" ]]; then
     if [[ "$force" != true ]]; then
-      fail "${runtime}: ${link_path} already exists. Re-run with --force to move it aside."
+      echo "  ${runtime}: skipped ${link_path} (already exists, use --force to replace)"
+      return
     fi
 
     backup_path="$(next_backup_path "$link_path")"
     mv "$link_path" "$backup_path"
     ln -s "$source_dir" "$link_path"
-    echo "${runtime}: moved existing target to ${backup_path}"
+    echo "  ${runtime}: moved existing target to ${backup_path}"
     return
   fi
 
   ln -s "$source_dir" "$link_path"
-  echo "${runtime}: linked ${link_path} -> ${source_dir}"
+  echo "  ${runtime}: linked ${link_path} -> ${source_dir}"
 }
 
 install_links() {
@@ -113,6 +118,7 @@ install_links() {
   local relative_source
   local source_dir
 
+  echo "Installing for ${runtime}..."
   for spec in "${skill_links[@]}"; do
     link_name="${spec%%:*}"
     relative_source="${spec#*:}"
@@ -125,6 +131,9 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --force)
       force=true
+      ;;
+    --skip-validation)
+      skip_validation=true
       ;;
     -h|--help)
       usage
@@ -144,11 +153,24 @@ claude_skills_dir="${CLAUDE_SKILLS_DIR:-${HOME}/.claude/skills}"
 codex_skills_dir="${CODEX_SKILLS_DIR:-${codex_base}/skills}"
 agents_skills_dir="${AGENTS_SKILLS_DIR:-${HOME}/.agents/skills}"
 
-(
-  cd "$source_dir"
-  bash scripts/validate-skills.sh
-)
+echo "qingshan-skills installer"
+echo "========================="
+echo ""
+
+if [[ "$skip_validation" != true ]]; then
+  echo "Validating repository..."
+  (cd "$source_dir" && bash scripts/validate-skills.sh)
+  echo ""
+else
+  echo "Skipping validation (--skip-validation)."
+  echo ""
+fi
 
 install_links "Claude Code" "$claude_skills_dir" "$source_dir"
+echo ""
 install_links "Codex" "$codex_skills_dir" "$source_dir"
+echo ""
 install_links "Generic Agent" "$agents_skills_dir" "$source_dir"
+echo ""
+
+echo "Done. Run 'bash scripts/validate-skills.sh' to verify."

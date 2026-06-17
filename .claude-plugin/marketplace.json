@@ -1,0 +1,19 @@
+{
+  "name": "qingshan-skills",
+  "description": "Lightweight software development methodology for AI coding agents",
+  "version": "0.1.0",
+  "owner": {
+    "name": "liqingshan"
+  },
+  "plugins": [
+    {
+      "name": "qingshan-skills",
+      "description": "Risk-graded workflows, surgical changes, fresh context, and verify-before-conclude for coding agents",
+      "version": "0.1.0",
+      "source": "./",
+      "author": {
+        "name": "liqingshan"
+      }
+    }
+  ]
+}

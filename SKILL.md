@@ -15,6 +15,8 @@ Read `ETHOS.md` before applying any core skill. Its non-negotiables override con
 
 Apply this root skill before responding to or acting on any software engineering request.
 
+Respond in the same natural language the user is using in the current conversation, unless they explicitly request another language. This governs output, not source: skill documents stay English by convention; replies follow the user.
+
 1. Classify the request shape.
 2. Select the entry skill from Routing.
 3. Set the lightest risk level that still protects the work.
@@ -102,8 +104,8 @@ Use soft dependencies to reduce risk without forcing ceremony:
 
 - Keep changes surgical.
 - Prefer existing project patterns.
-- Use TypeScript for new JS/TS code.
-- Do not introduce `any`.
+- Use language-appropriate type safety; in JS/TS projects, use TypeScript for new code.
+- Do not introduce `any` in TypeScript code.
 - Do not swallow errors or ignore promises.
 - Do not claim completion without verification output.
 - Do not use fresh context as a substitute for clear task boundaries.

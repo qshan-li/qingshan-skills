@@ -4,7 +4,7 @@ Personal AI-driven development methodology, distilled from gstack, Superpowers, 
 
 ## Project Goal
 
-Build a personal skill library that integrates the best patterns from four source skill systems into a cohesive, opinionated methodology. The result is not a copy or a wrapper — it is a **distillation** filtered through a specific engineering philosophy: minimal, surgical, TypeScript-first, verification-driven.
+Build a personal skill library that integrates the best patterns from four source skill systems into a cohesive, opinionated methodology. The result is not a copy or a wrapper — it is a **distillation** filtered through a specific engineering philosophy: minimal, surgical, type-safety-first, verification-driven.
 
 ### What This Project Produces
 

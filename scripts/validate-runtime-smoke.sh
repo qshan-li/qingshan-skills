@@ -15,29 +15,113 @@ fi
 
 command -v codex >/dev/null 2>&1 || fail "Codex CLI not found; runtime smoke currently supports Codex CLI"
 
-output_file="$(mktemp)"
-trap 'rm -f "$output_file"' EXIT
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
 
-prompt="Runtime smoke test for qingshan-skills. Do not edit files. Do not run write commands. Read the repository root SKILL.md and ETHOS.md if needed, then answer only with the workflow route for this task: Fix a typo in one sentence of README.md. The answer must include ROUTE: followed by the route."
+print_output() {
+  local name="$1"
+  local output_file="$2"
+  local log_file="$3"
 
-if ! codex exec --sandbox read-only --ask-for-approval never -C "$repo_root" "$prompt" >"$output_file" 2>&1; then
-  cat "$output_file" >&2
-  fail "Codex runtime smoke command failed"
-fi
-
-grep -q "/clarify" "$output_file" || {
-  cat "$output_file" >&2
-  fail "runtime smoke output did not include /clarify"
+  echo "---- ${name} final message ----" >&2
+  if [[ -f "$output_file" ]]; then
+    sed -n '1,160p' "$output_file" >&2 || true
+  else
+    echo "<missing final message file>" >&2
+  fi
+  echo "---- ${name} codex log ----" >&2
+  if [[ -f "$log_file" ]]; then
+    sed -n '1,160p' "$log_file" >&2 || true
+  else
+    echo "<missing codex log file>" >&2
+  fi
 }
 
-grep -q "/execute" "$output_file" || {
-  cat "$output_file" >&2
-  fail "runtime smoke output did not include /execute"
+require_text() {
+  local name="$1"
+  local route="$2"
+  local log_file="$3"
+  local text="$4"
+
+  grep -qiF "$text" <<<"$route" || {
+    print_output "$name" "${tmp_dir}/${name}.out" "$log_file"
+    fail "${name}: output did not include required text: ${text}"
+  }
 }
 
-grep -q "/verify" "$output_file" || {
-  cat "$output_file" >&2
-  fail "runtime smoke output did not include /verify"
+assert_route_only() {
+  local name="$1"
+  local output_file="$2"
+  local log_file="$3"
+  local non_empty_count
+  local route
+
+  non_empty_count="$(grep -c '[^[:space:]]' "$output_file" || true)"
+  if [[ "$non_empty_count" -ne 1 ]]; then
+    print_output "$name" "$output_file" "$log_file"
+    fail "${name}: output must contain exactly one non-empty ROUTE line"
+  fi
+
+  route="$(grep -Eim1 '^[[:space:]]*ROUTE:' "$output_file" || true)"
+  [[ -n "$route" ]] || {
+    print_output "$name" "$output_file" "$log_file"
+    fail "${name}: output did not include a ROUTE line"
+  }
+
+  printf '%s\n' "$route"
 }
+
+run_scenario() {
+  local name="$1"
+  local prompt="$2"
+  local output_file="${tmp_dir}/${name}.out"
+  local log_file="${tmp_dir}/${name}.log"
+  local route
+  local text
+
+  shift 2
+
+  if ! codex exec --sandbox read-only --ephemeral -C "$repo_root" \
+    --output-last-message "$output_file" "$prompt" >"$log_file" 2>&1; then
+    print_output "$name" "$output_file" "$log_file"
+    fail "${name}: Codex runtime smoke command failed"
+  fi
+
+  [[ -s "$output_file" ]] || {
+    print_output "$name" "$output_file" "$log_file"
+    fail "${name}: Codex runtime smoke produced no final message"
+  }
+
+  route="$(assert_route_only "$name" "$output_file" "$log_file")"
+
+  for text in "$@"; do
+    require_text "$name" "$route" "$log_file" "$text"
+  done
+
+  echo "OK runtime smoke scenario passed: ${name}"
+}
+
+common_instruction="Runtime smoke test for qingshan-skills. Do not edit files. Do not run write commands. Read repository root SKILL.md and ETHOS.md if needed. Answer exactly one non-empty line in this format: ROUTE: /skill -> /skill."
+
+run_scenario \
+  "simple-docs-route" \
+  "${common_instruction} Task: Fix a typo in one sentence of README.md." \
+  "/execute" \
+  "/verify"
+
+run_scenario \
+  "ambiguous-clarify-route" \
+  "${common_instruction} Task: Make the onboarding workflow better. What workflow route should be used before implementation?" \
+  "/clarify"
+
+run_scenario \
+  "bug-investigate-route" \
+  "${common_instruction} Task: Users report that login sometimes fails after password reset. What workflow route should be used before any fix?" \
+  "/investigate"
+
+run_scenario \
+  "review-verify-route" \
+  "${common_instruction} Task: Review this repository diff for correctness without making implementation changes." \
+  "/verify"
 
 echo "OK qingshan-skills runtime smoke passed"

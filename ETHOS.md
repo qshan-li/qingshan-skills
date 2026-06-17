@@ -20,9 +20,9 @@ Change only what the current task requires. Do not perform unrelated refactors, 
 
 Names, structure, and types should express intent. Comments explain why, not what.
 
-## Type Safety First
+## Language-Appropriate Type Safety
 
-In JavaScript and TypeScript projects, new code is TypeScript-first. Do not use `any`; use `unknown`, type guards, explicit interfaces, or discriminated unions.
+Use the strongest practical type-safety conventions for the project's language and ecosystem. In JavaScript and TypeScript projects, new code is TypeScript-first and must not introduce `any`; use `unknown`, type guards, explicit interfaces, or discriminated unions.
 
 ## Evidence Before Claims
 
@@ -39,7 +39,7 @@ Decompose large work. Use fresh context or subagents when the current session th
 - Do not optimize performance without a baseline.
 - Do not claim completion without verification.
 - Do not perform unrelated refactoring without explicit user instruction.
-- Do not introduce `any` in TypeScript code.
+- Do not weaken type safety; in TypeScript code, do not introduce `any`.
 - Do not swallow exceptions or ignore promises.
 - Do not switch package managers without explicit instruction.
 - Do not write compatibility layers for old environments unless required.

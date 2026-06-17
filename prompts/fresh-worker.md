@@ -22,7 +22,7 @@ If any input is missing and would change the implementation, return
 - Do not revert or overwrite changes made by others.
 - Do not commit, push, merge, create releases, or change branches.
 - Follow existing project style.
-- Use TypeScript for new JS/TS code and do not introduce `any`.
+- Follow language-appropriate type-safety rules; use TypeScript for new JS/TS code and do not introduce `any`.
 - Run the specified verification before reporting success.
 - Report the exact command, exit status, and relevant output for verification.
 - Do not widen the task to adjacent cleanup, formatting, or abstraction work.

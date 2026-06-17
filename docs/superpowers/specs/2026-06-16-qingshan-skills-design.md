@@ -8,7 +8,7 @@ qingshan-skills is a cross-agent software engineering methodology. It is not a c
 
 - minimal process unless risk requires more
 - surgical changes over broad refactors
-- TypeScript-first implementation discipline
+- language-appropriate type-safety discipline
 - evidence before completion claims
 - fresh context for complex execution
 - reusable learning without knowledge-base noise
@@ -189,9 +189,9 @@ The agent changes only what the current task requires. It does not perform unrel
 
 Names, structure, and types should make intent clear. Comments explain why, not what.
 
-### Type Safety First
+### Language-Appropriate Type Safety
 
-In JavaScript and TypeScript projects, new code should be TypeScript-first. `any` is forbidden. Use `unknown`, type guards, explicit interfaces, or discriminated unions instead.
+Use the strongest practical type-safety conventions for the project's language and ecosystem. In JavaScript and TypeScript projects, new code should be TypeScript-first and must not introduce `any`; use `unknown`, type guards, explicit interfaces, or discriminated unions instead.
 
 ### Evidence Before Claims
 
@@ -272,7 +272,7 @@ Global memory must not duplicate user-level `AGENTS.md` or `CLAUDE.md` instructi
 - Do not optimize performance without a baseline.
 - Do not claim completion without verification.
 - Do not perform unrelated refactoring without explicit user instruction.
-- Do not introduce `any` in TypeScript code.
+- Do not weaken type safety; in TypeScript code, do not introduce `any`.
 - Do not swallow exceptions or ignore promises.
 - Do not switch package managers without explicit instruction.
 - Do not write compatibility layers for old environments unless required.

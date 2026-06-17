@@ -31,7 +31,7 @@ prove.
 ## Layer 3: Transcript Behavior Tests
 
 Transcript tests record a manual or runtime agent run and map required signal
-IDs to evidence.
+IDs to evidence. They are behavior contracts, not black-box runtime proof.
 
 Run:
 
@@ -50,14 +50,25 @@ The validator checks artifact completeness and required scenario coverage:
 `FAIL` and `BLOCKED` transcripts may be kept as historical evidence, but they do
 not satisfy pressure scenario coverage.
 
-It does not judge prose quality or perform NLP matching. That keeps the test
-stable and reviewable.
+It does not judge prose quality, perform NLP matching, or prove that a hosted
+agent runtime will make the same routing choice. That keeps the test stable and
+reviewable.
 
 ## Layer 4: Runtime Integration Tests
 
 Runtime integration tests verify that a real host loads the root router and
 workflow skills correctly. They can use Codex CLI, Claude Code, Cursor wrappers,
 or an ACP adapter.
+
+The current smoke wrapper uses Codex CLI as the smallest black-box check. It
+runs read-only route-selection prompts against the real host. Each final
+response must be exactly one non-empty `ROUTE:` line, and the wrapper checks
+only that route line:
+
+- clear small documentation edit routes through `/execute` and `/verify`
+- ambiguous improvement request routes through `/clarify`
+- bug report routes through `/investigate`
+- review request routes through `/verify` without implementation claims
 
 ACP is a transport and host-integration layer, not the core testing method. Add
 an ACP runner only when cross-runtime behavior needs black-box coverage. Keep it

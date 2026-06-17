@@ -42,3 +42,18 @@ without changing the meaning of the root router or six workflow skills.
 A settled architecture, scope, tool, vendor, release, or reversal choice that
 future sessions should not silently re-litigate. Durable decisions are recorded
 separately from reusable lessons.
+
+## Document Language
+
+The natural language the skill *source files* (`SKILL.md`, `ETHOS.md`, prompts)
+are authored in. For qingshan-skills this is English, fixed by convention for
+portability across the English source systems. Distinct from output language:
+document language governs source files, not replies.
+
+## Output Language
+
+The natural language the agent *replies to the user in* while running a skill.
+Output language follows the user's current conversation language, unless the
+user explicitly requests another language. It is independent of document
+language: English source documents must not pull replies toward English when the
+user is conversing in another language.

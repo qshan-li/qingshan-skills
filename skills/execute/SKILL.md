@@ -86,7 +86,7 @@ access mode for every referenced artifact, stop conditions, and required proof.
 - Do not edit outside the planned scope.
 - Do not edit from direct `/execute` entry when the target, protected boundaries, acceptance criteria, or required proof is missing.
 - Do not keep a changed line that cannot be traced to the current task.
-- Do not introduce `any` in TypeScript code.
+- Follow language-appropriate type-safety rules; do not introduce `any` in TypeScript code.
 - Do not swallow errors, ignore promises, or hide failures.
 - Do not refactor adjacent code unless the plan requires it.
 - Do not clean up pre-existing dead code; only remove orphaned imports, variables, or helpers created by the current change.

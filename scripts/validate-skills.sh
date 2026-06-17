@@ -279,6 +279,7 @@ required_pressure_scenarios=(
   plan-direct-entry-preconditions
   code-review-routing
   runtime-smoke-boundary
+  output-language-mirror
 )
 
 for scenario in "${required_pressure_scenarios[@]}"; do

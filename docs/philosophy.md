@@ -16,7 +16,7 @@ qingshan-skills is organized by failure mode, not by source framework.
 - Use the least process that still protects correctness.
 - Preserve user and engineer control; process should guide work, not own it.
 - Keep edits minimal and scoped.
-- Prefer TypeScript and strong types in JS/TS work.
+- Prefer language-appropriate type safety; in JS/TS work, prefer TypeScript and strong types.
 - Treat evidence as the price of claims.
 - Capture only reusable learning.
 

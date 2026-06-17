@@ -6,16 +6,24 @@ validation.
 
 The current smoke wrapper uses Codex CLI in read-only, ephemeral mode. Each
 prompt must return exactly one non-empty `ROUTE:` line; the script checks that
-route line for the expected workflow skills across four scenarios:
+route line for the expected workflow skills across ten scenarios:
 
-- `simple-docs-route`: a clear small README typo routes through `/execute` and
-  `/verify`
-- `ambiguous-clarify-route`: an underspecified improvement request routes
-  through `/clarify`
+- `new-feature-clarify-route`: new feature work routes through `/clarify`
 - `bug-investigate-route`: an unexplained login failure routes through
   `/investigate` before any fix
+- `planned-work-plan-route`: clarified work needing sequencing, rollback, and
+  validation strategy routes through `/plan`
+- `dependency-upgrade-plan-route`: a TypeScript toolchain upgrade routes through
+  `/plan`
+- `test-system-investigate-route`: unclear flaky CI test improvement routes
+  through `/investigate`
+- `planned-docs-execute-route`: a clear small README typo routes through
+  `/execute` and `/verify`
 - `review-verify-route`: a diff review request routes through `/verify` without
   implementation claims
+- `completion-claim-verify-route`: a completion claim routes through `/verify`
+- `release-verify-route`: a release request routes through `/verify`
+- `learning-reflect-route`: reusable learning routes through `/reflect`
 
 Run them only when host credentials, model cost, and runtime availability are
 acceptable:

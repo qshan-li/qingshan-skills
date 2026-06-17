@@ -63,12 +63,18 @@ or an ACP adapter.
 The current smoke wrapper uses Codex CLI as the smallest black-box check. It
 runs read-only route-selection prompts against the real host. Each final
 response must be exactly one non-empty `ROUTE:` line, and the wrapper checks
-only that route line:
+only that route line across the route shapes covered by root `SKILL.md`:
 
-- clear small documentation edit routes through `/execute` and `/verify`
-- ambiguous improvement request routes through `/clarify`
-- bug report routes through `/investigate`
-- review request routes through `/verify` without implementation claims
+- new feature work routes through `/clarify`
+- bug reports route through `/investigate`
+- clarified work needing sequencing routes through `/plan`
+- dependency or toolchain upgrades route through `/plan`
+- unclear test-system improvements route through `/investigate`
+- clear planned documentation edits route through `/execute` and `/verify`
+- review requests route through `/verify`
+- completion claims route through `/verify`
+- release requests route through `/verify`
+- reusable learning routes through `/reflect`
 
 ACP is a transport and host-integration layer, not the core testing method. Add
 an ACP runner only when cross-runtime behavior needs black-box coverage. Keep it

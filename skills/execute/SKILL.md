@@ -44,10 +44,17 @@ Do not write all tests first and then all implementation. That horizontal patter
 
 ## Handoff and Context Inputs
 
-Before editing, read the plan plus any Task Handoff artifact produced from
-`docs/templates/task-handoff.md`, or root `STATE.md` when no project task
-artifact exists. The inputs must name the goal, owned files, protected
-boundaries, acceptance criteria, and required proof.
+Before editing, read the scoped input that matches the task risk:
+
+- Low risk: the task statement or lightweight target statement, touched files,
+  validation path, and protected boundaries.
+- Medium or high risk: the plan plus any Task Handoff artifact produced from
+  `docs/templates/task-handoff.md`, or root `STATE.md` when no project task
+  artifact exists.
+
+The inputs must name the goal, owned files or touched surface, protected
+boundaries, acceptance criteria, and required proof. If direct `/execute` entry
+lacks those inputs, return to `/clarify` or `/plan` before editing.
 
 Apply only the scoped glossary terms, durable decisions, project lessons, or
 trigger-matched global memory named by the plan, Task Handoff, or context
@@ -61,7 +68,7 @@ access mode for every referenced artifact, stop conditions, and required proof.
 
 ## Workflow
 
-1. Re-read the plan, any Task Handoff artifact, referenced memory, scoped lessons or durable decisions, constraints, protected files, and validation requirements.
+1. Re-read the lightweight target or plan, any Task Handoff artifact, referenced memory, scoped lessons or durable decisions, constraints, protected files, and validation requirements.
 2. Run the Context Gate:
    - Can the task be completed accurately in the current context?
    - Does it touch multiple modules, runtimes, or ownership boundaries?
@@ -77,6 +84,7 @@ access mode for every referenced artifact, stop conditions, and required proof.
 ## Hard Rules
 
 - Do not edit outside the planned scope.
+- Do not edit from direct `/execute` entry when the target, protected boundaries, acceptance criteria, or required proof is missing.
 - Do not keep a changed line that cannot be traced to the current task.
 - Do not introduce `any` in TypeScript code.
 - Do not swallow errors, ignore promises, or hide failures.

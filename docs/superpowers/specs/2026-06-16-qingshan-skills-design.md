@@ -88,6 +88,7 @@ The root skill should run before task work, route by task type, then select the 
 | Test system improvement | `/investigate` or `/plan` | Fix real coverage gaps instead of manufacturing tests for metrics |
 | Documentation, standards, or developer experience | `/clarify` | Serve an actual workflow; avoid decorative documentation |
 | Dependency or toolchain upgrade | `/plan` | Control blast radius and verify build and runtime paths |
+| Code review, PR or diff review, implementation or spec review | `/verify` | Compare intent against artifacts and report scope, quality, and residual risk |
 | Security or stability work | `/investigate` | Start from a threat, incident, or failure model |
 
 Every task type must answer the same baseline questions:
@@ -319,6 +320,13 @@ Handoff:
 
 `/plan` turns a clarified goal into executable work. It should prevent vague tasks, hidden dependencies, and accidental architecture decisions.
 
+Direct `/plan` entry is allowed for dependency upgrades, toolchain upgrades,
+CI changes, and other blast-radius work when the root router can establish a
+lightweight target, acceptance criteria, protected boundaries, and validation
+path. If those prerequisites cannot be established from the request, codebase,
+docs, or task artifacts, `/plan` must route back to `/clarify`; if required
+evidence or baselines are missing, it must route to `/investigate`.
+
 It classifies decisions:
 
 - Mechanical decisions: agent may decide using project conventions.
@@ -343,6 +351,13 @@ Handoff:
 ### `/execute`
 
 `/execute` performs all engineering changes, not only feature development. It must preserve scope and project style.
+
+Low-risk direct execution may use a lightweight target statement instead of a
+formal plan or Task Handoff artifact. Before editing, `/execute` still needs the
+target, touched surface, protected boundaries, acceptance criteria, and required
+proof. Medium and high-risk execution should read the plan and task handoff when
+they exist. If direct `/execute` entry lacks the required inputs, it must return
+to `/clarify` or `/plan` before editing.
 
 Before editing, `/execute` must pass a Context Gate:
 
@@ -518,8 +533,12 @@ Required pressure scenarios:
 - Wrong generalization: an environment-specific lesson should be rewritten as a conditional rule or kept project-local.
 - Skill reinforcement: a repeated or high-risk lesson should be proposed as a skill-rule update instead of staying only in memory.
 - Verification shortcut: an agent should not claim completion without command output or task-specific proof.
+- Direct execute lightweight target: low-risk direct `/execute` should not require a formal plan, but it must still name target, boundaries, acceptance criteria, and proof.
+- Plan direct entry preconditions: direct `/plan` for dependency, toolchain, or CI work must establish prerequisites before decomposing work.
+- Code review routing: review requests should enter `/verify`, not `/clarify` or implementation.
 - Scope creep: an agent should reject unrelated cleanup during a focused change.
 - Methodology bypass: an apparently simple, urgent, or obvious task should still enter the lightest applicable workflow instead of skipping the root routing check.
+- Runtime smoke boundary: hosted runtime smoke tests should remain adapter-level, optional, and explicit opt-in.
 
 These tests do not need to simulate every runtime. They should verify the methodology's behavioral contract: when the agent is tempted to skip discipline, the skill text pulls it back.
 

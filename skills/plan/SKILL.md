@@ -36,6 +36,18 @@ invocation changes the entry point, not the hard rules.
 | Medium | Create ordered tasks, risks, boundaries, and validation plan |
 | High | Add rollback or failure-handling path and stop for User Challenge decisions |
 
+## Direct Entry Preconditions
+
+Direct `/plan` entry is valid when the task already has a clear target or when
+the root router sends dependency upgrades, toolchain upgrades, CI changes, or
+other blast-radius work here first.
+
+Before planning implementation, establish a lightweight target statement,
+acceptance criteria, protected boundaries, and validation path. If those cannot
+be established from the request, codebase, docs, or existing task artifacts,
+return to `/clarify`. If the plan depends on failure evidence, a performance
+baseline, deployment logs, or root-cause facts, return to `/investigate`.
+
 ## Decision Brief
 
 Use a decision brief for every Taste or User Challenge decision. Mechanical decisions do not need a brief; resolve them using project conventions.
@@ -84,7 +96,7 @@ task shape, stack, risk, or artifact. Do not load unbounded memory dumps.
 
 ## Workflow
 
-1. Re-read the clarified goal, acceptance criteria, and any Task Handoff artifact.
+1. Re-read the clarified goal, or establish a direct-entry lightweight target, acceptance criteria, protected boundaries, validation path, and any Task Handoff artifact.
 2. Read relevant durable decisions, project learnings, and trigger-matched global memory that can change architecture, risk, validation, rollback, or user decision boundaries.
 3. List files or modules likely affected and files that should remain untouched.
 4. Grade decisions:
@@ -122,6 +134,7 @@ task shape, stack, risk, or artifact. Do not load unbounded memory dumps.
 ## Outputs
 
 - Ordered tasks.
+- Direct-entry target statement when planning did not follow `/clarify`.
 - Affected and protected files/modules.
 - Decision grades, Decision Briefs, and unresolved approvals.
 - Referenced memory and the trigger that made it relevant.

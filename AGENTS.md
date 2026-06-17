@@ -105,6 +105,16 @@ Common paths: small docs change → `/clarify → /execute → /verify`; bug fix
 - Every skill includes a Rationalization Prevention table
 - Every skill includes a "When NOT to use" section
 
+## Skill Sync (Mandatory)
+
+**Rule:** Whenever any skill-related content in this repo is updated — any `SKILL.md`, the root `SKILL.md`/`ETHOS.md`, anything under `skills/` or `prompts/`, or anything else that materially changes skill behavior — you **must** run the sync script as the final step before considering the task done:
+
+```sh
+scripts/sync-global-skills.sh
+```
+
+This propagates the updated skills into the local test skill installation so changes are actually exercised. Skipping it leaves the test environment stale and means the change is effectively unverified — do not claim completion without running it.
+
 ## Core Philosophy (from CLAUDE.md)
 
 1. **Understand before coding** — if unclear, stop and ask

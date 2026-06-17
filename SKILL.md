@@ -32,6 +32,7 @@ If no workflow skill applies, answer directly. If a workflow skill might apply, 
 | Dependency or toolchain upgrade | `/plan` | Blast radius, compatibility impact, and verification paths must be controlled |
 | Test-system improvement with unclear coverage gap, flaky signal, or failing behavior | `/investigate` | Improve a real signal instead of manufacturing tests for metrics |
 | Planned code, config, docs, or tooling change | `/execute` | Edits must stay scoped and context-safe |
+| Code review, PR or diff review, implementation or spec review | `/verify` | Review requests need fresh proof, scope review, and residual-risk reporting |
 | Any completion, fixed, passing, optimized, or ready claim | `/verify` | Claims require fresh proof |
 | Ship, deploy, publish, PR, merge, release | `/verify` | Release requests need fresh proof, scope review, and rollback or recovery notes before handoff |
 | Completed work with reusable learning | `/reflect` | Durable lessons should update future behavior |

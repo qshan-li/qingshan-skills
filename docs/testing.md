@@ -63,6 +63,18 @@ ACP is a transport and host-integration layer, not the core testing method. Add
 an ACP runner only when cross-runtime behavior needs black-box coverage. Keep it
 in the adapter layer and reuse the same pressure scenario signal IDs.
 
+Run the optional smoke wrapper when host credentials and runtime cost are
+acceptable:
+
+```bash
+QINGSHAN_RUNTIME_SMOKE=1 bash scripts/validate-runtime-smoke.sh
+```
+
+Without `QINGSHAN_RUNTIME_SMOKE=1`, the script reports `SKIP` and exits
+successfully. Runtime smoke tests must stay outside `validate-skills.sh` so core
+methodology validation remains deterministic and does not depend on a hosted
+agent runtime.
+
 ## Test Addition Workflow
 
 1. Add or update a pressure scenario.

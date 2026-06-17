@@ -66,6 +66,20 @@ When context risk justifies a fresh worker, create a packet with
 The packet must include owned files, protected files, a context manifest with
 access mode for every referenced artifact, stop conditions, and required proof.
 
+## Temporary State Cleanup
+
+For low-risk or otherwise simple tasks, `/execute` may dispose of root
+`STATE.md` after the specified verification passes when all of these are true:
+
+- `STATE.md` was used only for current-task continuity.
+- The current task is executed and locally verified.
+- No downstream handoff or `/reflect` candidate needs the state.
+- Cleanup can delete root `STATE.md` or trim the completed task section without
+  deleting unrelated active task state.
+
+If any condition is unclear, leave cleanup pending for `/verify` and report why.
+This is terminal handling for current-task state, not general cleanup.
+
 ## Workflow
 
 1. Re-read the lightweight target or plan, any Task Handoff artifact, referenced memory, scoped lessons or durable decisions, constraints, protected files, and validation requirements.
@@ -79,7 +93,8 @@ access mode for every referenced artifact, stop conditions, and required proof.
 4. For high-risk code changes, write one behavior-focused failing test before production code.
 5. Make the smallest change that satisfies the current task. Every changed line should trace to the task, required proof, or cleanup caused by this change.
 6. Run the specified verification.
-7. Report changed files, verification result, and unresolved concerns.
+7. Dispose of simple completed-task root `STATE.md` when Temporary State Cleanup conditions are met.
+8. Report changed files, verification result, temporary state cleanup status, and unresolved concerns.
 
 ## Hard Rules
 
@@ -95,6 +110,7 @@ access mode for every referenced artifact, stop conditions, and required proof.
 - Do not use fresh context for vague work; narrow the task first.
 - Do not couple tests to private implementation when a public behavior seam exists.
 - Do not batch all tests ahead of implementation for multi-behavior work.
+- Do not clean root `STATE.md` during execution when a downstream handoff, `/reflect` candidate, unresolved verification, or unrelated active task state is present.
 
 ## Rationalization Prevention
 
@@ -107,6 +123,7 @@ access mode for every referenced artifact, stop conditions, and required proof.
 | "A broader abstraction is cleaner" | Cleaner is not a requirement |
 | "A senior engineer would appreciate the abstraction" | If the abstraction is not required by the task, it is over-engineering |
 | "I should write the full test suite first" | TDD needs feedback one behavior at a time |
+| "STATE.md is temporary, so delete it now" | Only completed current-task state with no handoff or reflection dependency may be cleaned during execution |
 
 ## Outputs
 
@@ -114,6 +131,7 @@ access mode for every referenced artifact, stop conditions, and required proof.
 - What changed and why.
 - Referenced memory applied, or confirmation that no referenced memory affected execution.
 - Verification commands and results.
+- Temporary state cleanup status when root `STATE.md` was used.
 - Any concerns, blockers, or deviations from plan.
 
 ## Handoff

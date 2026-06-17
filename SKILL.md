@@ -78,10 +78,27 @@ Record any memory that affects the task in the next handoff, plan, context
 manifest, or verification report. Do not dump whole memory files into context
 when a matching excerpt or artifact reference is enough.
 
+## Temporary State Lifecycle
+
+`STATE.md`, Task Handoff artifacts, and fresh-context packets are current-task
+continuity artifacts, not durable memory. Any workflow that creates or consumes
+one must give it a terminal path before the task is finally closed.
+
+`/execute` may dispose of simple completed-task state after local verification
+when no downstream handoff or `/reflect` needs it. `/verify` owns the cleanup
+gate: it confirms prior cleanup, cleans pending completed-task state before the
+final completion claim, or hands the state to `/reflect` only through a
+structured reflection handoff when durable promotion must consume it first. If
+`/reflect` receives cleanup ownership, it must dispose of the named completed
+task state before ending the loop, even when the promotion gate rejects every
+durable write.
+
+Never delete unrelated active task state.
+
 ## Pipeline
 
 ```text
-/clarify -> /plan -> /execute -> /verify -> /reflect
+/clarify -> /plan -> /execute -> /verify -> /reflect (when durable learning or decisions exist)
       \                         ^
        -> /investigate -> /plan |
 ```

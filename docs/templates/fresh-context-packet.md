@@ -40,6 +40,12 @@ use targeted excerpts with the trigger that made them relevant.
 
 - <command, check, artifact, or manual proof>
 
+## Lifecycle
+
+<Temporary until `/verify` accepts or rejects the worker output. Delete, close,
+or name the project convention that keeps this packet after the current task is
+closed.>
+
 ## Stop Conditions
 
 - Return `NEEDS_CONTEXT` if required information is missing.

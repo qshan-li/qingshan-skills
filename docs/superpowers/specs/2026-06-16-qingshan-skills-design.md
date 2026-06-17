@@ -225,6 +225,24 @@ Each layer has a different purpose:
 
 Do not create every artifact by default. Low-risk work usually needs none of them. Use the smallest existing artifact that preserves the future behavior.
 
+Durable decisions and project learnings must be readable as conditional rules,
+not permanent truths. Decisions carry reversal conditions; project learnings
+should carry a trigger, scope, evidence, date, and invalidation condition when
+the target artifact supports that shape. Readers mark stale or superseded entries
+instead of silently applying outdated memory.
+
+`STATE.md`, Task Handoff artifacts, and fresh-context packets have a terminal
+lifecycle. They may preserve only current-task continuity, and the completion
+path must remove, trim, close, or explicitly preserve completed task state by
+project convention before the task is finally closed. `/execute` may clean
+simple completed-task state after local verification when no downstream handoff
+or `/reflect` needs it. `/verify` owns the cleanup gate. If `/reflect` needs the
+state for promotion, `/verify` must create a structured Reflection Handoff that
+names the candidate, evidence source, future behavior, temporary state needed,
+and cleanup owner. `/reflect` consumes the needed evidence first, then deletes
+or trims the completed task state even when the promotion gate rejects every
+durable write. Unrelated active task state must not be deleted.
+
 ### Memory Promotion Gate
 
 `/reflect` is the only workflow that may promote experience between layers. This gate does not block project-local persistence that belongs to the current workflow: `/clarify` may write user-confirmed stable glossary terms to `CONTEXT.md`, and `/plan` may write user-approved durable decisions that pass the three-gate rule to the project's ADR or decision artifact.

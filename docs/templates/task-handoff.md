@@ -62,6 +62,12 @@ when a targeted excerpt or artifact path is enough.
 
 - <Command, check, artifact, or manual proof>
 
+## Lifecycle
+
+<Temporary current-task state. `/verify` owns the cleanup gate: delete, trim,
+close, or name the project convention that keeps this artifact after the current
+task is closed.>
+
 ## Stop Conditions
 
 - Stop if acceptance criteria, required evidence, or a User Challenge decision is missing.

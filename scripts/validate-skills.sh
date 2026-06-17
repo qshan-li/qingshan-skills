@@ -190,16 +190,25 @@ require_text "SKILL.md" "Ship, deploy, publish, PR, merge, release"
 require_text "SKILL.md" "Code review, PR or diff review"
 require_text "SKILL.md" "/verify"
 require_text "SKILL.md" "## Memory Retrieval Gate"
+require_text "SKILL.md" "## Temporary State Lifecycle"
+require_text "SKILL.md" "structured reflection handoff"
 require_text "skills/plan/SKILL.md" "## Direct Entry Preconditions"
 require_text "skills/plan/SKILL.md" "Decision Brief"
 require_text "skills/plan/SKILL.md" "LEARNINGS.md"
+require_text "skills/plan/SKILL.md" "reversal conditions"
 require_text "skills/execute/SKILL.md" "Low risk: the task statement or lightweight target statement"
+require_text "skills/execute/SKILL.md" "## Temporary State Cleanup"
 require_text "skills/verify/SKILL.md" "Scope Drift Detection"
+require_text "skills/verify/SKILL.md" "## Reflection Handoff"
+require_text "skills/verify/SKILL.md" "## Temporary State Cleanup"
 require_text "skills/verify/SKILL.md" "durable decisions, project learning"
 require_text "skills/verify/SKILL.md" "Review Readiness Dashboard"
 require_text "skills/verify/SKILL.md" "Adversarial Review"
 require_text "skills/reflect/SKILL.md" "Durable Decision Log"
 require_text "skills/reflect/SKILL.md" "## Consumption Contract"
+require_text "skills/reflect/SKILL.md" "## Temporary State Disposal"
+require_text "skills/reflect/SKILL.md" "Memory Promotion Gate rejects"
+require_text "skills/reflect/SKILL.md" "invalidation condition"
 require_text "skills/reflect/SKILL.md" 'trigger`, `lesson`, `scope`,'
 require_text "docs/runtime-adapters.md" "Runtime-specific fields, manifests, hooks, and UI metadata belong outside the"
 require_text "docs/runtime-adapters.md" "## Automation Boundary"
@@ -242,9 +251,12 @@ require_text "skills/execute/SKILL.md" "docs/templates/fresh-context-packet.md"
 require_text "skills/verify/SKILL.md" "prompts/spec-reviewer.md"
 require_text "skills/verify/SKILL.md" "prompts/quality-reviewer.md"
 require_text "docs/templates/decision-brief.md" "Mechanical decisions must not use this template"
+require_text "docs/templates/durable-decision.md" "mark the old decision stale or superseded"
+require_text "docs/templates/fresh-context-packet.md" "## Lifecycle"
 require_text "docs/templates/release-checklist.md" "## Review Staleness"
 require_text "docs/templates/release-checklist.md" "## Commit Or PR Hygiene"
 require_text "docs/templates/task-handoff.md" "## Referenced Memory"
+require_text "docs/templates/task-handoff.md" "## Lifecycle"
 require_text "docs/templates/runtime-bootstrap.md" "global memory"
 
 required_pressure_scenarios=(
@@ -280,6 +292,7 @@ required_pressure_scenarios=(
   code-review-routing
   runtime-smoke-boundary
   output-language-mirror
+  state-lifecycle-cleanup
 )
 
 for scenario in "${required_pressure_scenarios[@]}"; do

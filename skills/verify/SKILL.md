@@ -109,6 +109,43 @@ recurring pitfall, project invariant, verification command, or skill-rule
 candidate, report it as a `/reflect` candidate instead of writing memory during
 verification.
 
+## Reflection Handoff
+
+Use a structured Reflection Handoff when verification finds a reusable learning,
+durable decision, glossary entry, or skill-rule candidate that `/reflect` must
+evaluate. Do not rely on conversation memory for this handoff.
+
+The handoff must state:
+
+- candidate type: reusable lesson, durable decision, glossary entry, or skill rule
+- evidence source: root `STATE.md` section, Task Handoff artifact,
+  fresh-context packet, verification report, diff, or other checked artifact
+- future behavior: what future reader or trigger may change because of this
+  candidate
+- temporary state needed: path and section, or `none`
+- cleanup owner: `/verify` unless `/reflect` must consume the named evidence
+
+If no concrete candidate survives this check, `/verify` owns cleanup and must not
+push temporary-state disposal to `/reflect` as a maybe.
+
+## Temporary State Cleanup
+
+When root `STATE.md`, a Task Handoff artifact, a fresh-context packet, or
+another task-local artifact was used for the current work, verification must
+check its cleanup gate before the final completion claim.
+
+If `/execute` already cleaned completed-task state, record that status. If root
+`STATE.md` only contains completed current-task state and no downstream handoff
+or `/reflect` needs it, delete it. If it also contains unrelated active task
+state, remove only the completed task's section. If `/reflect` needs the state
+to evaluate a structured Reflection Handoff, report that handoff and leave the
+named cleanup pending for `/reflect` after it consumes the needed evidence.
+
+This cleanup is terminal handling for temporary task state, not unrelated
+tidying. Do not delete project task artifacts that are meant to remain by
+convention; only close or trim the current temporary state when the artifact
+supports that.
+
 ## Adversarial Review
 
 Run an adversarial review for high-risk changes, or state why it could not run.
@@ -142,8 +179,10 @@ local checklist and state that the review was self-run.
 9. For fresh-context work, run spec and quality review using `prompts/spec-reviewer.md` and `prompts/quality-reviewer.md`, or state why the review was self-run or blocked.
 10. Run Adversarial Review for high-risk changes using `prompts/adversarial-reviewer.md` when available.
 11. Check whether relevant lessons or durable decisions were honored and whether new `/reflect` candidates emerged.
-12. For release-path work, perform or hand off the requested mechanical release action only when readiness is proven and no User Challenge decision remains.
-13. State actual status with evidence and residual risk.
+12. Create a structured Reflection Handoff for any `/reflect` candidate that must survive outside the verification report.
+13. Check Temporary State Cleanup for root `STATE.md` or task-local artifacts used by the work.
+14. For release-path work, perform or hand off the requested mechanical release action only when readiness is proven and no User Challenge decision remains.
+15. State actual status with evidence and residual risk.
 
 ## Hard Rules
 
@@ -158,6 +197,8 @@ local checklist and state that the review was self-run.
 - Do not hide missing, extra, changed, or unverifiable work behind passing tests.
 - Do not ignore durable decision, project learning, or referenced memory drift when it affected the task.
 - Do not accept unrelated cleanup as orphan-only cleanup unless the current change created the orphan.
+- Do not claim final completion while completed-task root `STATE.md` remains as stale temporary state; remove or trim it, or hand it to `/reflect` when reflection must consume it first.
+- Do not hand temporary-state cleanup to `/reflect` without a structured Reflection Handoff and named evidence to consume.
 
 ## Rationalization Prevention
 
@@ -180,6 +221,8 @@ local checklist and state that the review was self-run.
 - Review Readiness Dashboard when risk justifies it.
 - Adversarial Review result or reason skipped.
 - Context manifest, worker artifact review, spec review, and quality review when fresh context was used.
+- Structured Reflection Handoff when a `/reflect` candidate needs promotion review.
+- Temporary state cleanup status when root `STATE.md` or a task-local artifact was used.
 - Scope and quality review notes.
 - Residual risks or unverified items.
 

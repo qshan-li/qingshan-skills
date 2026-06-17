@@ -38,7 +38,7 @@ invocation changes the entry point, not the hard rules.
 
 ## Shared Language
 
-When a task depends on domain terms, read existing `CONTEXT.md`, `CONTEXT-MAP.md`, or ADRs if they exist. Challenge overloaded or conflicting terms, propose precise canonical vocabulary, and cross-check user claims against code or docs when possible.
+When a task depends on domain terms, read existing `CONTEXT.md` or ADRs if they exist. Challenge overloaded or conflicting terms, propose precise canonical vocabulary, and cross-check user claims against code or docs when possible.
 
 Read `CONTEXT.md` when terminology, naming, domain boundaries, or user wording
 can change the goal, acceptance criteria, file ownership, or fresh-context

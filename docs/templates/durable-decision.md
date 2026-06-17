@@ -28,3 +28,6 @@ YYYY-MM-DD
 ## Reversal Conditions
 
 <What evidence or changed constraint would justify revisiting this decision?>
+
+Readers must check these conditions before relying on the decision. If they now
+apply, mark the old decision stale or superseded instead of silently reusing it.

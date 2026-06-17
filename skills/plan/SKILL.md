@@ -25,6 +25,9 @@ invocation changes the entry point, not the hard rules.
 ## When NOT to Use
 
 - The task is low-risk and can be executed directly after `/clarify`.
+- The target, acceptance criteria, protected boundaries, or validation path
+  cannot be established from the request, codebase, docs, or task artifacts. Use
+  `/clarify`.
 - A bug, performance issue, or deployment failure lacks evidence. Use `/investigate`.
 - The user is asking to verify completed work. Use `/verify`.
 
@@ -76,7 +79,16 @@ Only record an ADR or durable decision when all three are true:
 - the choice would be surprising without context
 - the outcome came from a real trade-off
 
-When a user-approved decision passes this gate, record it before execution in the project's existing ADR or decision artifact. If the project has no existing convention, create or update root `DECISIONS.md`. Use the fields in `docs/templates/durable-decision.md`: decision, date, scope, rationale, alternatives rejected, and reversal conditions.
+When a user-approved decision passes this gate, record it before execution in
+the project's existing ADR or decision artifact. If the project has no existing
+convention, create or update root `DECISIONS.md`. Use the fields in
+`docs/templates/durable-decision.md`: decision, date, scope, rationale,
+alternatives rejected, and reversal conditions.
+
+When reading durable decisions, check scope and reversal conditions before
+relying on them. If the trigger no longer matches or reversal conditions may now
+apply, mark the entry stale, superseded, or unresolved in the plan instead of
+silently using it.
 
 If planning identifies a possible durable decision but approval, evidence, or one of the three gates is missing, do not record it as durable. State the deferral reason in the plan.
 
@@ -93,6 +105,9 @@ for settled durable decisions and `LEARNINGS.md` or the relevant project
 retrospective for recurring project pitfalls, verification commands, and known
 traps. Retrieve global memory only when an entry's trigger matches the current
 task shape, stack, risk, or artifact. Do not load unbounded memory dumps.
+When a learning or durable decision is relevant but stale, superseded, or missing
+an invalidation or reversal condition, report that status in the plan and avoid
+turning it into an implicit requirement.
 
 ## Workflow
 
@@ -139,6 +154,7 @@ task shape, stack, risk, or artifact. Do not load unbounded memory dumps.
 - Decision grades, Decision Briefs, and unresolved approvals.
 - Referenced memory and the trigger that made it relevant.
 - Durable decision artifact path and entry, or deferral reason.
+- Stale, superseded, or unresolved durable context that affected planning.
 - Vertical slices and dependencies.
 - Validation strategy.
 - Rollback or failure-handling notes when relevant.

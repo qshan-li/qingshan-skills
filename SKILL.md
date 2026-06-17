@@ -39,6 +39,27 @@ If no workflow skill applies, answer directly. If a workflow skill might apply, 
 | Ship, deploy, publish, PR, merge, release | `/verify` | Release requests need fresh proof, scope review, and rollback or recovery notes before handoff |
 | Completed work with reusable learning | `/reflect` | Durable lessons should update future behavior |
 
+## Routing Tie-breakers
+
+When multiple routing rows apply, choose the entry skill by the primary failure
+the workflow must prevent:
+
+- Failure, regression, flaky behavior, deployment breakage, security concern, or
+  unknown root cause with missing evidence: use `/investigate`.
+- Review, readiness, completion, PR, diff, merge, release, publish, ship, or
+  handoff claim: use `/verify` before edits or release action.
+- Missing goal, acceptance criteria, protected boundaries, validation path, or
+  user decision boundary: use `/clarify`.
+- Clear goal with sequencing, rollback, blast-radius, dependency, or validation
+  strategy risk: use `/plan`.
+- Planned change with target, boundaries, acceptance criteria, and proof already
+  present: use `/execute`.
+
+If a failure has already been reproduced, the root cause is known, and the fix is
+low risk, `/execute` may be the entry skill. If the tie-breaker still cannot
+select a route, stop and ask for the smallest missing fact that changes the
+route.
+
 ## Risk Gate
 
 | Risk | Use |
@@ -94,6 +115,19 @@ task state before ending the loop, even when the promotion gate rejects every
 durable write.
 
 Never delete unrelated active task state.
+
+## Workflow Loop Escape
+
+Track workflow transitions during a task. If the same transition repeats three
+times without new evidence, a narrower scope, a completed slice, or a user
+decision, stop the loop and report:
+
+- the route chain
+- the repeated transition
+- the evidence or decision that is missing
+- the next smallest unblocker
+
+Do not keep bouncing between skills to avoid naming the blocker.
 
 ## Pipeline
 

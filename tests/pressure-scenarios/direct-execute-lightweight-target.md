@@ -19,9 +19,11 @@ required proof.
 
 `/execute` accepts a lightweight target statement for low-risk work, verifies
 the touched surface, and returns to `/clarify` or `/plan` only when required
-inputs are missing.
+inputs are missing. Direct invocation also states the entry reason, risk level,
+required upstream facts, and fallback route before editing.
 
 ## Required signals
 
 - [direct-execute-lightweight-target-accepted] `/execute` accepts a lightweight target instead of requiring a formal plan or handoff for low-risk direct work.
 - [direct-execute-missing-input-stop] `/execute` stops or routes back when target, protected boundaries, acceptance criteria, or required proof is missing.
+- [direct-execute-preflight] Direct `/execute` states entry reason, risk level, required upstream facts, and fallback route.

@@ -104,6 +104,7 @@ validate_skill() {
   validate_frontmatter "$path"
 
   require_section "$path" "Purpose"
+  require_section "$path" "Direct Invocation"
   require_section "$path" "When to Use"
   require_section "$path" "When NOT to Use"
   require_section "$path" "Risk Gate"
@@ -121,8 +122,10 @@ validate_root_skill() {
   require_section "$path" "Purpose"
   require_section "$path" "Bootstrap Enforcement"
   require_section "$path" "Routing"
+  require_section "$path" "Routing Tie-breakers"
   require_section "$path" "Risk Gate"
   require_section "$path" "Decision Grading"
+  require_section "$path" "Workflow Loop Escape"
   require_section "$path" "Pipeline"
   require_section "$path" "Hard Rules"
   require_section "$path" "Rationalization Prevention"
@@ -232,21 +235,33 @@ require_text "SKILL.md" "/verify"
 require_text "SKILL.md" "## Memory Retrieval Gate"
 require_text "SKILL.md" "## Temporary State Lifecycle"
 require_text "SKILL.md" "structured reflection handoff"
+require_text "SKILL.md" "## Routing Tie-breakers"
+require_text "SKILL.md" "## Workflow Loop Escape"
+require_text "SKILL.md" "the same transition repeats three"
 require_text "skills/plan/SKILL.md" "## Direct Entry Preconditions"
 require_text "skills/plan/SKILL.md" "Decision Brief"
 require_text "skills/plan/SKILL.md" "LEARNINGS.md"
 require_text "skills/plan/SKILL.md" "reversal conditions"
 require_text "skills/execute/SKILL.md" "Low risk: the task statement or lightweight target statement"
+require_text "skills/execute/SKILL.md" "## Context Gate Scoring"
+require_text "skills/execute/SKILL.md" "## Fresh Worker Recovery"
 require_text "skills/execute/SKILL.md" "## Temporary State Cleanup"
+require_text "skills/execute/SKILL.md" "Temporary state cleanup: not used | cleaned | pending for /verify | handed to /reflect | preserved active state"
+require_text "skills/execute/SKILL.md" "NEEDS_CONTEXT"
+require_text "skills/execute/SKILL.md" "BLOCKED"
 require_text "skills/verify/SKILL.md" "Scope Drift Detection"
 require_text "skills/verify/SKILL.md" "## Reflection Handoff"
 require_text "skills/verify/SKILL.md" "## Temporary State Cleanup"
+require_text "skills/verify/SKILL.md" 'Read the `/execute` temporary state cleanup outcome'
+require_text "skills/verify/SKILL.md" "### Mandatory Core"
+require_text "skills/verify/SKILL.md" "### Risk-triggered Blocks"
 require_text "skills/verify/SKILL.md" "durable decisions, project learning"
 require_text "skills/verify/SKILL.md" "Review Readiness Dashboard"
 require_text "skills/verify/SKILL.md" "Adversarial Review"
 require_text "skills/reflect/SKILL.md" "Durable Decision Log"
 require_text "skills/reflect/SKILL.md" "## Consumption Contract"
 require_text "skills/reflect/SKILL.md" "## Temporary State Disposal"
+require_text "skills/reflect/SKILL.md" "## Promotion Decision Matrix"
 require_text "skills/reflect/SKILL.md" "Memory Promotion Gate rejects"
 require_text "skills/reflect/SKILL.md" "invalidation condition"
 require_text "skills/reflect/SKILL.md" 'trigger`, `lesson`, `scope`,'
@@ -283,6 +298,7 @@ require_text "tests/behavior/README.md" "scripts/validate-behavior-tests.sh"
 for skill in clarify plan execute investigate verify reflect; do
   validate_skill "skills/${skill}/SKILL.md"
   require_text "skills/${skill}/SKILL.md" 'Direct invocation must still honor root `SKILL.md` and `ETHOS.md`.'
+  require_text "skills/${skill}/SKILL.md" "Before continuing from direct invocation"
 done
 
 require_text "skills/plan/SKILL.md" "docs/templates/task-handoff.md"
@@ -333,6 +349,8 @@ required_pressure_scenarios=(
   runtime-smoke-boundary
   output-language-mirror
   state-lifecycle-cleanup
+  fresh-worker-recovery
+  workflow-loop-escape
 )
 
 for scenario in "${required_pressure_scenarios[@]}"; do

@@ -19,17 +19,19 @@ durable memory.
 For simple completed tasks, `/execute` may delete `STATE.md` or trim only the
 completed task section after local verification when no downstream handoff or
 `/reflect` needs it. `/verify` checks the cleanup gate before the final
-completion claim, records prior cleanup, or cleans pending completed-task state.
-If `/verify` hands cleanup to `/reflect`, it uses a structured Reflection
-Handoff with candidate type, evidence source, future behavior, temporary state
-needed, and cleanup owner. `/reflect` consumes the handoff and deletes or trims
-the completed task state even when the promotion gate rejects every durable
-write. Unrelated active task state remains untouched. Task Handoff artifacts and
-fresh-context packets receive the same terminal path: delete, trim, close, or
-name the project convention that keeps them.
+completion claim, reads the structured cleanup outcome from `/execute`, records
+prior cleanup, or cleans pending completed-task state. If `/verify` hands cleanup
+to `/reflect`, it uses a structured Reflection Handoff with candidate type,
+evidence source, future behavior, temporary state needed, and cleanup owner.
+`/reflect` consumes the handoff and deletes or trims the completed task state
+even when the promotion gate rejects every durable write. Unrelated active task
+state remains untouched. Task Handoff artifacts and fresh-context packets
+receive the same terminal path: delete, trim, close, or name the project
+convention that keeps them.
 
 ## Required signals
 - [state-lifecycle-execute-simple-cleanup] `/execute` may clean simple completed-task state after local verification.
+- [state-lifecycle-structured-outcome] `/execute` reports a structured cleanup outcome with path and reason.
 - [state-lifecycle-verify-gate] `/verify` checks the cleanup gate before the final completion claim.
 - [state-lifecycle-structured-reflect-handoff] `/verify` hands cleanup to `/reflect` only through a structured Reflection Handoff.
 - [state-lifecycle-reflect-disposes-without-promotion] `/reflect` disposes of assigned completed-task state even when no durable artifact is written.

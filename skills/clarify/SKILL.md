@@ -15,6 +15,10 @@ Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
 root routing assumptions and shared non-negotiables before continuing; direct
 invocation changes the entry point, not the hard rules.
 
+Before continuing from direct invocation, state the entry reason, risk level,
+required upstream facts, and fallback route. If the prerequisites for this skill
+are missing, use the fallback route before irreversible action.
+
 ## When to Use
 
 - New features, refactors, project structure work, deployment changes, docs, or developer-experience work with unclear intent.

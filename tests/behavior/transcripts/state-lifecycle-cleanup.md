@@ -19,6 +19,9 @@ User: The task used root STATE.md for a handoff. Verification passed; close it.
 Agent: For a simple completed task with no handoff or reflection dependency,
 /execute may remove the completed task section after local verification and
 report that cleanup status to /verify.
+Agent: /execute reports: Temporary state cleanup: cleaned; Path: STATE.md;
+Reason: current-task state was verified and no downstream handoff or reflection
+candidate needs it.
 Agent: /verify checks the cleanup gate before the final completion claim and
 records whether /execute already cleaned it or cleanup remains pending.
 Agent: In a different case, STATE.md contains a possible reusable lesson
@@ -39,6 +42,7 @@ cleanup result.
 ## Signal evidence
 
 - [state-lifecycle-execute-simple-cleanup] The transcript allows `/execute` to remove simple completed-task state after local verification.
+- [state-lifecycle-structured-outcome] The transcript reports a structured cleanup outcome with path and reason.
 - [state-lifecycle-verify-gate] The transcript includes cleanup gate checking before the final completion claim.
 - [state-lifecycle-structured-reflect-handoff] The transcript routes cleanup to `/reflect` only after `/verify` writes a structured Reflection Handoff.
 - [state-lifecycle-reflect-disposes-without-promotion] The transcript rejects durable promotion but still removes the completed task section from `STATE.md`.

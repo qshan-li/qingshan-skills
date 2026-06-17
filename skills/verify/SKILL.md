@@ -15,6 +15,10 @@ Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
 root routing assumptions and shared non-negotiables before continuing; direct
 invocation changes the entry point, not the hard rules.
 
+Before continuing from direct invocation, state the entry reason, risk level,
+required upstream facts, and fallback route. If the prerequisites for this skill
+are missing, use the fallback route before irreversible action.
+
 ## When to Use
 
 - Before saying complete, fixed, passing, shipped, optimized, documented, or ready.
@@ -134,6 +138,11 @@ When root `STATE.md`, a Task Handoff artifact, a fresh-context packet, or
 another task-local artifact was used for the current work, verification must
 check its cleanup gate before the final completion claim.
 
+Read the `/execute` temporary state cleanup outcome when it exists. If the
+outcome is missing but current work used root `STATE.md` or another temporary
+task artifact, inspect the artifact directly and report the missing outcome as a
+verification concern.
+
 If `/execute` already cleaned completed-task state, record that status. If root
 `STATE.md` only contains completed current-task state and no downstream handoff
 or `/reflect` needs it, delete it. If it also contains unrelated active task
@@ -168,21 +177,38 @@ local checklist and state that the review was self-run.
 
 ## Workflow
 
+### Mandatory Core
+
 1. Identify what claim is about to be made.
 2. Identify the command, check, or artifact that proves it.
 3. Run fresh verification or state why it cannot be run.
 4. Read the output and exit code.
 5. Compare results against acceptance criteria.
-6. Run Scope Drift Detection when a task statement, plan, referenced memory, durable decision, learning, or diff exists, including whether changed lines trace to the request.
-7. Use the Review Readiness Dashboard for medium-risk, high-risk, or release-path work.
-8. Use `docs/templates/release-checklist.md` for release-path work.
-9. For fresh-context work, run spec and quality review using `prompts/spec-reviewer.md` and `prompts/quality-reviewer.md`, or state why the review was self-run or blocked.
-10. Run Adversarial Review for high-risk changes using `prompts/adversarial-reviewer.md` when available.
-11. Check whether relevant lessons or durable decisions were honored and whether new `/reflect` candidates emerged.
-12. Create a structured Reflection Handoff for any `/reflect` candidate that must survive outside the verification report.
-13. Check Temporary State Cleanup for root `STATE.md` or task-local artifacts used by the work.
-14. For release-path work, perform or hand off the requested mechanical release action only when readiness is proven and no User Challenge decision remains.
-15. State actual status with evidence and residual risk.
+6. Run every applicable Risk-triggered Block before final status.
+7. State actual status with evidence and residual risk.
+
+### Risk-triggered Blocks
+
+- Scope Drift Detection: run when a task statement, plan, referenced memory,
+  durable decision, learning, or diff exists, including whether changed lines
+  trace to the request.
+- Review Readiness Dashboard: use for medium-risk, high-risk, or release-path
+  work.
+- Release checklist: use `docs/templates/release-checklist.md` for release-path
+  work.
+- Fresh-context review: for fresh-context work, run spec and quality review using
+  `prompts/spec-reviewer.md` and `prompts/quality-reviewer.md`, or state why the
+  review was self-run or blocked.
+- Adversarial Review: run for high-risk changes using
+  `prompts/adversarial-reviewer.md` when available.
+- Learning check: check whether relevant lessons or durable decisions were
+  honored and whether new `/reflect` candidates emerged.
+- Reflection Handoff: create a structured handoff for any `/reflect` candidate
+  that must survive outside the verification report.
+- Temporary State Cleanup: check root `STATE.md` or task-local artifacts used by
+  the work before final status.
+- Release action: perform or hand off the requested mechanical release action
+  only when readiness is proven and no User Challenge decision remains.
 
 ## Hard Rules
 

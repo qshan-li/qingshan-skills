@@ -15,6 +15,10 @@ Direct invocation must still honor root `SKILL.md` and `ETHOS.md`. Apply the
 root routing assumptions and shared non-negotiables before continuing; direct
 invocation changes the entry point, not the hard rules.
 
+Before continuing from direct invocation, state the entry reason, risk level,
+required upstream facts, and fallback route. If the prerequisites for this skill
+are missing, use the fallback route before irreversible action.
+
 ## When to Use
 
 - Work revealed a recurring trap, invariant, verification command, or project-specific rule.
@@ -50,6 +54,22 @@ Promote learning only as far as the evidence supports:
 - Skill rule: verified behavior change that should guide future agents.
 
 Do not promote one-off project facts into global rules.
+
+## Promotion Decision Matrix
+
+Use the first matching layer that preserves the future behavior:
+
+| Evidence shape | Promotion layer |
+| --- | --- |
+| Temporary progress needed only to finish the current task | Task state |
+| Stable repo-specific fact, command, term, or constraint | Project context |
+| Recurring repo-specific pattern, pitfall, or verification command with a trigger | Project learning |
+| Repeated cross-project lesson with trigger, scope, evidence, date, and source | Global memory |
+| High-frequency or high-risk behavior change that should guide future agents by default | Skill rule |
+| Settled architecture, scope, tool, vendor, release, or reversal choice that passed the three-gate rule | Durable decision |
+
+If no future reader and retrieval trigger can be named, do not persist the
+learning.
 
 ## Promotion Artifact Map
 

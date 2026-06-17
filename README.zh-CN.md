@@ -202,7 +202,7 @@ qingshan-skills 与具体运行时无关，本质是让 agent 运行时读到根
 如果你的环境支持 [`skill`](https://github.com/anthropics/claude-code-skill) CLI，一行完成安装：
 
 ```bash
-npx skill install liqingshan/qingshan-skills
+npx skill install qshan-li/qingshan-skills
 ```
 
 安装后根 skill 和六个 workflow skill 会自动链接到当前运行时的全局 skill 目录。更新时重新运行同一命令即可。
@@ -226,7 +226,7 @@ bash scripts/sync-global-skills.sh --force
 把仓库克隆到本地后，按运行时要求手动链接或复制 skill 文件：
 
 ```bash
-git clone https://github.com/liqingshan/qingshan-skills.git
+git clone https://github.com/qshan-li/qingshan-skills.git
 cd qingshan-skills
 
 # Claude Code

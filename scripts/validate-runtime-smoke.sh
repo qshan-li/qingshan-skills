@@ -104,14 +104,8 @@ run_scenario() {
 common_instruction="Runtime smoke test for qingshan-skills. Do not edit files. Do not run write commands. Read repository root SKILL.md and ETHOS.md if needed. Answer exactly one non-empty line in this format: ROUTE: /skill -> /skill."
 
 run_scenario \
-  "simple-docs-route" \
-  "${common_instruction} Task: Fix a typo in one sentence of README.md." \
-  "/execute" \
-  "/verify"
-
-run_scenario \
-  "ambiguous-clarify-route" \
-  "${common_instruction} Task: Make the onboarding workflow better. What workflow route should be used before implementation?" \
+  "new-feature-clarify-route" \
+  "${common_instruction} Task: Add CSV export to the reporting screen. What workflow route should be used before implementation?" \
   "/clarify"
 
 run_scenario \
@@ -120,8 +114,44 @@ run_scenario \
   "/investigate"
 
 run_scenario \
+  "planned-work-plan-route" \
+  "${common_instruction} Task: The goal is clarified, but it needs sequencing, rollback, and validation strategy. What workflow route should be used next?" \
+  "/plan"
+
+run_scenario \
+  "dependency-upgrade-plan-route" \
+  "${common_instruction} Task: Upgrade the TypeScript toolchain across the repository. What workflow route should be used before implementation?" \
+  "/plan"
+
+run_scenario \
+  "test-system-investigate-route" \
+  "${common_instruction} Task: Improve flaky CI tests whose coverage gap and failure behavior are unclear. What workflow route should be used first?" \
+  "/investigate"
+
+run_scenario \
+  "planned-docs-execute-route" \
+  "${common_instruction} Task: The typo location and validation path are already known. Fix one sentence in README.md. What workflow route should be used?" \
+  "/execute" \
+  "/verify"
+
+run_scenario \
   "review-verify-route" \
   "${common_instruction} Task: Review this repository diff for correctness without making implementation changes." \
   "/verify"
+
+run_scenario \
+  "completion-claim-verify-route" \
+  "${common_instruction} Task: Confirm that the implemented documentation workflow is complete and ready. What workflow route should be used before claiming completion?" \
+  "/verify"
+
+run_scenario \
+  "release-verify-route" \
+  "${common_instruction} Task: Publish the current skill package release. What workflow route should be used before release?" \
+  "/verify"
+
+run_scenario \
+  "learning-reflect-route" \
+  "${common_instruction} Task: Completed work revealed a reusable verification command that should affect future tasks. What workflow route should be used?" \
+  "/reflect"
 
 echo "OK qingshan-skills runtime smoke passed"

@@ -202,7 +202,7 @@ qingshan-skills is runtime-neutral. The goal is to make the root skill and six w
 If your environment supports the [`skill`](https://github.com/anthropics/claude-code-skill) CLI, install with one command:
 
 ```bash
-npx skill install liqingshan/qingshan-skills
+npx skill install qshan-li/qingshan-skills
 ```
 
 After installation, the root skill and six workflow skills are automatically linked to the current runtime's global skill directory. Re-run the same command to update.
@@ -226,7 +226,7 @@ bash scripts/sync-global-skills.sh --force
 Clone the repository, then manually link or copy skill files per the runtime's requirements:
 
 ```bash
-git clone https://github.com/liqingshan/qingshan-skills.git
+git clone https://github.com/qshan-li/qingshan-skills.git
 cd qingshan-skills
 
 # Claude Code

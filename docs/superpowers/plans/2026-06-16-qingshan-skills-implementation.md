@@ -29,6 +29,7 @@
 - Create: `prompts/fresh-worker.md` — fresh-context execution prompt.
 - Create: `prompts/spec-reviewer.md` — spec compliance reviewer prompt.
 - Create: `prompts/quality-reviewer.md` — quality reviewer prompt.
+- Create: `prompts/adversarial-reviewer.md` — high-risk adversarial review prompt.
 - Create: `scripts/validate-skills.sh` — structural validator.
 - Create: `tests/pressure-scenarios/simple-task-overprocessing.md`
 - Create: `tests/pressure-scenarios/feature-ambiguity.md`
@@ -71,11 +72,11 @@ The validator must fail before core skill files exist, then pass after implement
 - Create: `scripts/validate-skills.sh`
 - Create: `tests/pressure-scenarios/*.md`
 
-- [ ] **Step 1: Create the validator**
+- [x] **Step 1: Create the validator**
 
 Create `scripts/validate-skills.sh` as an executable Bash script. It must fail fast with `ERROR: <message>` and exit non-zero when a required file, section, or pressure scenario field is missing.
 
-- [ ] **Step 2: Create eight pressure scenarios**
+- [x] **Step 2: Create eight pressure scenarios**
 
 Each scenario file must use this exact shape:
 
@@ -95,7 +96,7 @@ Each scenario file must use this exact shape:
 <observable behavior that proves the skill resisted the shortcut>
 ```
 
-- [ ] **Step 3: Run RED validation**
+- [x] **Step 3: Run RED validation**
 
 Run:
 
@@ -117,11 +118,11 @@ Expected: FAIL because root docs and six skill files do not exist yet.
 - Track: `CLAUDE.md`
 - Modify: `.gitignore`
 
-- [ ] **Step 1: Create `ETHOS.md`**
+- [x] **Step 1: Create `ETHOS.md`**
 
-Include these seven principles: Understand Before Acting, Risk Determines Process, Minimal Surgical Change, Readable Is Documented, Type Safety First, Evidence Before Claims, Preserve Context Quality. Include the non-negotiables from the design spec.
+Include these eight principles: Understand Before Acting, Risk Determines Process, Preserve Engineer Control, Minimal Surgical Change, Readable Is Documented, Type Safety First, Evidence Before Claims, Preserve Context Quality. Include the non-negotiables from the design spec.
 
-- [ ] **Step 2: Create root `SKILL.md`**
+- [x] **Step 2: Create root `SKILL.md`**
 
 Use trigger-only frontmatter:
 
@@ -134,11 +135,11 @@ description: Use when coordinating software engineering work through qingshan-sk
 
 The body must include bootstrap enforcement, routing by task type, risk gates, the six-skill pipeline, decision grading, a meta anti-bypass table, and a rule to read `ETHOS.md` before applying any core skill.
 
-- [ ] **Step 3: Create `README.md`, `docs/philosophy.md`, and `docs/installation.md`**
+- [x] **Step 3: Create `README.md`, `docs/philosophy.md`, and `docs/installation.md`**
 
 Keep them concise. README explains what the library is and lists the six skills. Philosophy explains the four source failure models and qingshan constraints. Installation explains copying or symlinking the repo into agent-specific skill directories without assuming one runtime.
 
-- [ ] **Step 4: Track project root hygiene files**
+- [x] **Step 4: Track project root hygiene files**
 
 Track `CLAUDE.md` as the agent pointer to `AGENTS.md`, create MIT `LICENSE`, and update `.gitignore` so local `.agents/` and `.claude/` reference copies cannot be accidentally committed.
 
@@ -152,7 +153,7 @@ Track `CLAUDE.md` as the agent pointer to `AGENTS.md`, create MIT `LICENSE`, and
 - Create: `skills/verify/SKILL.md`
 - Create: `skills/reflect/SKILL.md`
 
-- [ ] **Step 1: Create `/clarify`**
+- [x] **Step 1: Create `/clarify`**
 
 Frontmatter:
 
@@ -165,7 +166,7 @@ description: Use when a software engineering task has unclear goals, scope, cons
 
 The body must center shared understanding, risk-scaled brainstorming, one question at a time, recommended answers, codebase-first exploration, and handoff to `/plan`, `/execute`, or `/investigate`.
 
-- [ ] **Step 2: Create `/plan`**
+- [x] **Step 2: Create `/plan`**
 
 Frontmatter:
 
@@ -178,7 +179,7 @@ description: Use when a clarified software engineering goal needs task decomposi
 
 The body must include Mechanical, Taste, and User Challenge decision grades.
 
-- [ ] **Step 3: Create `/execute`**
+- [x] **Step 3: Create `/execute`**
 
 Frontmatter:
 
@@ -191,7 +192,7 @@ description: Use when implementing a planned software engineering change, refact
 
 The body must include the Context Gate, scoped edit rules, TDD default for high-risk code changes, and prompt handoff to `prompts/fresh-worker.md`.
 
-- [ ] **Step 4: Create `/investigate`**
+- [x] **Step 4: Create `/investigate`**
 
 Frontmatter:
 
@@ -204,7 +205,7 @@ description: Use when diagnosing bugs, failing tests, deployment failures, perfo
 
 The body must enforce no facts, no fix; reproduction; evidence collection; baseline for performance; and environment boundaries for deployment issues.
 
-- [ ] **Step 5: Create `/verify`**
+- [x] **Step 5: Create `/verify`**
 
 Frontmatter:
 
@@ -217,7 +218,7 @@ description: Use before claiming software engineering work is complete, fixed, p
 
 The body must define task-specific verification and review dimensions.
 
-- [ ] **Step 6: Create `/reflect`**
+- [x] **Step 6: Create `/reflect`**
 
 Frontmatter:
 
@@ -236,18 +237,23 @@ The body must distinguish durable learning from knowledge-base noise.
 - Create: `prompts/fresh-worker.md`
 - Create: `prompts/spec-reviewer.md`
 - Create: `prompts/quality-reviewer.md`
+- Create: `prompts/adversarial-reviewer.md`
 
-- [ ] **Step 1: Create `fresh-worker.md`**
+- [x] **Step 1: Create `fresh-worker.md`**
 
 Prompt must instruct a worker to implement only the assigned task, respect existing changes, run specified verification, and report changed files plus status.
 
-- [ ] **Step 2: Create `spec-reviewer.md`**
+- [x] **Step 2: Create `spec-reviewer.md`**
 
 Prompt must instruct a reviewer to compare actual changes against the task/spec line-by-line, report missing requirements, extras, and approval status.
 
-- [ ] **Step 3: Create `quality-reviewer.md`**
+- [x] **Step 3: Create `quality-reviewer.md`**
 
 Prompt must instruct a reviewer to check scope control, readability, type safety, error handling, verification evidence, and maintainability.
+
+- [x] **Step 4: Create `adversarial-reviewer.md`**
+
+Prompt must instruct a reviewer to check high-risk changes for production failure modes.
 
 ## Task 5: Update Project Catalog and References
 
@@ -255,11 +261,11 @@ Prompt must instruct a reviewer to check scope control, readability, type safety
 - Modify: `AGENTS.md`
 - Modify: `docs/references.md`
 
-- [ ] **Step 1: Update `AGENTS.md`**
+- [x] **Step 1: Update `AGENTS.md`**
 
 Replace the old eight-skill goal with six skills: `/clarify`, `/plan`, `/execute`, `/investigate`, `/verify`, `/reflect`. Preserve the project philosophy and conventions, but remove references that require separate `/tdd`, `/review`, or `/ship` top-level skills.
 
-- [ ] **Step 2: Update `docs/references.md`**
+- [x] **Step 2: Update `docs/references.md`**
 
 Change the line saying qingshan-skills compresses four layers into eight skills to six skills. Update target-skill mappings where they still reference removed top-level skills.
 
@@ -268,7 +274,7 @@ Change the line saying qingshan-skills compresses four layers into eight skills 
 **Files:**
 - Modify only files touched by this plan.
 
-- [ ] **Step 1: Run validation**
+- [x] **Step 1: Run validation**
 
 Run:
 
@@ -282,7 +288,7 @@ Expected:
 OK qingshan-skills validation passed
 ```
 
-- [ ] **Step 2: Inspect diff**
+- [x] **Step 2: Inspect diff**
 
 Run:
 
@@ -293,7 +299,7 @@ git diff --stat
 
 Expected: no whitespace errors; diff only includes planned files.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 Run:
 

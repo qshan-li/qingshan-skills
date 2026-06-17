@@ -930,7 +930,8 @@ qingshan-skills/
 ├── prompts/
 │   ├── fresh-worker.md          # Fresh-context worker prompt
 │   ├── spec-reviewer.md         # Spec compliance reviewer prompt
-│   └── quality-reviewer.md      # Quality reviewer prompt
+│   ├── quality-reviewer.md      # Quality reviewer prompt
+│   └── adversarial-reviewer.md  # High-risk adversarial review prompt
 │
 └── docs/
     ├── references.md            # This file
@@ -962,7 +963,7 @@ Common paths (from the design doc): small docs change → `/clarify → /execute
 | `skills/clarify/SKILL.md` | Matt Pocock's Grill Me + Superpowers brainstorming | One question at a time, recommended answers, decision-tree walk, codebase-first, brainstorming hard gate scaled by risk |
 | `skills/plan/SKILL.md` | gstack autoplan + Superpowers writing-plans | Decision grading (Mechanical/Taste/User Challenge), task decomposition, validation + rollback strategy |
 | `skills/execute/SKILL.md` | Superpowers subagent + TDD + GSD fresh context | Context Gate, TDD default for high-risk code, fresh-context workers, surgical edits |
-| `prompts/` | Superpowers implementer/spec-reviewer/code-quality prompts | Worker + reviewer prompts, only where fresh-context execution requires them |
+| `prompts/` | Superpowers implementer/spec-reviewer/code-quality prompts + gstack adversarial review | Worker + reviewer prompts, only where fresh-context execution or high-risk review requires them |
 | `skills/investigate/SKILL.md` | Superpowers systematic-debugging + gstack investigate | No facts no fix; reproduce → evidence → narrow → hypothesis → test; baseline for perf |
 | `skills/verify/SKILL.md` | Superpowers verification-before-completion + gstack review | Task-type-specific proof, review as a dimension, acceptance-criteria status |
 | `skills/reflect/SKILL.md` | gstack retro + learn + GSD context artifacts | Memory Promotion Gate; selective durable learning; reject chronological/generic noise and wrong generalization |

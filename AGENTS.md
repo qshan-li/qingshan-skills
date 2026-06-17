@@ -71,7 +71,8 @@ qingshan-skills/
 ├── prompts/
 │   ├── fresh-worker.md          # Fresh-context worker prompt
 │   ├── spec-reviewer.md         # Spec compliance reviewer prompt
-│   └── quality-reviewer.md      # Quality reviewer prompt
+│   ├── quality-reviewer.md      # Quality reviewer prompt
+│   └── adversarial-reviewer.md  # High-risk adversarial review prompt
 │
 └── docs/
     ├── references.md            # Source skill deep-dive

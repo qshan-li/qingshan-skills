@@ -181,6 +181,10 @@ The agent must know the goal, constraints, acceptance criteria, and non-goals be
 
 Small, reversible tasks use light process. High-impact, ambiguous, or cross-cutting tasks use stronger process. The workflow can shrink with risk, but the hard rules cannot.
 
+### Preserve Engineer Control
+
+qingshan-skills provides the smallest process layer that protects the work. It should preserve user and engineer control instead of owning the whole development process.
+
 ### Minimal, Surgical Change
 
 The agent changes only what the current task requires. It does not perform unrelated refactors, cleanup, format churn, compatibility work, or speculative configuration.
@@ -277,6 +281,7 @@ Global memory must not duplicate user-level `AGENTS.md` or `CLAUDE.md` instructi
 - Do not switch package managers without explicit instruction.
 - Do not write compatibility layers for old environments unless required.
 - Do not automate high-impact product, architecture, or irreversible decisions that belong to the user.
+- Do not let process machinery replace engineering judgment.
 
 ## Skill Responsibilities
 

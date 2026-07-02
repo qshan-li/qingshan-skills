@@ -254,6 +254,10 @@ local checklist and state that the review was self-run.
 
 ## Handoff
 
-- Use `/reflect` when reusable learning should be captured.
-- Use `/investigate` if verification fails unexpectedly.
-- Use `/execute` for small fixes with clear cause.
+After presenting the verification results, **stop and wait for the user to decide the next step**. Do not automatically invoke `/reflect`, `/investigate`, `/execute`, or any other skill.
+
+Recommended next steps for the user:
+
+- `/reflect` when reusable learning should be captured.
+- `/investigate` if verification fails unexpectedly.
+- `/execute` for small fixes with clear cause.

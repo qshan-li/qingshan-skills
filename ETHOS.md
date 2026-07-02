@@ -24,6 +24,28 @@ Names, structure, and types should express intent. Comments explain why, not wha
 
 Use the strongest practical type-safety conventions for the project's language and ecosystem. In JavaScript and TypeScript projects, new code is TypeScript-first and must not introduce `any`; use `unknown`, type guards, explicit interfaces, or discriminated unions.
 
+## Trust the Contract
+
+When the type system, function signatures, upstream flow, or runtime-invariant configuration already guarantees a condition, do not add redundant runtime checks. Contracts come in three forms:
+
+- **Type contracts**: TypeScript types, interfaces, required fields — do not re-check what the compiler enforces.
+- **Flow contracts**: upstream pages, middleware, or sequential steps that already validated or blocked a condition — do not re-verify what the entry point guarantees.
+- **Invariant contracts**: configuration, environment, or state that cannot change at runtime — do not watch or guard against impossible transitions.
+
+Defensive code that guards against scenarios any of these contracts make impossible is over-engineering, not safety. Prefer letting violations surface as loud failures over silently handling them with fallback logic.
+
+## Defense Belongs at Boundaries
+
+The value of defensive code is at trust boundaries: IPC, network, hardware, user input, external APIs. Inside the type-safe interior, redundant defense is noise that makes real boundary defense harder to spot.
+
+Do not layer the same protection at multiple levels. If a value is defaulted at assignment, do not re-default at every use site. If a type guarantees non-null, do not add `?? ''` at every consumption point. Defense should happen once, at the boundary, not in an onion of redundant wrappers.
+
+Do not use `||` fallback to silence data integrity problems. `|| ''` conflates `null`, `undefined`, empty string, and zero into one undifferentiated value. Use `??` for nullish coalescing when a default is genuinely needed, and let missing required data surface as an error rather than silently producing a degraded result.
+
+When the same defensive pattern is copied across files, extract it to a shared location so the defense strategy can be reviewed and improved once.
+
+Not all runtime checks are over-defensive. Type narrowing on discriminated unions (`'key' in obj`, `if (obj.kind === 'a')`) is the type system working correctly, not redundancy. Judge checks by whether the type system already covers the case, not by whether a runtime check exists.
+
 ## Evidence Before Claims
 
 Bugs require reproduction. Performance work requires a baseline. Deployment work requires logs, environment boundaries, and rollback thinking. Completion requires verification output.

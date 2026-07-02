@@ -137,3 +137,4 @@ This propagates the updated skills into the local test skill installation so cha
 4. **Readable = documented** — names express intent, comments explain why
 5. **Fresh context** — heavy tasks go to subagents to prevent context rot
 6. **Verified = done** — no claim of completion without running the proof
+7. **Trust the contract** — when types or validated boundaries already guarantee a condition, runtime checks are noise; errors propagate unless the caller has a recovery path

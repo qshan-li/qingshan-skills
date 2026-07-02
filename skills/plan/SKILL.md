@@ -165,6 +165,10 @@ turning it into an implicit requirement.
 
 ## Handoff
 
-- Use `/execute` when the plan is complete.
-- Use `/clarify` when goals or decisions are unresolved.
-- Use `/investigate` when facts or baselines are missing.
+After presenting the plan, **stop and wait for the user to decide the next step**. Do not automatically invoke `/execute` or any other skill.
+
+Recommended next steps for the user:
+
+- `/execute` when the plan is complete and approved.
+- `/clarify` when goals or decisions are unresolved.
+- `/investigate` when facts or baselines are missing.

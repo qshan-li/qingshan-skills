@@ -231,5 +231,7 @@ Record an ADR or durable decision only when all three are true:
 
 ## Handoff
 
+After completing reflection, **stop and wait for the user to decide the next step**. Do not automatically invoke any other skill.
+
 - Update project context, docs, or skills only when the lesson is reusable.
 - End the loop when there is no durable learning to capture.

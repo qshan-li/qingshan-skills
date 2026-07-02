@@ -110,6 +110,10 @@ Performance work must establish a baseline and repeatable measurement method. De
 
 ## Handoff
 
-- Use `/plan` for non-trivial fixes.
-- Use `/execute` for small fixes after evidence exists.
+After presenting the investigation findings, **stop and wait for the user to decide the next step**. Do not automatically invoke `/plan`, `/execute`, or any other skill.
+
+Recommended next steps for the user:
+
+- `/plan` for non-trivial fixes.
+- `/execute` for small fixes after evidence exists.
 - Continue `/investigate` when confidence is too low.

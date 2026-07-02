@@ -122,6 +122,10 @@ If the runtime cannot surface interactive input, stop with the single blocking q
 
 ## Handoff
 
-- Use `/plan` for medium/high-risk work or tasks needing decomposition.
-- Use `/execute` for low-risk work with clear validation.
-- Use `/investigate` when evidence is required before design.
+After presenting the clarification, **stop and wait for the user to decide the next step**. Do not automatically invoke `/plan`, `/execute`, or any other skill.
+
+Recommended next steps for the user:
+
+- `/plan` for medium/high-risk work or tasks needing decomposition.
+- `/execute` for low-risk work with clear validation.
+- `/investigate` when evidence is required before design.

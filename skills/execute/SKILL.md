@@ -146,7 +146,7 @@ Reason: <why that outcome is correct>
 - Do not edit from direct `/execute` entry when the target, protected boundaries, acceptance criteria, or required proof is missing.
 - Do not keep a changed line that cannot be traced to the current task.
 - Follow language-appropriate type-safety rules; do not introduce `any` in TypeScript code.
-- Do not swallow errors, ignore promises, or hide failures.
+- Do not swallow errors, ignore promises, or hide failures. Silent `.catch(() => {})` or `.catch(() => null)` is forbidden unless the call is genuinely fire-and-forget and the result is logged elsewhere.
 - Do not refactor adjacent code unless the plan requires it.
 - Do not clean up pre-existing dead code; only remove orphaned imports, variables, or helpers created by the current change.
 - Do not fetch or apply memory that is not named by the plan, Task Handoff, or context manifest unless you return to `/plan`.
@@ -167,6 +167,17 @@ Reason: <why that outcome is correct>
 | "The current context is fine" | Context risk is silent; run the gate |
 | "A broader abstraction is cleaner" | Cleaner is not a requirement |
 | "A senior engineer would appreciate the abstraction" | If the abstraction is not required by the task, it is over-engineering |
+| "Better safe than sorry" | Safe is not a substitute for understanding the contract; type guarantees and validated boundaries already cover the risk |
+| "What if the input is null?" | If the type system guarantees non-null, the check is noise, not safety |
+| "I should add a try-catch just in case" | Catching errors that should propagate hides bugs; only catch when the caller has a recovery path |
+| "I should watch for config changes" | If the config is runtime-invariant, watching for changes guards against an impossible transition |
+| "The upstream might not have checked" | If the flow guarantees entry conditions, re-checking is distrust of the architecture, not safety |
+| "I'll add a fallback default" | If the type declares a required field, `\|\| []` masks a bug instead of surfacing it |
+| "Number(x \|\| 0) is safer" | Triple-wrapping a value that is already `number \| undefined` is checking whether the compiler failed; `?? 0` is the complete contract |
+| "I already defaulted at assignment, but let me default again at use" | Defense at two layers means neither layer is clearly responsible; pick one boundary and defend there |
+| "\|\| '' handles all edge cases" | `\|\|` conflates null, undefined, empty string, and zero; use `??` for nullish, and let missing required data fail loudly |
+| ".catch(() => null) is safe" | Silent catch turns errors into invisible data loss; if the call matters, log or propagate; if it does not matter, do not call it |
+| "This defensive function is needed in 5 files" | Copy-pasted defense is a maintenance burden; extract to a shared module so the strategy can be reviewed once |
 | "I should write the full test suite first" | TDD needs feedback one behavior at a time |
 | "STATE.md is temporary, so delete it now" | Only completed current-task state with no handoff or reflection dependency may be cleaned during execution |
 
@@ -181,6 +192,10 @@ Reason: <why that outcome is correct>
 
 ## Handoff
 
-- Use `/verify` before any completion claim.
-- Use `/investigate` if execution reveals unexpected failure.
-- Use `/plan` if task boundaries prove wrong.
+After completing the code changes and local validation, **stop and wait for the user to decide the next step**. Do not automatically invoke `/verify` or any other skill.
+
+Recommended next steps for the user:
+
+- `/verify` before any completion claim.
+- `/investigate` if execution reveals unexpected failure.
+- `/plan` if task boundaries prove wrong.

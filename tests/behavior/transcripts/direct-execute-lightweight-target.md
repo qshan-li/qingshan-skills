@@ -25,6 +25,9 @@ missing.
 Agent: Before editing, records lightweight inputs: target statement, touched
 file README.md, protected boundary of no unrelated docs cleanup, acceptance
 criteria that only the command example changes, and proof via focused diff.
+Agent: Records any trigger-matched memory on the lightweight target Referenced
+Memory section and applies only memory named there, without creating a formal
+Task Handoff only to carry memory.
 Agent: If any of those inputs were missing, it would return to /clarify or
 /plan before editing.
 ```
@@ -32,6 +35,7 @@ Agent: If any of those inputs were missing, it would return to /clarify or
 ## Signal evidence
 
 - [direct-execute-lightweight-target-accepted] The transcript accepts lightweight inputs instead of requiring a formal plan.
+- [direct-execute-lightweight-target-named-memory] Matching memory is named on the lightweight target Referenced Memory section.
 - [direct-execute-missing-input-stop] The transcript states missing target, boundaries, acceptance criteria, or proof routes back before editing.
 - [direct-execute-preflight] The transcript states entry reason, risk level, required upstream facts, and fallback route.
 

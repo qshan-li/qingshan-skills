@@ -102,15 +102,38 @@ Every task type must answer the same baseline questions:
 
 ## Risk Model
 
-Risk determines process weight.
+Risk determines process weight. **Executable classification lives only in root
+`SKILL.md` Risk Classification Floors.** This design records intent, not a second
+table that agents should apply:
 
-| Risk | Typical examples | Required behavior |
-| --- | --- | --- |
-| Low | Typo fix, small documentation correction, isolated config wording | Clarify the goal and validation path; execute surgically; verify minimally |
-| Medium | Local feature change, focused refactor, test improvement, single-service CI change | Compare options when meaningful; record target and non-targets; plan tasks and verification |
-| High | Cross-module architecture change, data migration, deployment pipeline change, security fix, performance tuning, unclear product behavior | Full relevant flow: investigate first when evidence is required, otherwise full clarify; explicit design approval; written plan; strongest verification available |
+- Low: narrow, reversible work with a clear validation path and no matching floor
+- Medium: cross-module work, User Challenge minimums that are not High, sequenced
+  fixes, multi-option user-facing changes without public-contract redesign
+- High: security/auth/secrets, irreversible data, real release, architecture
+  direction, public contract changes including public CLI/API/schema surfaces,
+  and unclear product behavior that defines success
 
 Low-risk work may skip formal artifacts, but it may not skip the hard rules.
+Do not invent scoring systems or restate floor bullets here when they can drift
+from runtime.
+
+## Loop And Continuation Contracts
+
+Ordinary finite engineering work is bounded by its goal, acceptance criteria,
+protected boundaries, and required proof. A separate Loop Contract is required
+only for recurring, automation-backed, fresh-context, multi-agent, migration,
+or broad repetitive work that needs explicit trigger, stop, proof, or usage
+limits.
+
+Workflow handoffs continue automatically only when the original request asks for
+the complete outcome, the next workflow remains inside the approved boundary,
+acceptance criteria are user-supplied, repository-derived with cited evidence,
+or user-confirmed, every Taste decision is explicitly approved, and no User
+Challenge or blocker is open. Agent-proposed success criteria that decide
+user-visible behavior need confirmation before continuation. Phase-only
+invocations, open or changed Taste decisions, missing prerequisites, scope
+expansion, and User Challenge decisions return control to the user. A workflow
+invocation alone is not approval.
 
 ## Shared Skill Chassis
 
@@ -134,7 +157,7 @@ Each skill body should contain:
 - Workflow: short steps with observable outputs
 - Hard Rules: non-negotiable constraints
 - Rationalization Prevention: common agent excuses and counters
-- Outputs: artifacts or statements required before handoff
+- Outputs: a small Always set plus risk-triggered When Applicable artifacts
 - Handoff: likely next skills and prohibited shortcuts
 
 The root `SKILL.md` has a different job from the six workflow skills. It should include routing, risk-weighted entry, and a meta rationalization table for bypassing the whole methodology. It should not duplicate each workflow's detailed procedure.
@@ -142,7 +165,9 @@ The root `SKILL.md` has a different job from the six workflow skills. It should 
 ## Runtime Adapter Boundary
 
 The canonical methodology lives in the root `SKILL.md` and the six workflow
-`skills/*/SKILL.md` files. These files should use only the portable Agent Skills
+files under `skills/{clarify,plan,execute,investigate,verify,reflect}/SKILL.md`.
+The thin `skills/qingshan-skills/SKILL.md` file is a plugin adapter, not a
+seventh workflow definition. Canonical files should use only the portable Agent Skills
 frontmatter shared by Claude Code, Codex, and similar runtimes:
 
 ```yaml
@@ -168,6 +193,12 @@ links the canonical skills into Claude Code and Codex skill directories.
 Plugin manifests such as `.claude-plugin/plugin.json` or
 `.codex-plugin/plugin.json` should be added only when there is a real
 distribution or bundled-capability need.
+
+Codex exposes the canonical root router through the thin
+`skills/qingshan-skills/SKILL.md` plugin adapter. Cursor uses an `alwaysApply`
+bootstrap wrapper that reads the canonical root router, ETHOS, and selected
+workflow skill. Neither adapter may embed a separately maintained methodology
+summary.
 
 ## Core Ethos
 
@@ -232,16 +263,12 @@ the target artifact supports that shape. Readers mark stale or superseded entrie
 instead of silently applying outdated memory.
 
 `STATE.md`, Task Handoff artifacts, and fresh-context packets have a terminal
-lifecycle. They may preserve only current-task continuity, and the completion
-path must remove, trim, close, or explicitly preserve completed task state by
-project convention before the task is finally closed. `/execute` may clean
-simple completed-task state after local verification when no downstream handoff
-or `/reflect` needs it. `/verify` owns the cleanup gate. If `/reflect` needs the
-state for promotion, `/verify` must create a structured Reflection Handoff that
-names the candidate, evidence source, future behavior, temporary state needed,
-and cleanup owner. `/reflect` consumes the needed evidence first, then deletes
-or trims the completed task state even when the promotion gate rejects every
-durable write. Unrelated active task state must not be deleted.
+lifecycle. They may preserve only current-task continuity. `/verify` is the sole
+workflow that deletes, trims, or closes temporary task state. Other workflows
+report artifact status and leave cleanup pending. When `/reflect` needs evidence,
+`/verify` creates a self-contained Reflection Handoff with the checked evidence,
+cleans completed temporary state, and preserves unrelated active task state.
+`/reflect` consumes the handoff and never reads or edits temporary task state.
 
 ### Memory Promotion Gate
 
@@ -257,18 +284,21 @@ Before writing durable memory, the agent must answer:
 6. Is there evidence, verification output, or repeated experience behind it?
 7. Is this high-frequency or high-risk enough to update a skill rule instead of leaving it in memory?
 
-Global memory entries must be conditional rules, not chronological summaries. Preferred shape:
+Global memory entries must be conditional rules, not chronological summaries.
+Runtime required fields live in `/reflect`: `trigger`, `lesson`, `scope`,
+`evidence`, `date`, and `source`. Optional fields such as tags or confidence may
+be added, but they must not replace the required set.
+
+Example shape aligned with runtime:
 
 ```json
 {
-  "type": "technical_pattern",
-  "tags": ["electron", "intranet", "auto-update"],
   "trigger": "When designing Electron auto-update for intranet or offline deployments",
-  "recommendation": "Use a server-hosted update manifest, package integrity checks, staged rollout, and rollback path.",
-  "avoid": ["public update channel assumptions", "updates without rollback", "missing package verification"],
+  "lesson": "Use a server-hosted update manifest, package integrity checks, staged rollout, and rollback path.",
+  "scope": "cross-project; Electron intranet or offline deployments",
   "evidence": "Derived from a verified intranet deployment constraint.",
-  "confidence": "high",
-  "status": "active"
+  "date": "2026-06-16",
+  "source": "qingshan-skills verified deployment work"
 }
 ```
 
@@ -322,6 +352,13 @@ It should also inherit Matt Pocock's Grill Me rules:
 
 It should keep asking only while the answer can change the goal, non-goals, constraints, acceptance criteria, shared language, or a high-impact user decision. Once the remaining choices are mechanical, reversible, taste-level, or answerable from the codebase and docs, `/clarify` should stop asking and hand off to the next workflow.
 
+For unfamiliar stacks or user-visible behavior, `/clarify` should run an
+Unknowns Pass that separates known facts, known unknowns, likely unknown
+unknowns, and the smallest discovery probes. When asked to read a project or
+module, it should produce a scoped Project/Module Orientation with evidence,
+nodes, edges, layers, domain flow, guided reading order, unknowns, and next route
+without inventing a new top-level command or persistent graph product.
+
 Runtime-specific user-input mechanisms are an adapter detail, not part of the skill contract. If a host provides a native user-input action, `/clarify` may use it; otherwise it should ask a normal conversational question. If the host cannot surface interactive input, it should stop with one blocking question and a recommended answer rather than guessing.
 
 Outputs:
@@ -331,7 +368,7 @@ Outputs:
 - constraints
 - acceptance criteria
 - risk level
-- approved design or lightweight target statement
+- approved design, lightweight target statement, or Project/Module Orientation
 
 Handoff:
 
@@ -353,8 +390,13 @@ evidence or baselines are missing, it must route to `/investigate`.
 It classifies decisions:
 
 - Mechanical decisions: agent may decide using project conventions.
-- Taste or product decisions: batch for user review when they affect user-facing behavior.
-- High-impact or irreversible decisions: stop and get explicit user approval.
+- Taste decisions: batch with recommendations, then stop once for explicit user approval before execution.
+- High-impact or irreversible User Challenge decisions: stop immediately and get explicit user approval.
+
+Taste approval records the selected option and approval evidence. A complete
+task request, silence, lack of objection, or a later `/execute` invocation is
+not approval. Material changes to the recommendation, alternatives, coverage,
+or reversibility reopen the decision.
 
 Outputs:
 
@@ -382,16 +424,27 @@ proof. Medium and high-risk execution should read the plan and task handoff when
 they exist. If direct `/execute` entry lacks the required inputs, it must return
 to `/clarify` or `/plan` before editing.
 
-Before editing, `/execute` must pass a Context Gate:
+`/execute` must also reject open or changed Taste decisions and unresolved User
+Challenge decisions. It may reuse explicit approval preserved in the request,
+plan, or Task Handoff, but a direct `/execute` invocation is not approval.
 
-- Can the task be completed accurately in the current context?
-- Does the task touch multiple modules, runtimes, or ownership boundaries?
-- Is the plan long enough that execution details may crowd out the original intent?
-- Is the work independent enough to delegate safely?
-- Has the conversation been compressed, interrupted, or filled with unrelated exploration?
-- Would a fresh worker reduce risk more than it adds coordination cost?
+Before editing, `/execute` must pass the runtime Context Gate Scoring model in
+`skills/execute/SKILL.md`: count discrete context-risk signals and, when two or
+more are present, split the work or use fresh context. This design must not keep
+a separate qualitative question list. Fresh context is a reliability tool, not
+an excuse to fragment simple work. The main session keeps the plan, constraints,
+and review responsibility; workers receive only the task, relevant context,
+boundaries, and verification requirements.
 
-If the answer indicates context risk, `/execute` should use fresh context or subagents. The main session keeps the plan, constraints, and review responsibility; workers receive only the task, relevant context, boundaries, and verification requirements. Fresh context is a reliability tool, not an excuse to fragment simple work.
+Low-risk direct execution may carry referenced memory on a lightweight target
+statement; that target is a valid named-memory container and does not require a
+formal Task Handoff only to satisfy memory rules.
+
+Before editing an unfamiliar language, framework, runtime, build system, or
+business domain, `/execute` should run the smallest read-only Unknown-Unknowns
+Probe that can expose local conventions, generated code, lifecycle hooks,
+external contracts, permissions, and business invariants. Medium and high-risk
+execution records any deviation from the approved plan.
 
 For high-risk code changes, TDD is the default:
 
@@ -413,7 +466,8 @@ Outputs:
 
 Handoff:
 
-- to `/verify` before any completion claim
+- continue to `/verify` when the original request authorizes the complete
+  outcome and the root continuation contract permits it
 - to `/investigate` when execution exposes unexpected failures
 - back to `/plan` if task boundaries prove wrong
 
@@ -443,13 +497,22 @@ Outputs:
 
 Handoff:
 
-- to `/plan` for non-trivial fixes
-- to `/execute` for small, obvious fixes after evidence exists
-- remain in `/investigate` if evidence is still insufficient
+- to `/plan` when the fix needs decomposition, non-Low risk, sequencing, or
+  user-owned decisions
+- to `/execute` when causal evidence exists, risk re-grades to Low, inputs are
+  complete, and no rollout or user-decision risk remains
+- remain in `/investigate` if causal confidence is still insufficient
 
 ### `/verify`
 
 `/verify` proves the work is valid before completion is claimed. It includes testing, type checking, build checks, manual checks, review dimensions, and task-specific proof.
+
+Verification should choose the smallest observable signal that can see,
+measure, or interact with the changed result instead of relying on an
+implementer summary. High-risk, unfamiliar-stack, fresh-context, broad-diff, or
+release-path work should include a concise reviewer explainer and an
+understanding check when it improves human handoff. `/verify` is also the sole
+cleanup owner for temporary task state.
 
 Verification depends on task type:
 
@@ -468,13 +531,17 @@ Outputs:
 - relevant command results
 - manual checks performed
 - acceptance criteria status
+- scope drift and observability status
+- temporary state cleanup status when task-local artifacts were used
 - residual risks
 
 Handoff:
 
 - to `/reflect` when useful learning should be captured
 - to `/investigate` if verification fails unexpectedly
-- to `/execute` if a small fix is needed and the root cause is clear
+- to `/execute` only when Fix-Path Exit Criteria are met or missing
+  distinguishing proof must be authored under an authorized implementation
+  request
 
 ### `/reflect`
 
@@ -533,7 +600,8 @@ The implementation plan should produce:
 
 - root `SKILL.md` as session-bootstrap enforcement skill with routing table, risk-weighted entry, and meta anti-bypass rationalization table
 - `ETHOS.md`
-- six skill files under `skills/`
+- six workflow skill files under `skills/`, plus the thin
+  `skills/qingshan-skills/SKILL.md` plugin adapter
 - prompt templates only where fresh-context execution or review requires them
 - docs for philosophy and installation
 - context persistence rules inside `/clarify`, durable decision rules inside `/plan`, and memory promotion rules inside `/reflect`, with read rules referenced by `/clarify`, `/plan`, `/execute`, and `/verify`
@@ -549,6 +617,7 @@ Required pressure scenarios:
 - Simple task over-processing: a typo or small docs fix should not trigger a heavyweight plan.
 - Feature ambiguity: a vague feature request should enter `/clarify` instead of direct implementation.
 - User decision theft: an architecture or product trade-off should be classified as Taste or User Challenge, not silently decided.
+- Taste approval theft: Taste decisions should be batched into one explicit approval gate, and `/execute` invocation alone must not approve them.
 - Bug guesswork: a bug report should enter `/investigate` and collect evidence before editing.
 - Performance guesswork: a performance request should establish a baseline before optimization.
 - Context rot: a large cross-module task should trigger the `/execute` Context Gate and consider fresh context.
@@ -561,8 +630,13 @@ Required pressure scenarios:
 - Code review routing: review requests should enter `/verify`, not `/clarify` or implementation.
 - Scope creep: an agent should reject unrelated cleanup during a focused change.
 - Methodology bypass: an apparently simple, urgent, or obvious task should still enter the lightest applicable workflow instead of skipping the root routing check.
+- Workflow continuation: complete-outcome requests continue across safe routine handoffs, while phase-only invocations and root stop conditions return control.
+- Loop Contract scope: ordinary finite tasks do not gain loop ceremony, while recurring or automation-backed work declares trigger, stop, proof, and usage boundaries.
+- State lifecycle cleanup: `/verify` alone cleans temporary task state after preserving any reflection evidence in a self-contained handoff.
 - Runtime smoke boundary: hosted runtime smoke tests should remain adapter-level, optional, and explicit opt-in.
 
-These tests do not need to simulate every runtime. They should verify the methodology's behavioral contract: when the agent is tempted to skip discipline, the skill text pulls it back.
+Manual transcripts are contract artifacts, not black-box runtime proof. Selected
+root routing and canonical body behaviors should also have optional real-runtime
+checks whose external model cost remains explicit.
 
 The previous eight-skill outline is superseded by this six-skill structure. A future split requires explicit design review and user approval.

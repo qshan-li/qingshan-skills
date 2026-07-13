@@ -24,13 +24,11 @@ are missing, use the fallback route before irreversible action.
 - Work revealed a recurring trap, invariant, verification command, or project-specific rule.
 - A skill rule should be sharpened because the agent found a loophole.
 - A deployment, performance, or debugging lesson will affect future work.
-- `/verify` assigned cleanup ownership in a structured Reflection Handoff.
 - The user asks for retrospective learning.
 
 ## When NOT to Use
 
-- The work produced no reusable lesson and no `/verify` handoff assigned
-  temporary-state disposal.
+- The work produced no reusable lesson.
 - The note would be a chronological summary.
 - The fact is already obvious from the code.
 - Verification has not passed. Use `/verify`.
@@ -107,10 +105,9 @@ plan, context manifest, or verification report rather than relying on raw
 conversation history.
 
 When `/verify` creates a structured Reflection Handoff, read its candidate type,
-evidence source, future behavior, temporary state needed, and cleanup owner
-before using raw conversation history. If the Memory Promotion Gate rejects the
-candidate, still dispose of any completed task state whose cleanup owner is
-`/reflect`.
+checked evidence source, self-contained evidence, future behavior, and cleanup
+status before using raw conversation history. Temporary task state must already
+be cleaned by `/verify`.
 
 Global memory entries must include at least: `trigger`, `lesson`, `scope`,
 `evidence`, `date`, and `source`. Without a clear trigger, keep the learning
@@ -121,19 +118,13 @@ invalidation condition when the target artifact supports that structure. When an
 existing learning no longer applies, supersede or mark it stale instead of
 appending a contradictory lesson.
 
-## Temporary State Disposal
+## Temporary State Boundary
 
-When reflection receives cleanup ownership or reads root `STATE.md` as evidence
-for promotion, consume only the details needed to evaluate the durable lesson,
-decision, glossary entry, or skill rule. Before ending the loop, dispose of the
-completed task state: delete root `STATE.md` if it contains only that completed
-task, or trim only the completed task's section when unrelated active task state
-remains.
-
-Do this even when reflection writes no durable artifact because the candidate
-fails the promotion gate. Do not preserve `STATE.md` as a diary, retrospective,
-or evidence archive after the evidence has been evaluated. Do not delete
-unrelated active task state.
+Reflection consumes the self-contained evidence in the Reflection Handoff. It
+does not read, delete, or trim root `STATE.md`, Task Handoff artifacts, or
+fresh-context packets. If required evidence is missing from the handoff, report
+the candidate as blocked and return to `/verify` rather than taking cleanup
+ownership.
 
 ## Session History Retrieval
 
@@ -176,7 +167,7 @@ Record an ADR or durable decision only when all three are true:
 
 ## Workflow
 
-1. Identify whether `/verify` provided a structured Reflection Handoff and whether cleanup ownership is assigned to `/reflect`.
+1. Identify whether `/verify` provided a structured Reflection Handoff with self-contained checked evidence.
 2. Identify whether the outcome is a reusable lesson, a durable decision, both, or neither.
 3. For a reusable lesson, state the future trigger and apply the Memory Promotion Gate.
 4. For a durable decision, record the decision, scope, rationale, rejected alternatives, and reversal conditions.
@@ -185,8 +176,7 @@ Record an ADR or durable decision only when all three are true:
 7. Confirm the future reader and retrieval trigger from the Consumption Contract.
 8. Avoid duplicating facts already present in code or docs.
 9. Record the lesson or decision concisely, or state why no durable artifact was written.
-10. Dispose of consumed root `STATE.md` task state when reflection used it or cleanup ownership was assigned to `/reflect`.
-11. Verify the artifact still reads as a rule, glossary entry, or decision record, not a diary.
+10. Verify the artifact still reads as a rule, glossary entry, or decision record, not a diary.
 
 ## Hard Rules
 
@@ -202,8 +192,8 @@ Record an ADR or durable decision only when all three are true:
 - Do not create contradictory decision records; supersede reversals explicitly.
 - Do not put implementation details or plans into glossary entries.
 - Do not create ADRs for reversible, unsurprising, or no-trade-off choices.
-- Do not leave consumed root `STATE.md` task state behind after durable promotion.
-- Do not skip temporary-state disposal just because the promotion gate rejected the durable memory candidate.
+- Do not read, delete, or trim temporary task state; `/verify` is the sole cleanup owner.
+- Do not accept a Reflection Handoff that depends on temporary state not included as checked evidence.
 
 ## Rationalization Prevention
 
@@ -218,20 +208,27 @@ Record an ADR or durable decision only when all three are true:
 
 ## Outputs
 
+### Always
+
 - Reusable lesson.
 - Future trigger.
 - Future reader and consumption artifact.
+- Artifact updated or reason no update was needed.
+
+### When Applicable
+
 - Retrieval source used, if raw session history affected the reflection.
 - Glossary entry when stable shared language was captured.
 - Durable Decision Log entry when a durable decision was made.
-- Artifact updated or reason no update was needed.
 - Reflection Handoff consumed when `/verify` provided one.
-- Temporary state disposal status when root `STATE.md` was consumed.
+- Temporary state cleanup status reported by `/verify`.
 - Any skill improvement required.
 
 ## Handoff
 
-After completing reflection, **stop and wait for the user to decide the next step**. Do not automatically invoke any other skill.
+Apply root `Workflow Continuation`. Reflection normally ends the current task;
+continue only when the original request explicitly includes another in-scope
+outcome and no stop condition applies.
 
 - Update project context, docs, or skills only when the lesson is reusable.
 - End the loop when there is no durable learning to capture.

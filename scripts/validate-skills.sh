@@ -121,6 +121,8 @@ validate_root_skill() {
 
   require_section "$path" "Purpose"
   require_section "$path" "Bootstrap Enforcement"
+  require_section "$path" "Loop Contract"
+  require_section "$path" "Workflow Continuation"
   require_section "$path" "Routing"
   require_section "$path" "Routing Tie-breakers"
   require_section "$path" "Risk Gate"
@@ -165,13 +167,7 @@ validate_unique_signal_ids() {
 validate_json() {
   local path="$1"
   require_file "$path"
-  if command -v jq >/dev/null 2>&1; then
-    jq empty "$path" 2>/dev/null || fail "$path: invalid JSON"
-  elif command -v python3 >/dev/null 2>&1; then
-    python3 -c "import json; json.load(open('$path'))" 2>/dev/null || fail "$path: invalid JSON"
-  else
-    echo "WARN: skipping JSON validation for $path (no jq or python3)" >&2
-  fi
+  jq empty "$path" 2>/dev/null || fail "$path: invalid JSON"
 }
 
 validate_plugin_manifest() {
@@ -181,6 +177,17 @@ validate_plugin_manifest() {
   jq -e '.description' "$path" >/dev/null 2>&1 || fail "$path: missing 'description' field"
   jq -e '.version' "$path" >/dev/null 2>&1 || fail "$path: missing 'version' field"
 }
+
+validate_root_adapter() {
+  local path="$1"
+
+  validate_frontmatter "$path"
+  require_text "$path" '../../SKILL.md'
+  require_text "$path" '../../ETHOS.md'
+  require_text "$path" 'without duplicating its workflow semantics'
+}
+
+command -v jq >/dev/null 2>&1 || fail "jq is required for repository validation"
 
 require_file "SKILL.md"
 require_file "ETHOS.md"
@@ -209,14 +216,30 @@ require_file "prompts/quality-reviewer.md"
 require_file "prompts/adversarial-reviewer.md"
 require_file "scripts/validate-behavior-tests.sh"
 require_file "scripts/validate-runtime-smoke.sh"
+require_file "scripts/validate-runtime-behavior.sh"
+require_file "tests/plugin-layout.test.sh"
+require_file "tests/runtime-adapters.test.sh"
+require_file "tests/workflow-contracts.test.sh"
 require_file "tests/behavior/README.md"
 require_file "tests/runtime-smoke/README.md"
+require_file "skills/qingshan-skills/SKILL.md"
 
 validate_root_skill "SKILL.md"
 
 validate_plugin_manifest ".claude-plugin/plugin.json"
 validate_plugin_manifest ".claude-plugin/marketplace.json"
 validate_plugin_manifest ".codex-plugin/plugin.json"
+validate_root_adapter "skills/qingshan-skills/SKILL.md"
+
+jq -e '.skills == "./skills/"' .codex-plugin/plugin.json >/dev/null 2>&1 ||
+  fail ".codex-plugin/plugin.json: skills must be ./skills/"
+for field in displayName shortDescription longDescription developerName category defaultPrompt; do
+  jq -e --arg field "$field" '.interface[$field] != null' .codex-plugin/plugin.json >/dev/null 2>&1 ||
+    fail ".codex-plugin/plugin.json: missing interface.${field}"
+done
+jq -e '.interface.defaultPrompts == null and .interface.websiteUrl == null' \
+  .codex-plugin/plugin.json >/dev/null 2>&1 ||
+  fail ".codex-plugin/plugin.json: unsupported interface field"
 
 require_text ".cursor/rules/qingshan-skills.mdc" "alwaysApply: true"
 
@@ -233,26 +256,51 @@ require_text "SKILL.md" "Ship, deploy, publish, PR, merge, release"
 require_text "SKILL.md" "Code review, PR or diff review"
 require_text "SKILL.md" "/verify"
 require_text "SKILL.md" "## Memory Retrieval Gate"
+require_text "SKILL.md" "## Risk Classification Floors"
+require_text "SKILL.md" "lightweight target statement"
 require_text "SKILL.md" "## Temporary State Lifecycle"
-require_text "SKILL.md" "structured reflection handoff"
+require_text "SKILL.md" "self-contained Reflection Handoff"
 require_text "SKILL.md" "## Routing Tie-breakers"
 require_text "SKILL.md" "## Workflow Loop Escape"
 require_text "SKILL.md" "the same transition repeats three"
+require_text "SKILL.md" "structured map and unknowns"
+require_text "skills/clarify/SKILL.md" "## Unknowns Pass"
+require_text "skills/clarify/SKILL.md" "## Acceptance Package Provenance"
+require_text "skills/clarify/SKILL.md" "agent-proposed goal"
+require_text "skills/clarify/SKILL.md" "## Project/Module Orientation"
+require_text "skills/clarify/SKILL.md" "teaching graph"
+require_text "skills/clarify/SKILL.md" "Separate facts from interpretation"
+require_text "skills/clarify/SKILL.md" "goal-clarify or orientation"
 require_text "skills/plan/SKILL.md" "## Direct Entry Preconditions"
 require_text "skills/plan/SKILL.md" "Decision Brief"
+require_text "skills/plan/SKILL.md" "## Decision-First Planning"
 require_text "skills/plan/SKILL.md" "LEARNINGS.md"
 require_text "skills/plan/SKILL.md" "reversal conditions"
 require_text "skills/execute/SKILL.md" "Low risk: the task statement or lightweight target statement"
+require_text "skills/execute/SKILL.md" "lightweight target, or context manifest"
 require_text "skills/execute/SKILL.md" "## Context Gate Scoring"
+require_text "skills/execute/SKILL.md" "## Unknown-Unknowns Probe"
+require_text "skills/execute/SKILL.md" "## Deviation Log"
 require_text "skills/execute/SKILL.md" "## Fresh Worker Recovery"
-require_text "skills/execute/SKILL.md" "## Temporary State Cleanup"
-require_text "skills/execute/SKILL.md" "Temporary state cleanup: not used | cleaned | pending for /verify | handed to /reflect | preserved active state"
+require_text "skills/execute/SKILL.md" "## Temporary State Handoff"
+require_text "skills/execute/SKILL.md" "Temporary state: not used | pending for /verify | preserved active state"
 require_text "skills/execute/SKILL.md" "NEEDS_CONTEXT"
 require_text "skills/execute/SKILL.md" "BLOCKED"
+require_text "skills/verify/SKILL.md" "## Reviewer Explainer and Check"
+require_text "skills/verify/SKILL.md" "## Behavior Regression Proof"
+require_text "skills/verify/SKILL.md" "does not author production code or tests"
+require_text "skills/verify/SKILL.md" "## Pure Review Boundary"
+require_text "docs/templates/task-handoff.md" "Goal"
+require_text "skills/verify/SKILL.md" "release action status"
+require_text "skills/clarify/SKILL.md" "Only a claim labeled \`repository-derived\`"
+require_text "SKILL.md" "any open or approved User Challenge decision"
+require_text "SKILL.md" "public contract change"
+require_text ".cursor/rules/qingshan-skills.mdc" "QINGSHAN_SKILLS_ROOT"
+require_text "docs/installation.md" "install-cursor-project-rule.sh"
 require_text "skills/verify/SKILL.md" "Scope Drift Detection"
 require_text "skills/verify/SKILL.md" "## Reflection Handoff"
 require_text "skills/verify/SKILL.md" "## Temporary State Cleanup"
-require_text "skills/verify/SKILL.md" 'Read the `/execute` temporary state cleanup outcome'
+require_text "skills/verify/SKILL.md" 'Read the `/execute` temporary state status'
 require_text "skills/verify/SKILL.md" "### Mandatory Core"
 require_text "skills/verify/SKILL.md" "### Risk-triggered Blocks"
 require_text "skills/verify/SKILL.md" "durable decisions, project learning"
@@ -260,18 +308,23 @@ require_text "skills/verify/SKILL.md" "Review Readiness Dashboard"
 require_text "skills/verify/SKILL.md" "Adversarial Review"
 require_text "skills/reflect/SKILL.md" "Durable Decision Log"
 require_text "skills/reflect/SKILL.md" "## Consumption Contract"
-require_text "skills/reflect/SKILL.md" "## Temporary State Disposal"
+require_text "skills/reflect/SKILL.md" "## Temporary State Boundary"
 require_text "skills/reflect/SKILL.md" "## Promotion Decision Matrix"
-require_text "skills/reflect/SKILL.md" "Memory Promotion Gate rejects"
+require_text "skills/reflect/SKILL.md" "Temporary task state must already"
 require_text "skills/reflect/SKILL.md" "invalidation condition"
 require_text "skills/reflect/SKILL.md" 'trigger`, `lesson`, `scope`,'
+require_text "skills/investigate/SKILL.md" "## Fix-Path Exit Criteria"
+require_text "docs/templates/release-checklist.md" "release action status: not attempted | succeeded | failed | handed off"
+require_text "docs/templates/task-handoff.md" "agent-proposed"
+require_text "AGENTS.md" "Runtime behavior source of truth"
 require_text "docs/runtime-adapters.md" "Runtime-specific fields, manifests, hooks, and UI metadata belong outside the"
 require_text "docs/runtime-adapters.md" "## Automation Boundary"
 require_text "docs/runtime-adapters.md" "## Bootstrap Wrapper"
 require_text "docs/runtime-adapters.md" "Runtime automation protects workflow boundaries; it does not drive the whole"
 require_text "docs/runtime-adapters.md" "## Memory Retrieval Boundary"
-require_text "docs/testing.md" "## Layer 3: Transcript Behavior Tests"
+require_text "docs/testing.md" "## Layer 3: Contract Artifact Coverage"
 require_text "docs/testing.md" "scripts/validate-runtime-smoke.sh"
+require_text "docs/testing.md" "scripts/validate-runtime-behavior.sh"
 require_text "docs/testing.md" "ACP is a transport and host-integration layer"
 require_text "CONTEXT.md" "This file is a glossary only."
 require_text "README.md" "docs/templates/"
@@ -288,6 +341,8 @@ require_text "docs/templates/fresh-context-packet.md" "## Stop Conditions"
 require_text "docs/templates/release-checklist.md" "## Scope Review"
 require_text "docs/templates/runtime-bootstrap.md" "## Adapter Must Not"
 require_text "docs/templates/behavior-transcript.md" "## Signal evidence"
+require_text "docs/templates/behavior-transcript.md" "## Command"
+require_text "docs/templates/behavior-transcript.md" "## Runtime Version"
 require_text "docs/templates/task-handoff.md" "## Investigation Evidence"
 require_text "prompts/fresh-worker.md" "## Review Handoff"
 require_text "prompts/spec-reviewer.md" "## Inputs Required"
@@ -299,6 +354,9 @@ for skill in clarify plan execute investigate verify reflect; do
   validate_skill "skills/${skill}/SKILL.md"
   require_text "skills/${skill}/SKILL.md" 'Direct invocation must still honor root `SKILL.md` and `ETHOS.md`.'
   require_text "skills/${skill}/SKILL.md" "Before continuing from direct invocation"
+  require_text "skills/${skill}/SKILL.md" "### Always"
+  require_text "skills/${skill}/SKILL.md" "### When Applicable"
+  require_text "skills/${skill}/SKILL.md" 'Apply root `Workflow Continuation`'
 done
 
 require_text "skills/plan/SKILL.md" "docs/templates/task-handoff.md"
@@ -351,6 +409,15 @@ required_pressure_scenarios=(
   state-lifecycle-cleanup
   fresh-worker-recovery
   workflow-loop-escape
+  workflow-continuation
+  loop-contract-scope
+  unfamiliar-stack-unknowns
+  project-module-orientation
+  risk-classification-floors
+  ac-provenance-gate
+  behavior-regression-proof
+  investigate-fix-path-exit
+  release-action-status
 )
 
 for scenario in "${required_pressure_scenarios[@]}"; do
@@ -364,5 +431,8 @@ done
 validate_unique_signal_ids
 
 bash scripts/validate-behavior-tests.sh >/dev/null
+bash tests/plugin-layout.test.sh >/dev/null
+bash tests/runtime-adapters.test.sh >/dev/null
+bash tests/workflow-contracts.test.sh >/dev/null
 
 echo "OK qingshan-skills validation passed"

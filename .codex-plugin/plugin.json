@@ -16,25 +16,19 @@
     "verification",
     "engineering"
   ],
-  "skills": [
-    "./skills/qingshan-skills",
-    "./skills/clarify",
-    "./skills/plan",
-    "./skills/execute",
-    "./skills/investigate",
-    "./skills/verify",
-    "./skills/reflect"
-  ],
+  "skills": "./skills/",
   "interface": {
     "displayName": "qingshan-skills",
     "shortDescription": "Risk-graded workflows, surgical changes, and verify-before-conclude for coding agents",
+    "longDescription": "A lightweight engineering methodology that routes work by risk, preserves user decisions, keeps changes surgical, and requires fresh evidence before completion claims.",
+    "developerName": "liqingshan",
     "category": "Coding",
     "capabilities": ["Interactive", "Read", "Write"],
-    "defaultPrompts": [
+    "defaultPrompt": [
       "I have a software engineering task to work on.",
       "Help me fix a bug in this project.",
       "I need to plan a feature implementation."
     ],
-    "websiteUrl": "https://github.com/qshan-li/qingshan-skills"
+    "websiteURL": "https://github.com/qshan-li/qingshan-skills"
   }
 }

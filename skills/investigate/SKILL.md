@@ -28,7 +28,12 @@ are missing, use the fallback route before irreversible action.
 
 ## When NOT to Use
 
-- The issue is already reproduced, root cause is known, and the fix is low-risk. Use `/execute`.
+- Fix-Path Exit Criteria for direct `/execute` are already met: reproduced or
+  observed failure, causal root-cause evidence, Low re-grade, complete execution
+  inputs, no open Taste or User Challenge decision, and no rollout, rollback, or
+  sequencing risk. Use `/execute`.
+- Causal root cause is known but the fix is non-Low or needs decomposition,
+  sequencing, validation, or rollback design. Use `/plan`.
 - The task is a new feature or planned refactor with no failure signal. Use `/clarify`.
 - Completed work needs proof. Use `/verify`.
 
@@ -73,7 +78,10 @@ facts, narrowed surface, hypotheses with confidence, and recommended fix path.
 5. Narrow the failing surface.
 6. Form ranked falsifiable root-cause hypotheses and test the strongest one.
 7. Persist an Investigation Handoff when the evidence or fix path must survive outside the conversation.
-8. Recommend the smallest fix path.
+8. Re-state risk with root Risk Classification Floors when new evidence changes
+   scope, failing surface, irreversibility, security or data or deploy exposure,
+   user-visible behavior, or decision grade.
+9. Recommend the smallest fix path and the next skill.
 
 Performance work must establish a baseline and repeatable measurement method. Deployment work must identify environment boundaries and failure evidence. Security and stability work must include a threat or failure model.
 
@@ -87,33 +95,60 @@ Performance work must establish a baseline and repeatable measurement method. De
 - Do not proceed from a weak or unrelated feedback loop as if it reproduced the user's failure.
 - Do not test multiple variables in one probe when isolating root cause.
 - Do not leave medium/high-risk investigation evidence only in the conversation when handing off to `/plan`, `/execute`, or fresh context.
+- Do not exit to `/execute` on "small" or "obvious" alone; use Fix-Path Exit Criteria.
 
 ## Rationalization Prevention
 
 | Excuse | Reality |
 | --- | --- |
 | "This is probably cache" | Probably is not evidence |
-| "The fix is obvious" | Obvious fixes still need reproduction |
+| "The fix is obvious" | Obvious fixes still need reproduction and Fix-Path Exit Criteria |
+| "It is only one file, so skip /plan" | Exit on causal evidence, Low re-grade, complete inputs, and no sequencing risk |
 | "Benchmarks take too long" | Performance work without baselines is guessing |
 | "Logs are noisy" | Find the signal before editing |
 | "One plausible hypothesis is enough" | Single-hypothesis debugging anchors too early |
 
 ## Outputs
 
+### Always
+
 - Reproduction or observation method.
-- Feedback loop quality and limits.
 - Facts collected.
 - Narrowed failing surface.
 - Root-cause hypotheses and confidence.
-- Recommended fix path.
+- Recommended fix path and next skill.
+- Risk re-grade after evidence, or confirmation that risk did not change.
+
+### When Applicable
+
+- Feedback loop quality and limits.
 - Investigation Handoff artifact path when one was needed, or the reason no handoff artifact was needed.
+
+## Fix-Path Exit Criteria
+
+Continue investigating until there is causal evidence for the root cause, not
+only a plausible story. Then choose the exit:
+
+- `/execute` when all of these are true: the failure is reproduced or observed
+  through the feedback loop, the root cause has causal evidence, risk re-grades
+  to Low, goal, boundaries, acceptance criteria, and required proof are present,
+  no Taste or User Challenge decision remains, and no rollout, rollback, or
+  sequencing risk remains.
+- `/plan` when the fix needs decomposition, multi-surface sequencing, non-Low
+  risk, validation or rollback design, or any open user-owned decision.
+- Stay in `/investigate` when causal confidence is still too low.
+
+Do not use "obvious" or "small" as the exit test. File count alone is not the
+threshold.
 
 ## Handoff
 
-After presenting the investigation findings, **stop and wait for the user to decide the next step**. Do not automatically invoke `/plan`, `/execute`, or any other skill.
+Apply root `Workflow Continuation`. Continue to `/plan` or `/execute` when the
+original request authorizes a fix, Fix-Path Exit Criteria are met, and no stop
+condition applies; otherwise return control with the recommended next route.
 
 Recommended next steps for the user:
 
-- `/plan` for non-trivial fixes.
-- `/execute` for small fixes after evidence exists.
-- Continue `/investigate` when confidence is too low.
+- `/plan` when Fix-Path Exit Criteria require decomposition or non-Low risk.
+- `/execute` when Fix-Path Exit Criteria for direct execution are met.
+- Continue `/investigate` when causal confidence is too low.

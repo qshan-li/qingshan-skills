@@ -2,8 +2,10 @@
 
 qingshan-skills has one canonical skill contract and separate runtime adapters.
 
-The canonical contract is the repository root `SKILL.md` plus `skills/*/SKILL.md`.
-Those files define the methodology and must stay portable across agent runtimes.
+The canonical contract is the repository root `SKILL.md` plus the six workflow
+files under `skills/{clarify,plan,execute,investigate,verify,reflect}/SKILL.md`.
+`skills/qingshan-skills/SKILL.md` is a thin plugin adapter, not another canonical
+workflow definition. The canonical files define the methodology and must stay portable across agent runtimes.
 They use only the common Agent Skills frontmatter surface:
 
 ```yaml
@@ -51,7 +53,8 @@ Adapters may:
   validation path
 - continue across a handoff when the original user request asks the agent to
   complete the work, the risk is controlled, acceptance criteria are clear, and
-  no User Challenge decision remains open
+  every Taste decision is explicitly approved with no root
+  `Workflow Continuation` stop condition left open
 - require fresh verification before completion, release, merge, publish, or
   deployment claims
 
@@ -59,7 +62,8 @@ Adapters must not:
 
 - run `/clarify -> /plan -> /execute -> /verify` unconditionally
 - turn a `/clarify` handoff into automatic execution when product,
-  architecture, release, or irreversible decisions remain
+  architecture, release, irreversible, or unapproved Taste decisions remain
+- treat a workflow invocation, silence, or lack of objection as Taste approval
 - hide stop-or-continue decisions from the user when automation changes risk,
   scope, ownership, or release exposure
 
@@ -76,7 +80,7 @@ the task type, stack, risk, artifact, or failure mode.
 Adapters must return targeted excerpts or artifact references, not full memory
 dumps. Missing global memory is not a blocker. Adapter retrieval must not change
 canonical workflow semantics, invent new memory rules, or continue past User
-Challenge decisions.
+Challenge decisions or open Taste approval gates.
 
 ## Workflow Breadcrumbs
 
@@ -96,7 +100,7 @@ Breadcrumbs must not:
 
 - fork the meaning of any canonical workflow skill
 - make task creation mandatory for low-risk work
-- silently continue past User Challenge decisions
+- silently continue past open Taste or User Challenge decisions
 - treat a hook, worker report, or manifest as completion proof
 
 Workflow breadcrumbs are an adapter convenience. The portable source of truth
@@ -122,8 +126,8 @@ skills for a specific runtime.
 | Runtime | Adapter surface | Use |
 | --- | --- | --- |
 | Claude Code | `~/.claude/skills`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Local skill loading, plugin marketplace distribution, optional Claude-only enhancements such as tool declarations, hooks, forked context, or subagents |
-| Codex | `$CODEX_HOME/skills`, `.codex-plugin/plugin.json` | Local skill loading, plugin distribution, UI metadata, invocation policy, and dependency declarations |
-| Cursor | `.cursor/rules/qingshan-skills.mdc` | Project rules with `alwaysApply: true` providing root router, ETHOS, and all six workflow skill summaries |
+| Codex | `$CODEX_HOME/skills`, `.codex-plugin/plugin.json`, `skills/qingshan-skills/SKILL.md` | Local skill loading plus a thin plugin adapter that loads the canonical root router |
+| Cursor | Consumer `.cursor/rules/qingshan-skills.mdc` via `scripts/install-cursor-project-rule.sh` | An `alwaysApply: true` bootstrap wrapper that resolves `QINGSHAN_SKILLS_ROOT` / baked path / `~/.qingshan-skills/repo`, then reads the canonical root router, ETHOS, and selected workflow skill |
 | Generic agents | `~/.agents/skills` | Local skill loading for runtimes that scan a personal skill folder (OpenCode, Gemini CLI, etc.) |
 
 ## Current Scope
@@ -131,7 +135,7 @@ skills for a specific runtime.
 The repository supports Claude Code, Codex, Cursor, and generic agent runtimes:
 
 - **Claude Code and Codex**: `scripts/sync-global-skills.sh` or `./setup` links the canonical skill folders into both runtimes. Plugin manifests (`.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`) enable marketplace and plugin-system distribution.
-- **Cursor**: `.cursor/rules/qingshan-skills.mdc` provides a complete summary of the methodology as a project rule.
+- **Cursor**: install the thin bootstrap rule into each consumer project with `scripts/install-cursor-project-rule.sh`. The full repository remains at a resolvable skills root (`QINGSHAN_SKILLS_ROOT`, baked path, or `~/.qingshan-skills/repo`).
 - **Generic agents**: `./setup` links skills into `~/.agents/skills/` for runtimes that scan that directory.
 
 Runtime-specific fields, manifests, hooks, and UI metadata remain outside the canonical `SKILL.md` files.

@@ -11,6 +11,13 @@ Implementer | Spec Reviewer | Quality Reviewer
 
 <One scoped outcome.>
 
+## Loop Contract
+
+- Trigger:
+- Stop condition:
+- Proof:
+- Usage boundary:
+
 ## Owned Files
 
 - <file path>
@@ -24,9 +31,10 @@ the Context Manifest as `read-only reference`.
 
 ## Relevant Context
 
-<Only the plan, acceptance criteria, glossary terms, and constraints needed for
-this scoped task. Include `LEARNINGS.md`, durable decisions, or global memory
-excerpts only when their trigger matches this task.>
+<Only the plan, acceptance criteria, approved decision options and evidence,
+glossary terms, and constraints needed for this scoped task. Include
+`LEARNINGS.md`, durable decisions, or global memory excerpts only when their
+trigger matches this task.>
 
 ## Context Manifest
 
@@ -40,6 +48,12 @@ use targeted excerpts with the trigger that made them relevant.
 
 - <command, check, artifact, or manual proof>
 
+## Pilot Scope
+
+<For broad, repetitive, migration, or multi-agent work, name the first narrow
+slice that should pass before expanding. Use `not applicable` for a single
+scoped worker task.>
+
 ## Lifecycle
 
 <Temporary until `/verify` accepts or rejects the worker output. Delete, close,
@@ -50,7 +64,11 @@ closed.>
 
 - Return `NEEDS_CONTEXT` if required information is missing.
 - Return `BLOCKED` when evidence shows the task cannot proceed safely.
+- Return `BLOCKED` when a Taste decision is open or changed, or a User Challenge
+  decision is unresolved.
 - Do not widen scope to solve adjacent problems.
+- Do not expand beyond the pilot slice until its proof passes, when a pilot
+  scope is required.
 
 ## Report Format
 

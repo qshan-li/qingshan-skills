@@ -23,14 +23,16 @@ qingshan-skills is not a set of isolated commands — it is a lightweight routin
 2. Follow the Memory Retrieval Gate for trigger-based retrieval: only read `CONTEXT.md`, `LEARNINGS.md`, decision artifacts, or global memory excerpts that match the task type, risk, tech stack, artifact, failure mode, or decision boundary — never a full dump.
 3. Select the entry skill: low-risk tasks enter the shortest path that solves the problem; medium-to-high-risk tasks first fill gaps in understanding, planning, evidence, or rollback thinking.
 4. Execute the skill's `Workflow`: each skill has trigger conditions, risk thresholds, hard rules, outputs, and handoff methods.
-5. Hand off between skills: `/clarify` produces a clear goal and persists confirmed shared language; `/plan` produces an executable plan and records approved durable decisions; `/execute` makes changes; `/verify` proves conclusions; `/reflect` captures only reusable lessons.
-6. Any conclusion of "done, fixed, passing, shipped, optimized, or ready-for-review" must first pass through `/verify` with fresh evidence.
+5. Continue across routine handoffs when the original request asks for the complete outcome, acceptance criteria are user-supplied, repository-derived with citation, or user-confirmed, every Taste decision is explicitly approved, and no User Challenge or missing prerequisite requires a stop. A phase-only invocation returns control after that stage.
+6. Add a Loop Contract only for recurring, automation-backed, fresh-context, multi-agent, migration, or broad repetitive work. Ordinary finite tasks rely on their goal, acceptance criteria, boundaries, and proof.
+7. Any conclusion of "done, fixed, passing, shipped, optimized, or ready-for-review" must first pass through `/verify` with fresh evidence. `/verify` is the sole owner of temporary task-state cleanup.
 
 ### Quick Routing Reference
 
 | Task Signal | Entry Skill | Typical Follow-up |
 | --- | --- | --- |
 | Goal, scope, acceptance criteria, terminology, or user decision unclear | [`/clarify`](skills/clarify/SKILL.md) | Low-risk → `/execute`; needs decomposition → `/plan` |
+| Read a project, directory, or module and produce a structured map plus unknowns | [`/clarify`](skills/clarify/SKILL.md) | Continue `/clarify`, or route to `/plan`, `/investigate`, or `/execute` when a scoped next step is clear |
 | Goal is clear, but needs task breakdown, ordering, decision grading, or verification design | [`/plan`](skills/plan/SKILL.md) | `/execute → /verify` |
 | Dependency or toolchain upgrade | [`/plan`](skills/plan/SKILL.md) | Control blast radius, compatibility impact, and verification path |
 | Plan is clear, needs code, config, docs, tools, or project structure changes | [`/execute`](skills/execute/SKILL.md) | `/verify` |
@@ -38,7 +40,7 @@ qingshan-skills is not a set of isolated commands — it is a lightweight routin
 | Test improvement but coverage gap, flaky signal, or failure behavior unclear | [`/investigate`](skills/investigate/SKILL.md) | Confirm real signal first, then `/plan` or `/execute` |
 | Code review, PR/diff review, implementation or spec review | [`/verify`](skills/verify/SKILL.md) | Scope/quality review and report residual risk |
 | About to declare done, fixed, passing, shipped, optimized, or ready-for-review | [`/verify`](skills/verify/SKILL.md) | If reusable experience exists → `/reflect` |
-| Ship, deploy, publish, PR, merge, release | [`/verify`](skills/verify/SKILL.md) | Only execute or hand off after release-path readiness proof passes and residual User Challenge risk is accepted |
+| Ship, deploy, publish, PR, merge, release | [`/verify`](skills/verify/SKILL.md) | Only execute or hand off after readiness proof passes, Taste is approved, and residual User Challenge risk is accepted |
 | Verified work produced reusable lessons, project invariants, verification commands, or durable decisions | [`/reflect`](skills/reflect/SKILL.md) | Update minimal persistence artifact, or explicitly skip |
 
 ### Risk Levels
@@ -49,15 +51,19 @@ qingshan-skills is not a set of isolated commands — it is a lightweight routin
 | Medium | Clarify goals, task order, decision grading, and verification strategy, e.g. `/clarify → /plan → /execute → /verify` |
 | High | Establish evidence, rollback, or failure handling first; use fresh-context subagents, TDD, adversarial review, and release checks as needed |
 
-Risk rises from cross-module changes, irreversibility, user-visible impact, security, deployment, performance, architecture, or unclear requirements. Risk only determines workflow weight — it never overrides hard rules.
+Risk uses floors, not open-ended scoring: security, secrets, irreversible data, and real release actions are at least High; cross-module or multi-option user-facing work is at least Medium. Choose the minimum sufficient level, never below a matching floor. Risk only determines workflow weight — it never overrides hard rules.
 
 ### Decision Grades
 
 | Decision Type | Handling |
 | --- | --- |
-| Mechanical | Decide directly following existing project patterns; do not interrupt the user |
-| Taste | Batch recommended options with tradeoffs and reversibility |
-| User Challenge | Stop and let the user decide explicitly, e.g. architecture direction, product behavior, irreversible data, or release risk |
+| Mechanical | Project conventions already decide it; reversible; no user-visible, contract, data, architecture, or release impact — decide silently |
+| Taste | Reversible choice that still affects user-facing behavior, docs shape, workflow ergonomics, or implementation style — batch once for explicit approval |
+| User Challenge | Architecture, product behavior, public contracts, irreversible data, or release risk — stop immediately |
+
+A complete-outcome request or a later `/execute` invocation does not approve an
+open Taste batch. Record the selected options and approval evidence; ask again
+only when a material decision changes.
 
 ## Skill Details
 
@@ -70,11 +76,19 @@ Prevents agents from starting work when they only "think they understand." Used 
 Core actions:
 
 - Read relevant code, docs, and existing context first; avoid asking questions code can answer.
-- Clarify goals, non-goals, constraints, acceptance criteria, and task risk.
+- Select `goal-clarify` or `orientation` mode first; orientation does not invent implementation acceptance criteria.
+- Clarify goals, non-goals, constraints, and acceptance criteria with provenance labels; confirm agent-proposed user-visible success criteria before continuation.
+- For project or module reading requests, produce a teaching-graph style
+  orientation: scoped evidence, structural nodes and edges, layers, domain
+  flows, guided tour, unknowns, and next route.
 - Run a shared language check on domain vocabulary; user-confirmed stable terms are written to or updated in `CONTEXT.md`.
 - Provide tradeoff analysis and recommendations for medium-to-high-risk tasks; high-impact decisions must be left to the user.
+- Pass Taste decisions to `/plan` for batch approval, or approve the batch in `/clarify` before a low-risk direct `/execute` handoff.
 
-Output: task type, risk level, goals and non-goals, acceptance criteria, terminology clarifications with `CONTEXT.md` update status, open decisions, and a lightweight goal statement for `/plan` or `/execute`.
+Output: task type, risk level, goals and non-goals, acceptance criteria,
+Project/Module Orientation when requested, terminology clarifications with
+`CONTEXT.md` update status, open decisions, and a lightweight goal statement for
+`/plan` or `/execute`.
 
 ### `/plan`
 
@@ -86,6 +100,7 @@ Core actions:
 - When entering `/plan` directly from the root router, first establish a lightweight goal, acceptance criteria, protection boundaries, and verification path; return to `/clarify` if these inputs are missing.
 - Classify decisions as Mechanical, Taste, or User Challenge.
 - Write Decision Briefs for Taste and User Challenge decisions, covering recommended options, alternatives, tradeoffs, reversibility, and coverage differences.
+- Batch Taste decisions into one explicit approval gate before `/execute`; stop immediately for User Challenge decisions.
 - Prefer independently verifiable vertical slices; avoid stacking plans by technical layer.
 - For approved durable decisions that pass all three gates, write to existing ADR/decision artifacts; if no project convention exists, write to root `DECISIONS.md`.
 - Add rollback or failure handling for high-risk changes involving deployment, data, security, or architecture.
@@ -98,7 +113,9 @@ Prevents execution drift, over-engineering, and context rot. Used for implementi
 
 Core actions:
 
-- Re-confirm the lightweight goal or plan, constraints, protected files, and verification requirements.
+- Re-confirm the lightweight goal or plan, constraints, protected files, verification requirements, and decision approval evidence.
+- Treat a lightweight target as a valid named-memory container; apply only memory named on the plan, Task Handoff, lightweight target, or context manifest.
+- Refuse to edit while a Taste decision is open or changed; invoking `/execute` alone is not approval.
 - Run the Context Gate to assess whether current context is sufficient; for high-risk tasks, hand off narrow tasks to fresh context.
 - Make minimal changes; only touch files required by the current task.
 - Execute high-risk code changes using TDD vertical slices: one behavior, one failing test, one minimal implementation.
@@ -116,9 +133,10 @@ Core actions:
 - Establish the fastest, reliable, reproducible feedback loop; strengthen weak loops before drawing conclusions.
 - Reproduce or observe the failure; collect evidence from tests, logs, metrics, traces, configs, or code paths.
 - Narrow the failure surface; form 3 to 5 falsifiable hypotheses and verify the strongest ones sequentially.
+- Exit with Fix-Path Exit Criteria: `/execute` only for Low re-grade with complete inputs and no sequencing risk; otherwise `/plan`.
 - Performance issues must have a baseline; deployment issues must describe environment boundaries; security and stability issues must describe the threat or failure model.
 
-Output: reproduction or observation method, feedback loop quality, collected facts, narrowed failure surface, root cause hypotheses with confidence, and minimal fix path.
+Output: reproduction or observation method, feedback loop quality, collected facts, narrowed failure surface, root cause hypotheses with confidence, risk re-grade, and next skill.
 
 ### `/verify`
 
@@ -129,11 +147,12 @@ Core actions:
 - Find commands, checks, or artifacts that can prove the conclusion; run fresh verification.
 - Read output and exit codes; do not treat old results or implementer reports as evidence.
 - Run Scope Drift Detection against the task, plan, and diff to classify as Delivered, Missing, Extra, Changed, or Unverifiable.
+- When observable behavior changes, require Behavior Regression Proof: distinguishing test when a seam exists, or repeatable changed-path proof with residual risk.
 - Use the Review Readiness Dashboard for medium-to-high-risk or release-path tasks.
-- For ship, deploy, publish, PR, merge, release requests: complete release-path readiness proof first; only execute or hand off when checklist is ready, residual User Challenge risk is accepted, and the action is a mechanical handoff or release.
+- For ship, deploy, publish, PR, merge, release requests: complete release-path readiness proof first; only execute or hand off when checklist is ready, every Taste decision is approved, residual User Challenge risk is accepted, and the action is a mechanical handoff or release. Report readiness status and release action status separately.
 - Run Adversarial Review for high-risk changes involving auth, data migration, concurrency, payments, deployment, LLM trust boundaries, or large cross-module diffs.
 
-Output: verification commands and results, acceptance status, scope drift check, necessary review panels, residual risks, and whether completion can genuinely be claimed.
+Output: verification commands and results, acceptance status, scope drift check, behavior regression status when needed, necessary review panels, residual risks, release-action status when requested, and whether completion can genuinely be claimed.
 
 ### `/reflect`
 
@@ -195,7 +214,7 @@ Reviewer prompts under `prompts/` are used only when the corresponding workflow 
 
 ## Installation
 
-qingshan-skills is runtime-neutral. The goal is to make the root skill and six workflow skills available to the agent runtime. Four installation methods are provided.
+qingshan-skills is runtime-neutral. The goal is to make the root skill and six workflow skills available to the agent runtime. Five installation methods are provided.
 
 ### Option 1: Setup Script (Recommended)
 
@@ -210,6 +229,8 @@ This validates the repository, then links the root skill and workflow skills int
 ```bash
 ./setup --force
 ```
+
+Any conflicting target stops installation with a non-zero exit instead of leaving a partial installation. `--skip-validation` skips only the repository validation step.
 
 ### Option 2: Claude Code Plugin Marketplace
 
@@ -234,7 +255,15 @@ bash scripts/sync-global-skills.sh --force
 
 ### Option 4: Cursor
 
-Clone or symlink this repository into your project. Cursor automatically loads the rules from `.cursor/rules/qingshan-skills.mdc`.
+Keep a full clone of this repository on disk, then install a Cursor project rule into each consumer project:
+
+```bash
+bash scripts/install-cursor-project-rule.sh /path/to/consumer-project
+# optional but recommended
+export QINGSHAN_SKILLS_ROOT=/absolute/path/to/qingshan-skills
+```
+
+The rule resolves the skills root (`QINGSHAN_SKILLS_ROOT`, baked path, or `~/.qingshan-skills/repo`) and reads the canonical root router, ETHOS, and selected workflow skill. Do not assume the consumer project root is the skills repository.
 
 ### Option 5: Manual Installation
 
@@ -281,7 +310,7 @@ OK qingshan-skills validation passed
 
 The validator checks required files, skill YAML frontmatter, required sections, templates, prompt guardrails, plugin manifests, VERSION consistency, Cursor rules, and pressure scenarios with required signals.
 
-Behavioral regression uses transcript artifacts:
+Pressure-scenario contract coverage uses transcript artifacts:
 
 ```bash
 bash scripts/validate-behavior-tests.sh
@@ -289,12 +318,19 @@ bash scripts/validate-behavior-tests.sh
 
 Every pressure scenario must have at least one `PASS` transcript. `FAIL` and
 `BLOCKED` transcripts may remain as historical evidence, but they do not count
-as pressure scenario coverage.
+as pressure scenario coverage. Manual transcripts are reviewable contract
+fixtures, not black-box runtime proof.
 
-Test layering and ACP boundaries are described in [`docs/testing.md`](docs/testing.md). ACP belongs to future runtime adapter integration testing, not the first layer of core skill semantic testing. Design rationale is in the authoritative specs under [`docs/superpowers/specs/`](docs/superpowers/specs/).
+Test layering and ACP boundaries are described in [`docs/testing.md`](docs/testing.md). ACP belongs to future runtime adapter integration testing, not the first layer of core skill semantic testing. Runtime behavior is defined by root [`SKILL.md`](SKILL.md) and the six workflow skills. Design rationale (not a second executable rule set) lives under [`docs/superpowers/specs/`](docs/superpowers/specs/).
 
 An optional runtime smoke check is available for real host loading; it is not called automatically by core validation:
 
 ```bash
 QINGSHAN_RUNTIME_SMOKE=1 bash scripts/validate-runtime-smoke.sh
+```
+
+Selected canonical body behavior can be checked separately:
+
+```bash
+QINGSHAN_RUNTIME_BEHAVIOR=1 bash scripts/validate-runtime-behavior.sh
 ```

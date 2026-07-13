@@ -23,14 +23,16 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 2. 按 Memory Retrieval Gate 做 trigger-based retrieval：只读取与任务类型、风险、技术栈、artifact、失败模式或决策边界匹配的 `CONTEXT.md`、`LEARNINGS.md`、decision artifact 或 global memory excerpt，不全量 dump。
 3. 选择入口 skill：低风险任务直接进入能解决问题的最短路径；中高风险任务先补足理解、计划、证据或回滚思考。
 4. 执行对应 skill 的 `Workflow`：每个 skill 都有触发条件、风险门槛、硬规则、输出和交接方式。
-5. 在 skill 之间交接：`/clarify` 产出清晰目标并持久化确认后的共享语言，`/plan` 产出可执行计划并记录已批准的 durable decision，`/execute` 完成改动，`/verify` 证明结论，`/reflect` 只提升可复用学习。
-6. 任何"完成、修复、通过、发布、优化、待评审"的结论，都必须先经过 `/verify` 的新鲜证据。
+5. 原始请求要求完整结果、边界仍然清晰、所有 Taste 已明确批准且不存在 User Challenge 或缺失前置条件时，可以跨常规 handoff 继续；只调用当前阶段时，在该阶段后归还控制权。
+6. 只有 recurring、automation、fresh-context、多 agent、迁移或大规模重复工作才需要 Loop Contract。普通有限任务依靠目标、验收标准、边界和 proof 即可。
+7. 任何"完成、修复、通过、发布、优化、待评审"的结论，都必须先经过 `/verify` 的新鲜证据；`/verify` 是临时任务状态的唯一 cleanup owner。
 
 ### 路由速查
 
 | 任务信号 | 入口 skill | 典型后续 |
 | --- | --- | --- |
 | 目标、范围、验收标准、术语或用户决策不清 | [`/clarify`](skills/clarify/SKILL.md) | 低风险到 `/execute`；需要拆解到 `/plan` |
+| 阅读项目、目录或模块并产出结构化地图与 unknowns | [`/clarify`](skills/clarify/SKILL.md) | 继续 `/clarify`，或在下一步明确后进入 `/plan`、`/investigate` 或 `/execute` |
 | 目标已清楚，但需要拆任务、排顺序、分级决策或设计验证方式 | [`/plan`](skills/plan/SKILL.md) | `/execute → /verify` |
 | 依赖或工具链升级 | [`/plan`](skills/plan/SKILL.md) | 控制 blast radius、兼容影响和验证路径 |
 | 已有明确计划，需要改代码、配置、文档、工具或项目结构 | [`/execute`](skills/execute/SKILL.md) | `/verify` |
@@ -38,7 +40,7 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 | 测试体系改进但 coverage gap、flaky signal 或失败行为不清楚 | [`/investigate`](skills/investigate/SKILL.md) | 先确认真实信号，再到 `/plan` 或 `/execute` |
 | code review、PR/diff review、实现或 spec review | [`/verify`](skills/verify/SKILL.md) | 做 scope/quality review 并报告残余风险 |
 | 准备声明完成、修复、通过、发布、优化或待评审 | [`/verify`](skills/verify/SKILL.md) | 有可复用经验时到 `/reflect` |
-| ship、deploy、publish、PR、merge、release | [`/verify`](skills/verify/SKILL.md) | release-path 验证 ready 且无 User Challenge 后，才执行或交接机械发布动作 |
+| ship、deploy、publish、PR、merge、release | [`/verify`](skills/verify/SKILL.md) | release-path 验证 ready、Taste 已批准且无 User Challenge 后，才执行或交接机械发布动作 |
 | 已验证的工作产生可复用经验、项目不变量、验证命令或 durable decision | [`/reflect`](skills/reflect/SKILL.md) | 更新最小持久化 artifact，或明确跳过 |
 
 ### 风险分级
@@ -49,15 +51,18 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 | 中风险 | 明确目标、任务顺序、决策分级和验证策略，例如 `/clarify → /plan → /execute → /verify` |
 | 高风险 | 先建立证据、回滚或失败处理；必要时使用新上下文子代理、TDD、对抗性评审和发布检查 |
 
-风险会因为跨模块、不可逆、用户可见、安全、部署、性能、架构或需求不清而上升。风险只决定流程重量，不取消硬规则。
+风险使用 floor 而不是开放计分：安全、密钥、不可逆数据和真实发布动作至少 High；跨模块或多方案用户可见变更至少 Medium。选最小仍足够的等级，不得低于匹配 floor。风险只决定流程重量，不取消硬规则。
 
 ### 决策分级
 
 | 决策类型 | 处理方式 |
 | --- | --- |
-| Mechanical | 按项目既有模式直接决定，不打断用户 |
-| Taste | 批量给出推荐方案、取舍和可逆性 |
-| User Challenge | 停下来让用户明确拍板，例如架构方向、产品行为、不可逆数据或发布风险 |
+| Mechanical | 项目惯例已决定、可逆、不影响用户可见行为/公共契约/数据/架构/发布——静默决定 |
+| Taste | 可逆但仍影响用户体验、文档形态、工作流或实现风格——批量一次明确批准 |
+| User Challenge | 架构、产品行为、公共契约、不可逆数据或发布风险——立即停下 |
+
+完整结果请求或随后单独调用 `/execute` 都不等于批准开放的 Taste
+批次。记录用户选择和批准证据；只有决策发生实质变化时才重新询问。
 
 ## Skill 功能详解
 
@@ -70,11 +75,14 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 核心动作：
 
 - 先读相关代码、文档和已有上下文，避免问代码能回答的问题。
-- 明确目标、非目标、约束、验收标准和任务风险。
+- 先选择 `goal-clarify` 或 `orientation` 模式；orientation 不得发明实现验收标准。
+- 明确目标、非目标、约束与带 provenance 的验收标准；代理自拟且影响用户可见成功定义的项须确认后再续跑。
+- 阅读项目或模块时，产出 teaching-graph 风格的 orientation：限定范围、证据、节点与边、层次、领域流程、推荐阅读顺序、unknowns 和下一 route。
 - 对领域词汇做 shared language 检查；用户确认后的稳定术语写入或更新 `CONTEXT.md`。
 - 对中高风险任务给出方案取舍和推荐；高影响决策必须留给用户。
+- Taste 决策交给 `/plan` 批量批准；低风险直接进入 `/execute` 时，由 `/clarify` 先完成统一审批门。
 
-产出：任务类型、风险等级、目标和非目标、验收标准、术语澄清及其 `CONTEXT.md` 更新状态、开放决策，以及可交给 `/plan` 或 `/execute` 的轻量目标陈述。
+产出：任务类型、风险等级、目标和非目标、验收标准、按需提供的 Project/Module Orientation、术语澄清及其 `CONTEXT.md` 更新状态、开放决策，以及可交给 `/plan` 或 `/execute` 的轻量目标陈述。
 
 ### `/plan`
 
@@ -86,6 +94,7 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 - 直接从 root router 进入 `/plan` 时，先建立轻量目标、验收标准、保护边界和验证路径；缺这些输入则回到 `/clarify`。
 - 把决策分为 Mechanical、Taste、User Challenge。
 - 对 Taste 和 User Challenge 决策写 Decision Brief，说明推荐方案、替代方案、取舍、可逆性和覆盖差异。
+- Taste 在进入 `/execute` 前统一审批一次；User Challenge 发现后立即停止。
 - 优先拆成可独立验证的纵向切片，避免按技术层横向堆计划。
 - 对已批准且通过三道门槛的 durable decision，写入既有 ADR/decision artifact；没有项目惯例时写入根目录 `DECISIONS.md`。
 - 对部署、数据、安全、架构等高风险变更补充回滚或失败处理。
@@ -98,7 +107,9 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 
 核心动作：
 
-- 重新确认轻量目标或计划、约束、受保护文件和验证要求。
+- 重新确认轻量目标或计划、约束、受保护文件、验证要求和决策批准证据。
+- 将 lightweight target 视为合法 named-memory 容器；只应用 plan、Task Handoff、lightweight target 或 context manifest 中命名的 memory。
+- Taste 仍为 open 或 changed 时拒绝修改；单独调用 `/execute` 不算批准。
 - 运行 Context Gate，判断当前上下文是否足够；风险高时用窄任务交给新上下文。
 - 做最小修改，只触碰当前任务需要的文件。
 - 高风险代码变更按 TDD 纵向切片执行：一个行为、一个失败测试、一个最小实现。
@@ -116,9 +127,10 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 - 建立最快、可靠、可重复的反馈环；弱反馈环先强化再下结论。
 - 复现或观察失败，收集测试、日志、指标、trace、配置或代码路径证据。
 - 缩小失败面，形成 3 到 5 个可证伪假设，并逐一验证最强假设。
+- 按 Fix-Path Exit Criteria 出口：仅当 Low 重评、输入齐全且无 sequencing 风险时进 `/execute`，否则 `/plan`。
 - 性能问题必须有 baseline；部署问题必须说明环境边界；安全和稳定性问题必须说明威胁或失败模型。
 
-产出：复现或观察方法、反馈环质量、已收集事实、缩小后的失败面、根因假设和信心、最小修复路径。
+产出：复现或观察方法、反馈环质量、已收集事实、缩小后的失败面、根因假设和信心、风险重评、下一 skill。
 
 ### `/verify`
 
@@ -129,11 +141,12 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 - 找到能证明结论的命令、检查或 artifact，并运行新鲜验证。
 - 读取输出和退出码，不把旧结果或实现者报告当证据。
 - 做 Scope Drift Detection，对照任务、计划和 diff 判断 Delivered、Missing、Extra、Changed 或 Unverifiable。
+- 可观察行为变更时做 Behavior Regression Proof：有稳定 seam 则新增/更新区分性测试，否则可重复 changed-path 证明并声明残余风险。
 - 中高风险或发布路径使用 Review Readiness Dashboard。
-- 对 ship、deploy、publish、PR、merge、release 请求，先完成 release-path readiness proof；只有 checklist ready、残余 User Challenge 风险已被接受、且动作是机械交接或发布时，才执行或交接发布动作。
+- 对 ship、deploy、publish、PR、merge、release 请求，先完成 release-path readiness proof；只有 checklist ready、Taste 已批准、残余 User Challenge 风险已被接受、且动作是机械交接或发布时，才执行或交接发布动作。分别报告 readiness status 与 release action status。
 - 对认证、数据迁移、并发、支付、部署、LLM 信任边界、大型跨模块 diff 等高风险变更做 Adversarial Review。
 
-产出：验证命令和结果、验收状态、范围漂移检查、必要的评审面板、残余风险，以及是否可以真实声明完成。
+产出：验证命令和结果、验收状态、范围漂移检查、必要时的行为回归状态、必要的评审面板、残余风险、按需的发布动作状态，以及是否可以真实声明完成。
 
 ### `/reflect`
 
@@ -211,6 +224,8 @@ cd qingshan-skills
 ./setup --force
 ```
 
+任何冲突目标都会让安装以非零状态停止，避免留下部分安装。`--skip-validation` 只跳过仓库验证步骤。
+
 ### 方式二：Claude Code Plugin Marketplace
 
 ```
@@ -234,7 +249,14 @@ bash scripts/sync-global-skills.sh --force
 
 ### 方式四：Cursor
 
-把仓库克隆或符号链接到项目中，Cursor 会自动加载 `.cursor/rules/qingshan-skills.mdc` 中的规则。
+在磁盘上保留完整 qingshan-skills 仓库，然后为每个消费项目安装 Cursor project rule：
+
+```bash
+bash scripts/install-cursor-project-rule.sh /path/to/consumer-project
+export QINGSHAN_SKILLS_ROOT=/absolute/path/to/qingshan-skills
+```
+
+规则按 `QINGSHAN_SKILLS_ROOT`、baked path 或 `~/.qingshan-skills/repo` 解析 skills root，再读取 canonical 根 router、ETHOS 和选中的 workflow skill。不要把消费项目根目录当成 skills 仓库。
 
 ### 方式五：手动安装
 
@@ -281,7 +303,7 @@ OK qingshan-skills validation passed
 
 校验内容包括必需文件、skill 的 YAML frontmatter、必需章节、模板、prompt 护栏、插件 manifest、VERSION 一致性、Cursor 规则，以及带 Required signals 的压测场景。
 
-行为回归使用 transcript artifact：
+压测场景的合同覆盖使用 transcript artifact：
 
 ```bash
 bash scripts/validate-behavior-tests.sh
@@ -291,10 +313,18 @@ Every pressure scenario must have at least one `PASS` transcript. `FAIL` and
 `BLOCKED` transcripts may remain as historical evidence, but they do not count
 as pressure scenario coverage.
 
-测试分层和 ACP 边界见 [`docs/testing.md`](docs/testing.md)。ACP 属于未来 runtime adapter 集成测试，不是核心 skill 语义测试的第一层。设计依据见 [`docs/superpowers/specs/`](docs/superpowers/specs/) 下的权威设计文档。
+手工 transcript 是可审查的合同 fixture，不是 hosted runtime 的黑盒行为证明。
+
+测试分层和 ACP 边界见 [`docs/testing.md`](docs/testing.md)。ACP 属于未来 runtime adapter 集成测试，不是核心 skill 语义测试的第一层。运行时行为以根 [`SKILL.md`](SKILL.md) 与六个 workflow skill 为准；[`docs/superpowers/specs/`](docs/superpowers/specs/) 只保留设计理念与理由，不是第二套可执行规则。
 
 真实宿主加载可用可选 runtime smoke 检查；它不会被核心验证自动调用：
 
 ```bash
 QINGSHAN_RUNTIME_SMOKE=1 bash scripts/validate-runtime-smoke.sh
+```
+
+可另外检查选定的 canonical body 行为：
+
+```bash
+QINGSHAN_RUNTIME_BEHAVIOR=1 bash scripts/validate-runtime-behavior.sh
 ```

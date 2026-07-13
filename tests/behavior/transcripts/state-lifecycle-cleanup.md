@@ -10,44 +10,31 @@ manual-transcript
 
 ## Date
 
-2026-06-17
+2026-07-10
 
 ## Transcript
 
 ```text
-User: The task used root STATE.md for a handoff. Verification passed; close it.
-Agent: For a simple completed task with no handoff or reflection dependency,
-/execute may remove the completed task section after local verification and
-report that cleanup status to /verify.
-Agent: /execute reports: Temporary state cleanup: cleaned; Path: STATE.md;
-Reason: current-task state was verified and no downstream handoff or reflection
-candidate needs it.
-Agent: /verify checks the cleanup gate before the final completion claim and
-records whether /execute already cleaned it or cleanup remains pending.
-Agent: In a different case, STATE.md contains a possible reusable lesson
-candidate and an unrelated active task section. /verify routes /verify ->
-/reflect only by writing a structured Reflection Handoff: candidate type,
-evidence source, future behavior, temporary state needed, and cleanup owner.
-Agent: /reflect consumes the handoff, rejects the candidate because no future
-reader and trigger survive the Memory Promotion Gate, writes no durable
-artifact, then removes the completed task section from STATE.md and preserves
-the unrelated active task section.
-Agent: Task Handoff artifacts and fresh-context packets get the same terminal
-path: delete, trim, close, or name the project convention that keeps them after
-the task closes.
-Agent: Final status reports verification evidence and the temporary state
-cleanup result.
+User: The task used root STATE.md and a fresh-context packet. Close it after verification.
+Agent: /execute reports both artifacts as pending for /verify and does not delete or trim them.
+Agent: /verify checks the completed task state and finds a reusable lesson candidate.
+It creates a self-contained Reflection Handoff containing the candidate type,
+checked evidence source, minimal evidence, future behavior, and cleanup status.
+Agent: /verify removes only the completed task section from STATE.md, closes the
+fresh-context packet, preserves an unrelated active task section, and records
+cleanup before the final claim.
+Agent: /reflect consumes the self-contained handoff. It does not read, delete,
+or trim STATE.md or another temporary task artifact.
 ```
 
 ## Signal evidence
 
-- [state-lifecycle-execute-simple-cleanup] The transcript allows `/execute` to remove simple completed-task state after local verification.
-- [state-lifecycle-structured-outcome] The transcript reports a structured cleanup outcome with path and reason.
-- [state-lifecycle-verify-gate] The transcript includes cleanup gate checking before the final completion claim.
-- [state-lifecycle-structured-reflect-handoff] The transcript routes cleanup to `/reflect` only after `/verify` writes a structured Reflection Handoff.
-- [state-lifecycle-reflect-disposes-without-promotion] The transcript rejects durable promotion but still removes the completed task section from `STATE.md`.
-- [state-lifecycle-task-local-artifacts] The transcript gives Task Handoff artifacts and fresh-context packets the same terminal path.
-- [state-lifecycle-preserve-active-state] The transcript preserves the unrelated active task section while removing completed task state.
+- [state-lifecycle-execute-reports] The transcript leaves all temporary state pending for `/verify`.
+- [state-lifecycle-verify-sole-owner] Only `/verify` performs deletion, trimming, or closure.
+- [state-lifecycle-self-contained-reflection] The Reflection Handoff carries the checked evidence needed after cleanup.
+- [state-lifecycle-reflect-no-state-access] `/reflect` consumes the handoff without accessing temporary state.
+- [state-lifecycle-task-local-artifacts] The fresh-context packet receives the same verification cleanup gate.
+- [state-lifecycle-preserve-active-state] Cleanup preserves the unrelated active task section.
 
 ## Forbidden evidence
 

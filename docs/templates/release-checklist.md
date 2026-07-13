@@ -43,9 +43,16 @@ requests. This is not a separate `/ship` workflow.
 
 - requested action:
 - readiness status: Ready | ready with stated risk | blocked | not ready
+- Taste approval status: approved | blocked | not applicable
 - residual User Challenge risk: accepted | blocked | not applicable
-- action result or handoff:
+- release action status: not attempted | succeeded | failed | handed off
+- action result or handoff detail:
+
+Release-action failure (auth, credentials, merge conflict, remote rejection, or
+handoff refusal) is separate from implementation verification failure when
+readiness already passed.
 
 ## Status
 
-<Ready, ready with stated risk, blocked, or not ready.>
+<Ready, ready with stated risk, blocked, or not ready. When a release action was
+requested, also report release action status.>

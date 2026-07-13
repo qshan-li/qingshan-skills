@@ -83,6 +83,7 @@ validate_transcript() {
   local scenario
   local scenario_path
   local verdict
+  local runner
   local id
 
   require_section "$path" "Scenario"
@@ -98,6 +99,15 @@ validate_transcript() {
 
   scenario_path="tests/pressure-scenarios/${scenario}.md"
   require_file "$scenario_path"
+
+  runner="$(section_value "$path" "Runner")"
+  [[ -n "$runner" ]] || fail "$path has empty Runner"
+  if [[ "$runner" != "manual-transcript" ]]; then
+    require_section "$path" "Command"
+    require_section "$path" "Runtime Version"
+    [[ -n "$(section_value "$path" "Command")" ]] || fail "$path has empty Command"
+    [[ -n "$(section_value "$path" "Runtime Version")" ]] || fail "$path has empty Runtime Version"
+  fi
 
   verdict="$(section_value "$path" "Verdict")"
   [[ "$verdict" =~ ^(PASS|FAIL|BLOCKED)$ ]] || fail "$path has invalid verdict: $verdict"
@@ -138,4 +148,4 @@ pass_covered_count="$(
   done | sort -u | wc -l | tr -d ' '
 )"
 
-echo "OK qingshan-skills behavior tests validation passed (${pass_covered_count}/${scenario_count} scenarios covered by PASS transcripts)"
+echo "OK qingshan-skills contract artifact validation passed (${pass_covered_count}/${scenario_count} scenarios covered by PASS transcripts)"

@@ -11,19 +11,36 @@ type. Include Low, Medium, or High risk.>
 
 ## Goal
 
-<The outcome the next workflow should preserve.>
+<The outcome the next workflow should preserve.> — provenance: `user-supplied` |
+`repository-derived` with cited evidence | `agent-proposed`
 
 ## Non-Goals
 
-- <Out-of-scope item>
+- <Out-of-scope item> — provenance: `user-supplied` | `repository-derived` with
+  cited evidence | `agent-proposed`
 
 ## Constraints
 
-- <Constraint or protected boundary>
+- <Constraint or protected boundary> — provenance: `user-supplied` |
+  `repository-derived` with cited evidence | `agent-proposed`
 
 ## Acceptance Criteria
 
-- <Observable condition that proves the task is done>
+- <Observable condition that proves the task is done. Prefer deterministic
+  checks, thresholds, or artifacts over subjective judgment. Label each item
+  `user-supplied`, `repository-derived` with cited evidence, or
+  `agent-proposed`.>
+
+## Loop Contract (When Required)
+
+<Required only for recurring, automation-backed, fresh-context, multi-agent,
+migration, or broad repetitive work. Use `not applicable` for ordinary finite
+engineering work.>
+
+- Trigger:
+- Stop condition:
+- Proof:
+- Usage boundary:
 
 ## Shared Language Status
 
@@ -52,7 +69,11 @@ when a targeted excerpt or artifact path is enough.
 
 ## Open Decisions
 
-- <Decision, grade, and owner>
+- <Decision, Mechanical | Taste | User Challenge, open | approved | changed,
+  selected option, owner, and approval evidence>
+
+Taste decisions must be approved before `/execute`. User Challenge decisions
+stop immediately. A workflow invocation alone is not approval.
 
 ## Next Workflow
 
@@ -70,5 +91,8 @@ task is closed.>
 
 ## Stop Conditions
 
-- Stop if acceptance criteria, required evidence, or a User Challenge decision is missing.
+- Stop if acceptance criteria or required evidence is missing, a Taste decision
+  is open or changed, or a User Challenge decision is unresolved.
 - Stop if the next workflow would need files, referenced memory, or context not named here.
+- Stop if a required loop contract lacks a trigger, stop condition, proof, or
+  usage boundary.

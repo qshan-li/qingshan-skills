@@ -157,9 +157,11 @@ The skill should require decision briefs for Taste and User Challenge decisions,
 Acceptance criteria:
 
 - Mechanical decisions are not escalated unnecessarily.
-- Taste decisions are batched when possible.
-- User Challenge decisions stop execution until explicitly resolved.
+- Taste decisions are batched into one explicit approval gate before execution.
+- User Challenge decisions stop immediately until explicitly resolved.
 - Each non-mechanical decision includes recommendation, alternatives, reversibility, and trade-offs.
+- A workflow invocation alone does not approve a Taste decision.
+- Material changes to an approved Taste decision reopen approval.
 
 ### `/verify`
 
@@ -204,6 +206,7 @@ Acceptance criteria:
 Add or update pressure scenarios for:
 
 - a Taste decision that must be presented as a decision brief
+- a Taste batch that must receive explicit approval before execution
 - a User Challenge decision that must block execution
 - a completed task with passing tests but extra unrelated changes
 - a release request with stale verification evidence

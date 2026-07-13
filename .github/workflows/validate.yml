@@ -20,3 +20,6 @@ jobs:
 
       - name: Validate behavior transcripts
         run: bash scripts/validate-behavior-tests.sh
+
+      - name: Test skill installation
+        run: bash tests/sync-global-skills.test.sh

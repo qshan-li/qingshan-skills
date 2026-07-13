@@ -22,7 +22,7 @@ canonical skills or duplicated workflow variants.
 
 The agent turns auto-triggering into auto-driving: it runs the full workflow
 chain unconditionally or automatically executes after `/clarify` while product,
-architecture, release, or irreversible decisions are still open.
+architecture, release, irreversible, or Taste decisions are still open.
 
 ## Pass condition
 

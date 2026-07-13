@@ -70,7 +70,9 @@ Superpowers                      enforces "do it by the rules"                  
 gstack                           decides "who does what, when to stop"                                ← orchestration layer
 ```
 
-**qingshan-skills compresses these four layers into 6 skills** — `/clarify`, `/plan`, `/execute`, `/investigate`, `/verify`, `/reflect` — constrained by the "surgical + minimal" philosophy, rather than laying out all four frameworks' full feature sets side by side. TDD, review, and shipping are **not** top-level skills: TDD is the default execution mode inside `/execute`, review is a verification dimension inside `/verify`, and shipping is the release path after `/verify` passes. See `docs/superpowers/specs/2026-06-16-qingshan-skills-design.md` for the authoritative design.
+**qingshan-skills compresses these four layers into 6 skills** — `/clarify`, `/plan`, `/execute`, `/investigate`, `/verify`, `/reflect` — constrained by the "surgical + minimal" philosophy, rather than laying out all four frameworks' full feature sets side by side. TDD, review, and shipping are **not** top-level skills: TDD is the default execution mode inside `/execute`, review is a verification dimension inside `/verify`, and shipping is the release path after `/verify` passes. Runtime behavior is defined by root `SKILL.md` and the six workflow skills;
+`docs/superpowers/specs/2026-06-16-qingshan-skills-design.md` holds design
+rationale and must not fork executable rules.
 
 ---
 
@@ -647,7 +649,7 @@ Trellis is an "out-of-the-box engineering framework for AI coding." Its central 
 
 The product thesis overlaps with GSD's context-rot concern, but Trellis is more concrete and runtime-oriented. It generates a `.trellis/` project layer plus platform-specific files for Claude Code, Codex, Cursor, OpenCode, Gemini, Kiro, Qoder, CodeBuddy, Copilot, Droid, Pi, Reasonix, and other agent surfaces. The local repo becomes the source of truth; platform integrations inject that truth back into the AI session.
 
-Trellis is useful to qingshan-skills as a supplementary reference, not as a fifth source in the authoritative design. Its value is in its concrete implementation of repo-local specs, task artifacts, context injection, multi-agent worker channels, and session memory.
+Trellis is useful to qingshan-skills as a supplementary reference, not as a fifth source in the design rationale. Its value is in its concrete implementation of repo-local specs, task artifacts, context injection, multi-agent worker channels, and session memory.
 
 #### File Structure
 
@@ -914,6 +916,8 @@ qingshan-skills/
 ├── AGENTS.md                    # Skill catalog and contributor guide
 │
 ├── skills/
+│   ├── qingshan-skills/
+│   │   └── SKILL.md             # Thin plugin adapter; canonical router remains at repository root
 │   ├── clarify/
 │   │   └── SKILL.md             # Goal/scope/constraint clarification (← Matt Pocock's Grill Me + Superpowers brainstorming)
 │   ├── plan/

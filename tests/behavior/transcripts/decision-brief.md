@@ -24,6 +24,8 @@ Agent: Uses docs/templates/decision-brief.md with recommendation "no cache
 until baseline proves need," alternatives "local cache" and "Redis," trade-offs,
 reversibility, and the coverage difference between process-local and shared
 cache behavior.
+Agent: Marks the Taste brief open and stops before execution. After the user
+selects an option, it records the approved option and approval evidence.
 ```
 
 ## Signal evidence
@@ -31,6 +33,7 @@ cache behavior.
 - [decision-brief-not-mechanical] The transcript classifies the cache choice as Taste, not Mechanical.
 - [decision-brief-complete-fields] The transcript includes recommendation, alternatives, trade-offs, reversibility, and coverage difference.
 - [decision-brief-template-used] The transcript uses `docs/templates/decision-brief.md`.
+- [decision-brief-approval-state] The transcript records open status before execution and the selected option plus approval evidence afterward.
 
 ## Forbidden evidence
 

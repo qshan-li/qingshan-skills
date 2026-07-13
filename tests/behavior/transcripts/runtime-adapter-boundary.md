@@ -24,8 +24,8 @@ description fields, and places Codex-specific fields in adapter documentation
 or plugin files.
 Agent: Documents automation as boundary protection: it may stop unclear edits
 or require fresh verification, but it must not unconditionally drive
-/clarify -> /plan -> /execute -> /verify or continue past User Challenge
-decisions.
+/clarify -> /plan -> /execute -> /verify, infer Taste approval from a workflow
+invocation, or continue past open Taste or User Challenge decisions.
 ```
 
 ## Signal evidence

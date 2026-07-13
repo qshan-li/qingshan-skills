@@ -13,8 +13,16 @@ qingshan-skills is organized by failure mode, not by source framework.
 
 ## qingshan Constraints
 
-- Use the least process that still protects correctness.
+- Use the least process that still protects correctness, never below risk floors.
 - Preserve user and engineer control; process should guide work, not own it.
+- Continue routine workflow handoffs only when the original request already
+  authorizes the complete outcome; stop on phase-only requests, open or changed
+  Taste decisions, User Challenge decisions, missing prerequisites, blockers,
+  or scope expansion.
+- Batch Taste decisions into one explicit approval gate before execution;
+  workflow invocation alone is not consent.
+- Reserve Loop Contracts for work that actually repeats or needs explicit usage
+  limits; ordinary finite work already has acceptance criteria and proof.
 - Keep edits minimal and scoped.
 - Prefer language-appropriate type safety; in JS/TS work, prefer TypeScript and strong types.
 - Treat evidence as the price of claims.

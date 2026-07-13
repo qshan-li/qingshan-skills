@@ -28,10 +28,12 @@ scenario must define stable `Required signals` with IDs:
 These contracts are not transcripts. They define what a later behavior run must
 prove.
 
-## Layer 3: Transcript Behavior Tests
+## Layer 3: Contract Artifact Coverage
 
-Transcript tests record a manual or runtime agent run and map required signal
-IDs to evidence. They are behavior contracts, not black-box runtime proof.
+Transcript artifacts record a manual or runtime agent run and map required
+signal IDs to evidence. They are behavior contracts, not black-box runtime
+proof. Non-manual transcripts must include the exact command, runtime version,
+and raw relevant output.
 
 Run:
 
@@ -54,13 +56,13 @@ It does not judge prose quality, perform NLP matching, or prove that a hosted
 agent runtime will make the same routing choice. That keeps the test stable and
 reviewable.
 
-## Layer 4: Runtime Integration Tests
+## Layer 4: Runtime Integration And Behavior Tests
 
 Runtime integration tests verify that a real host loads the root router and
 workflow skills correctly. They can use Codex CLI, Claude Code, Cursor wrappers,
 or an ACP adapter.
 
-The current smoke wrapper uses Codex CLI as the smallest black-box check. It
+The route smoke wrapper uses Codex CLI as the smallest host-loading check. It
 runs read-only route-selection prompts against the real host. Each final
 response must be exactly one non-empty `ROUTE:` line, and the wrapper checks
 only that route line across the route shapes covered by root `SKILL.md`:
@@ -80,6 +82,17 @@ ACP is a transport and host-integration layer, not the core testing method. Add
 an ACP runner only when cross-runtime behavior needs black-box coverage. Keep it
 in the adapter layer and reuse the same pressure scenario signal IDs.
 
+The optional behavior wrapper checks selected canonical body contracts rather
+than only routing: bounded continuation, phase-only stops, Taste approval
+blocking and continuation, finite-task Loop Contract exemption, and
+recurring-work Loop Contract requirements.
+
+Run it only when host credentials and runtime cost are acceptable:
+
+```bash
+QINGSHAN_RUNTIME_BEHAVIOR=1 bash scripts/validate-runtime-behavior.sh
+```
+
 Run the optional smoke wrapper when host credentials and runtime cost are
 acceptable:
 
@@ -92,11 +105,15 @@ successfully. Runtime smoke tests must stay outside `validate-skills.sh` so core
 methodology validation remains deterministic and does not depend on a hosted
 agent runtime.
 
+Without `QINGSHAN_RUNTIME_BEHAVIOR=1`, the behavior wrapper also reports `SKIP`
+and exits successfully.
+
 ## Test Addition Workflow
 
 1. Add or update a pressure scenario.
 2. Give each required behavior a stable signal ID.
 3. Add a transcript when a real or manual run should become regression evidence.
+   Include the exact command and runtime version for non-manual runs.
 4. Run `bash scripts/validate-skills.sh`.
 5. Review scope drift: no runtime-specific fields in canonical skill files, no
    plugin manifests unless a distribution decision approved them.

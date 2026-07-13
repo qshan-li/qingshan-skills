@@ -1,8 +1,8 @@
 # Behavior Transcript Template
 
-Use this template to record a black-box skill behavior test. A transcript does
-not need exact-output matching. It must map required signal IDs to concrete
-evidence from the run.
+Use this template to record a skill contract artifact. A transcript does not
+need exact-output matching. It must map required signal IDs to concrete evidence
+from the run; only non-manual runner output counts as black-box runtime evidence.
 
 ## Scenario
 
@@ -12,6 +12,14 @@ evidence from the run.
 
 manual-transcript | codex-cli | claude-code | acp-adapter | other
 
+## Command
+
+<Exact runner command for non-manual transcripts, or `not applicable`.>
+
+## Runtime Version
+
+<Host and model/runtime version for non-manual transcripts, or `not applicable`.>
+
 ## Date
 
 YYYY-MM-DD
@@ -19,8 +27,9 @@ YYYY-MM-DD
 ## Transcript
 
 ```text
-<Relevant user and agent turns. Keep only enough context to prove or disprove
-the required signals.>
+<Raw relevant user and agent turns. Keep only enough context to prove or
+disprove the required signals. Do not rewrite runtime output into idealized
+behavior.>
 ```
 
 ## Signal evidence

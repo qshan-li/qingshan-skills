@@ -13,6 +13,9 @@ their meaning.
    available and relevant.
 5. Select the workflow skill from root routing.
 6. Load only the selected workflow skill unless a handoff requires another one.
+7. Apply root `Decision Approval Gate` before execution.
+8. Apply root `Workflow Continuation` at each handoff.
+9. Add a Loop Contract only when the root contract says the work is actually bounded-loop work.
 
 ## Adapter May
 
@@ -20,6 +23,7 @@ their meaning.
 - Help retrieve trigger-matched global memory entries such as
   `~/.qingshan-skills/memory/learnings.jsonl`.
 - Enforce hard stops before unclear edits, guess fixes, or unverified claims.
+- Continue routine handoffs when the original request authorizes the complete outcome, every Taste decision is approved, and no root stop condition applies.
 - Require fresh verification before release, merge, publish, or deployment claims.
 
 ## Adapter Must Not
@@ -28,4 +32,5 @@ their meaning.
 - Fork `/clarify`, `/plan`, `/execute`, `/investigate`, `/verify`, or `/reflect`.
 - Run the full workflow chain unconditionally.
 - Dump all project or global memory into context when a trigger-matched excerpt is enough.
+- Treat `/execute` invocation, silence, or lack of objection as Taste approval.
 - Hide product, architecture, release, or irreversible decisions from the user.

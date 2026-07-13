@@ -38,3 +38,13 @@ structure validation remains deterministic.
 
 ACP is intentionally not part of this smoke layer. Add an ACP runner only when a
 real cross-runtime adapter needs black-box coverage across hosts.
+
+## Canonical Body Behavior
+
+Route smoke proves that the host can load the router. A separate opt-in wrapper
+checks selected body contracts for workflow continuation and Loop Contract
+scope:
+
+```bash
+QINGSHAN_RUNTIME_BEHAVIOR=1 bash scripts/validate-runtime-behavior.sh
+```

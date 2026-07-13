@@ -27,7 +27,16 @@ Build a personal skill library that integrates the best patterns from four sourc
    - `prompts/` — fresh-context worker/reviewer prompts, only where needed
    - `docs/` — philosophy, installation guide, references, design spec
 
-The authoritative design lives at `docs/superpowers/specs/2026-06-16-qingshan-skills-design.md`. The earlier eight-skill outline is superseded; any future split requires explicit design review.
+**Runtime behavior source of truth:** repository root `SKILL.md` plus the six
+workflow files under `skills/{clarify,plan,execute,investigate,verify,reflect}/SKILL.md`.
+Adapters and hosts must not fork those semantics.
+
+**Design history and rationale:** `docs/superpowers/specs/2026-06-16-qingshan-skills-design.md`
+records why the system exists and which source patterns were distilled. It must
+not restate a second executable rule set that drifts from the runtime skills.
+When design prose and runtime skills disagree, runtime wins until design is
+updated in the same change. The earlier eight-skill outline is superseded; any
+future skill split requires explicit design review.
 
 ### Source Skills and What We Take From Each
 
@@ -72,6 +81,7 @@ qingshan-skills/
 │       └── qingshan-skills.mdc  # Cursor rules (alwaysApply)
 │
 ├── skills/
+│   ├── qingshan-skills/SKILL.md # Thin plugin adapter that loads root SKILL.md + ETHOS.md
 │   ├── clarify/SKILL.md         # Goal/scope/constraint clarification (← Matt Pocock's Grill Me + Superpowers brainstorming)
 │   ├── plan/SKILL.md            # Task decomposition + decision grading (← gstack autoplan + Superpowers writing-plans)
 │   ├── execute/SKILL.md         # All engineering changes; TDD default; Context Gate (← Superpowers subagent + GSD fresh context)

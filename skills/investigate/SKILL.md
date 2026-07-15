@@ -150,6 +150,11 @@ condition applies; otherwise return control with the recommended next route.
 Apply root `Workflow Handoff Selection` when returning control. Use only the
 valid routes below as options, with the recommended route first.
 
+Load the qingshan-skills runtime adapter at `../qingshan-skills/SKILL.md` and
+apply its `Runtime Handoff Interaction` section before rendering options. The
+adapter must use the host-native option action before writing a prose
+recommendation list.
+
 Recommended next steps for the user:
 
 - `/plan` when Fix-Path Exit Criteria require decomposition or non-Low risk.

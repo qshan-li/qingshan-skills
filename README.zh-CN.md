@@ -23,7 +23,7 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 2. 按 Memory Retrieval Gate 做 trigger-based retrieval：只读取与任务类型、风险、技术栈、artifact、失败模式或决策边界匹配的 `CONTEXT.md`、`LEARNINGS.md`、decision artifact 或 global memory excerpt，不全量 dump。
 3. 选择入口 skill：低风险任务直接进入能解决问题的最短路径；中高风险任务先补足理解、计划、证据或回滚思考。
 4. 执行对应 skill 的 `Workflow`：每个 skill 都有触发条件、风险门槛、硬规则、输出和交接方式。
-5. 原始请求要求完整结果、边界仍然清晰、所有 Taste 已明确批准且不存在 User Challenge 或缺失前置条件时，可以跨常规 handoff 继续；只调用当前阶段时，在该阶段后归还控制权。停止交接存在有效下一流程时，优先显示原生可选 option，并把推荐路线放在第一项；运行时不支持原生输入时，使用编号或标签选项，用户无需手动输入 skill 命令。
+5. 原始请求要求完整结果、边界仍然清晰、所有 Taste 已明确批准且不存在 User Challenge 或缺失前置条件时，可以跨常规 handoff 继续；只调用当前阶段时，在该阶段后归还控制权。停止交接存在有效下一流程时，Claude Code 在普通文字前调用 `AskUserQuestion`，Codex 调用 `request_user_input`，并把推荐路线放在第一项；运行时不支持原生输入时，使用编号或标签选项，用户无需手动输入 skill 命令。
 6. 只有 recurring、automation、fresh-context、多 agent、迁移或大规模重复工作才需要 Loop Contract。普通有限任务依靠目标、验收标准、边界和 proof 即可。
 7. 任何"完成、修复、通过、发布、优化、待评审"的结论，都必须先经过 `/verify` 的新鲜证据；`/verify` 是临时任务状态的唯一 cleanup owner。
 

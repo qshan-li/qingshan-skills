@@ -241,6 +241,11 @@ next route.
 Apply root `Workflow Handoff Selection` when returning control. Use only the
 valid routes below as options, with the recommended route first.
 
+Load the qingshan-skills runtime adapter at `../qingshan-skills/SKILL.md` and
+apply its `Runtime Handoff Interaction` section before rendering options. The
+adapter must use the host-native option action before writing a prose
+recommendation list.
+
 Recommended next steps for the user:
 
 - `/execute` when the plan is complete and approved.

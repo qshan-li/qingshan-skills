@@ -24,6 +24,14 @@ grep -qF 'Do not open a selection prompt when automatic continuation applies' SK
   fail "root SKILL.md must preserve automatic continuation without prompts"
 grep -qF 'without typing a skill name' SKILL.md ||
   fail "root SKILL.md must provide a no-command handoff fallback"
+grep -q '^## Runtime Handoff Interaction$' skills/qingshan-skills/SKILL.md ||
+  fail "plugin adapter missing Runtime Handoff Interaction"
+grep -qF 'AskUserQuestion' skills/qingshan-skills/SKILL.md ||
+  fail "Claude Code adapter must name AskUserQuestion"
+grep -qF 'request_user_input' skills/qingshan-skills/SKILL.md ||
+  fail "Codex adapter must name request_user_input"
+grep -qF 'before writing any prose' skills/qingshan-skills/SKILL.md ||
+  fail "runtime adapter must prioritize native interaction before prose"
 grep -q '^## Decision Approval Gate$' SKILL.md ||
   fail "root SKILL.md missing Decision Approval Gate"
 grep -qF 'A direct `/execute` invocation does not approve open Taste decisions' SKILL.md ||
@@ -49,6 +57,8 @@ for skill in clarify plan execute investigate verify reflect; do
     fail "$path must use the root continuation contract"
   grep -qF 'Apply root `Workflow Handoff Selection` when returning control' "$path" ||
     fail "$path must use the root handoff selection contract"
+  grep -qF 'Load the qingshan-skills runtime adapter' "$path" ||
+    fail "$path must load the runtime handoff adapter before rendering options"
   if grep -qF 'stop and wait for the user to decide the next step' "$path"; then
     fail "$path still contains an unconditional handoff stop"
   fi

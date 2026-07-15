@@ -234,5 +234,10 @@ Apply root `Workflow Handoff Selection` when returning control and a valid next
 workflow exists. Do not manufacture a route when reflection correctly ends the
 task.
 
+Load the qingshan-skills runtime adapter at `../qingshan-skills/SKILL.md` and
+apply its `Runtime Handoff Interaction` section before rendering options. The
+adapter must use the host-native option action before writing a prose
+recommendation list.
+
 - Update project context, docs, or skills only when the lesson is reusable.
 - End the loop when there is no durable learning to capture.

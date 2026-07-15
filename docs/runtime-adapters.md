@@ -84,6 +84,21 @@ same choices as numbered or labeled conversational input. Adapter UI must not
 offer blocked routes or treat navigation selection as approval for unresolved
 Taste or User Challenge decisions.
 
+## Native Handoff Channels
+
+The qingshan-skills plugin adapter defines the preferred native channel for the
+two primary interactive runtimes:
+
+- Claude Code calls `AskUserQuestion` before prose, with one question and two to
+  four options.
+- Codex calls `request_user_input` before prose, with one question and the valid
+  route options supported by the host.
+
+Both runtimes put the recommended valid route first, omit blocked routes, and
+skip the native prompt when canonical `Workflow Continuation` authorizes an
+automatic handoff. A tool failure may fall back to labeled conversation, but a
+plain recommendation paragraph is not the preferred first action.
+
 ## Memory Retrieval Boundary
 
 Runtime adapters may help implement the root Memory Retrieval Gate. They may
@@ -139,8 +154,8 @@ skills for a specific runtime.
 
 | Runtime | Adapter surface | Use |
 | --- | --- | --- |
-| Claude Code | `~/.claude/skills`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Local skill loading, plugin marketplace distribution, optional Claude-only enhancements such as tool declarations, hooks, forked context, or subagents |
-| Codex | `$CODEX_HOME/skills`, `.codex-plugin/plugin.json`, `skills/qingshan-skills/SKILL.md` | Local skill loading plus a thin plugin adapter that loads the canonical root router |
+| Claude Code | `~/.claude/skills`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `skills/qingshan-skills/SKILL.md` | Local skill loading, plugin distribution, and `AskUserQuestion` mapping for stopping handoffs |
+| Codex | `$CODEX_HOME/skills`, `.codex-plugin/plugin.json`, `skills/qingshan-skills/SKILL.md` | Local skill loading plus `request_user_input` mapping for stopping handoffs |
 | Cursor | Consumer `.cursor/rules/qingshan-skills.mdc` via `scripts/install-cursor-project-rule.sh` | An `alwaysApply: true` bootstrap wrapper that resolves `QINGSHAN_SKILLS_ROOT` / baked path / `~/.qingshan-skills/repo`, then reads the canonical root router, ETHOS, and selected workflow skill |
 | Generic agents | `~/.agents/skills` | Local skill loading for runtimes that scan a personal skill folder (OpenCode, Gemini CLI, etc.) |
 

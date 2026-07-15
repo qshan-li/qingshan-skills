@@ -359,6 +359,7 @@ for skill in clarify plan execute investigate verify reflect; do
   require_text "skills/${skill}/SKILL.md" "### When Applicable"
   require_text "skills/${skill}/SKILL.md" 'Apply root `Workflow Continuation`'
   require_text "skills/${skill}/SKILL.md" 'Apply root `Workflow Handoff Selection` when returning control'
+  require_text "skills/${skill}/SKILL.md" "Load the qingshan-skills runtime adapter"
 done
 
 require_text "skills/plan/SKILL.md" "docs/templates/task-handoff.md"
@@ -374,6 +375,10 @@ require_text "docs/templates/release-checklist.md" "## Commit Or PR Hygiene"
 require_text "docs/templates/task-handoff.md" "## Referenced Memory"
 require_text "docs/templates/task-handoff.md" "## Lifecycle"
 require_text "docs/templates/runtime-bootstrap.md" "global memory"
+require_text "skills/qingshan-skills/SKILL.md" "## Runtime Handoff Interaction"
+require_text "skills/qingshan-skills/SKILL.md" "AskUserQuestion"
+require_text "skills/qingshan-skills/SKILL.md" "request_user_input"
+require_text "skills/qingshan-skills/SKILL.md" "before writing any prose"
 
 required_pressure_scenarios=(
   simple-task-overprocessing
@@ -413,6 +418,7 @@ required_pressure_scenarios=(
   workflow-loop-escape
   workflow-continuation
   workflow-handoff-options
+  runtime-native-handoff-options
   loop-contract-scope
   unfamiliar-stack-unknowns
   project-module-orientation

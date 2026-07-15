@@ -16,7 +16,8 @@ their meaning.
 7. Apply root `Decision Approval Gate` before execution.
 8. Apply root `Workflow Continuation` at each handoff.
 9. When continuation returns control and valid routes remain, apply root `Workflow Handoff Selection`.
-10. Add a Loop Contract only when the root contract says the work is actually bounded-loop work.
+10. Load the qingshan-skills adapter's `Runtime Handoff Interaction`: Claude Code uses `AskUserQuestion`; Codex uses `request_user_input`.
+11. Add a Loop Contract only when the root contract says the work is actually bounded-loop work.
 
 ## Adapter May
 
@@ -27,6 +28,8 @@ their meaning.
 - Continue routine handoffs when the original request authorizes the complete outcome, every Taste decision is approved, and no root stop condition applies.
 - Render stopping-handoff choices through native input when available, or use
   numbered or labeled choices without requiring a skill command.
+- Call the Claude Code or Codex native option action before emitting a prose
+  recommendation list.
 - Require fresh verification before release, merge, publish, or deployment claims.
 
 ## Adapter Must Not

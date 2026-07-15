@@ -238,6 +238,9 @@ request authorizes implementation, every Taste decision is approved, and no
 other stop condition applies; otherwise return control with the recommended
 next route.
 
+Apply root `Workflow Handoff Selection` when returning control. Use only the
+valid routes below as options, with the recommended route first.
+
 Recommended next steps for the user:
 
 - `/execute` when the plan is complete and approved.

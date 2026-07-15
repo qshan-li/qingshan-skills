@@ -16,6 +16,14 @@ grep -qF 'the original request asks for the complete outcome' SKILL.md ||
   fail "root SKILL.md must allow bounded automatic continuation"
 grep -qF 'the user invoked only the current workflow stage' SKILL.md ||
   fail "root SKILL.md must stop after phase-only invocation"
+grep -q '^## Workflow Handoff Selection$' SKILL.md ||
+  fail "root SKILL.md missing Workflow Handoff Selection"
+grep -qF 'only when `Workflow Continuation` returns control' SKILL.md ||
+  fail "root SKILL.md must limit handoff options to stopping handoffs"
+grep -qF 'Do not open a selection prompt when automatic continuation applies' SKILL.md ||
+  fail "root SKILL.md must preserve automatic continuation without prompts"
+grep -qF 'without typing a skill name' SKILL.md ||
+  fail "root SKILL.md must provide a no-command handoff fallback"
 grep -q '^## Decision Approval Gate$' SKILL.md ||
   fail "root SKILL.md missing Decision Approval Gate"
 grep -qF 'A direct `/execute` invocation does not approve open Taste decisions' SKILL.md ||
@@ -39,6 +47,8 @@ for skill in clarify plan execute investigate verify reflect; do
   path="skills/${skill}/SKILL.md"
   grep -qF 'Apply root `Workflow Continuation`' "$path" ||
     fail "$path must use the root continuation contract"
+  grep -qF 'Apply root `Workflow Handoff Selection` when returning control' "$path" ||
+    fail "$path must use the root handoff selection contract"
   if grep -qF 'stop and wait for the user to decide the next step' "$path"; then
     fail "$path still contains an unconditional handoff stop"
   fi

@@ -93,6 +93,36 @@ materially. Mechanical decisions never require approval. Workflow continuation
 preserves the original task boundary; it does not authorize unrelated work or
 release actions.
 
+## Workflow Handoff Selection
+
+Use this contract only when `Workflow Continuation` returns control and the
+current workflow can name one or more valid next workflows.
+Do not open a selection prompt when automatic continuation applies.
+
+Apply the root stop conditions and the current skill's exit criteria before
+building the option set. Offer only routes that remain valid. Do not offer a
+blocked workflow, such as `/execute` while required evidence or decision
+approval is missing.
+
+Use the strongest interactive channel available in the current runtime. Present
+the smallest useful set of labeled options, put the recommended valid route
+first, and give each option a short impact description. Labels should describe
+the action in the user's language; the user should be able to select the route
+without typing a skill name.
+
+Treat the selection as explicit authorization to enter the selected workflow
+inside the approved task boundary. Route selection is navigation, not decision
+approval: it does not approve an open or changed Taste decision, resolve a User
+Challenge decision, supply missing evidence, or widen scope.
+
+If the runtime cannot surface native interactive selection, present concise
+numbered or labeled choices and accept the number or label in normal
+conversation. Do not hard-code platform-specific tool names into the canonical
+contract. When a blocking question or decision approval is required, use its
+existing input gate before offering workflow routes. When no valid next workflow
+exists because the task has ended, report the terminal status instead of
+manufacturing an option.
+
 ## Routing
 
 | Request shape | Entry skill | Reason |

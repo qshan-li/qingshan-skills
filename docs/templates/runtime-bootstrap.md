@@ -15,7 +15,8 @@ their meaning.
 6. Load only the selected workflow skill unless a handoff requires another one.
 7. Apply root `Decision Approval Gate` before execution.
 8. Apply root `Workflow Continuation` at each handoff.
-9. Add a Loop Contract only when the root contract says the work is actually bounded-loop work.
+9. When continuation returns control and valid routes remain, apply root `Workflow Handoff Selection`.
+10. Add a Loop Contract only when the root contract says the work is actually bounded-loop work.
 
 ## Adapter May
 
@@ -24,6 +25,8 @@ their meaning.
   `~/.qingshan-skills/memory/learnings.jsonl`.
 - Enforce hard stops before unclear edits, guess fixes, or unverified claims.
 - Continue routine handoffs when the original request authorizes the complete outcome, every Taste decision is approved, and no root stop condition applies.
+- Render stopping-handoff choices through native input when available, or use
+  numbered or labeled choices without requiring a skill command.
 - Require fresh verification before release, merge, publish, or deployment claims.
 
 ## Adapter Must Not
@@ -33,4 +36,5 @@ their meaning.
 - Run the full workflow chain unconditionally.
 - Dump all project or global memory into context when a trigger-matched excerpt is enough.
 - Treat `/execute` invocation, silence, or lack of objection as Taste approval.
+- Prompt for workflow selection during an authorized automatic handoff.
 - Hide product, architecture, release, or irreversible decisions from the user.

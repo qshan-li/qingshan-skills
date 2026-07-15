@@ -230,5 +230,9 @@ Apply root `Workflow Continuation`. Reflection normally ends the current task;
 continue only when the original request explicitly includes another in-scope
 outcome and no stop condition applies.
 
+Apply root `Workflow Handoff Selection` when returning control and a valid next
+workflow exists. Do not manufacture a route when reflection correctly ends the
+task.
+
 - Update project context, docs, or skills only when the lesson is reusable.
 - End the loop when there is no durable learning to capture.

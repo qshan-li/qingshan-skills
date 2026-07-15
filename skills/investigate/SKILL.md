@@ -147,6 +147,9 @@ Apply root `Workflow Continuation`. Continue to `/plan` or `/execute` when the
 original request authorizes a fix, Fix-Path Exit Criteria are met, and no stop
 condition applies; otherwise return control with the recommended next route.
 
+Apply root `Workflow Handoff Selection` when returning control. Use only the
+valid routes below as options, with the recommended route first.
+
 Recommended next steps for the user:
 
 - `/plan` when Fix-Path Exit Criteria require decomposition or non-Low risk.

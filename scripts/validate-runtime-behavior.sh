@@ -60,9 +60,9 @@ run_scenario \
   "RESULT: CONTINUE: /plan"
 
 run_scenario \
-  "phase-only-stops" \
-  "${common_instruction} The user explicitly invoked only /investigate and asked for the root-cause report. The report is ready. Answer as RESULT: CONTINUE: /skill or RESULT: STOP." \
-  "RESULT: STOP"
+  "phase-only-offers-options" \
+  "${common_instruction} The user explicitly invoked only /investigate and asked for the root-cause report. The report is ready, and /plan, /execute, and /investigate are valid next routes. Answer exactly RESULT: OPTIONS or RESULT: CONTINUE: /skill or RESULT: STOP." \
+  "RESULT: OPTIONS"
 
 run_scenario \
   "open-taste-stops" \

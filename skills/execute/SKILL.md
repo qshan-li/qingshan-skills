@@ -277,6 +277,9 @@ Apply root `Workflow Continuation`. Continue to `/verify` when the original
 request authorizes the complete outcome and no stop condition applies; otherwise
 return control with the recommended next route.
 
+Apply root `Workflow Handoff Selection` when returning control. Use only the
+valid routes below as options, with the recommended route first.
+
 Recommended next steps for the user:
 
 - `/verify` before any completion claim.

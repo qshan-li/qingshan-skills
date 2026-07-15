@@ -123,6 +123,7 @@ validate_root_skill() {
   require_section "$path" "Bootstrap Enforcement"
   require_section "$path" "Loop Contract"
   require_section "$path" "Workflow Continuation"
+  require_section "$path" "Workflow Handoff Selection"
   require_section "$path" "Routing"
   require_section "$path" "Routing Tie-breakers"
   require_section "$path" "Risk Gate"
@@ -357,6 +358,7 @@ for skill in clarify plan execute investigate verify reflect; do
   require_text "skills/${skill}/SKILL.md" "### Always"
   require_text "skills/${skill}/SKILL.md" "### When Applicable"
   require_text "skills/${skill}/SKILL.md" 'Apply root `Workflow Continuation`'
+  require_text "skills/${skill}/SKILL.md" 'Apply root `Workflow Handoff Selection` when returning control'
 done
 
 require_text "skills/plan/SKILL.md" "docs/templates/task-handoff.md"
@@ -410,6 +412,7 @@ required_pressure_scenarios=(
   fresh-worker-recovery
   workflow-loop-escape
   workflow-continuation
+  workflow-handoff-options
   loop-contract-scope
   unfamiliar-stack-unknowns
   project-module-orientation

@@ -388,6 +388,9 @@ Apply root `Workflow Continuation`. Continue only when the original request
 authorizes the next workflow and verification evidence identifies no stop
 condition; otherwise return control with the recommended next route.
 
+Apply root `Workflow Handoff Selection` when returning control. Use only the
+valid routes below as options, with the recommended route first.
+
 Recommended next steps for the user:
 
 - `/reflect` when reusable learning should be captured.

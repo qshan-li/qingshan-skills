@@ -31,6 +31,7 @@ Adapters may provide:
 - trigger-based project or global memory retrieval
 - runtime-specific subagent, fork, or context behavior
 - prompt or rules wrappers for runtimes that do not read Agent Skills directly
+- native UI rendering for canonical stopping-handoff options
 
 Adapters must not:
 
@@ -55,6 +56,8 @@ Adapters may:
   complete the work, the risk is controlled, acceptance criteria are clear, and
   every Taste decision is explicitly approved with no root
   `Workflow Continuation` stop condition left open
+- render valid stopping-handoff routes through native selection controls, with
+  the canonical recommended route first
 - require fresh verification before completion, release, merge, publish, or
   deployment claims
 
@@ -66,9 +69,20 @@ Adapters must not:
 - treat a workflow invocation, silence, or lack of objection as Taste approval
 - hide stop-or-continue decisions from the user when automation changes risk,
   scope, ownership, or release exposure
+- open a handoff selection prompt when canonical `Workflow Continuation`
+  authorizes automatic continuation
+- require users to type canonical skill commands when the host can provide
+  native or labeled selection
 
 Runtime automation protects workflow boundaries; it does not drive the whole
 development process.
+
+When a stopping handoff has valid next routes, adapters should map the canonical
+labels, recommendation order, and impact descriptions to the host's strongest
+interactive input surface. Hosts without native selection should preserve the
+same choices as numbered or labeled conversational input. Adapter UI must not
+offer blocked routes or treat navigation selection as approval for unresolved
+Taste or User Challenge decisions.
 
 ## Memory Retrieval Boundary
 

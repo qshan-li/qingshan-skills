@@ -21,8 +21,10 @@ are missing, use the fallback route before irreversible action.
 
 ## When to Use
 
-- Before saying complete, fixed, passing, shipped, optimized, documented, or ready.
-- After code, config, docs, tests, dependency, performance, deployment, or security changes.
+- Before saying complete, fixed, passing, shipped, optimized, documented, or
+  ready unless active `/execute` proved root Local Completion Exit.
+- After code, config, docs, tests, dependency, performance, deployment, or
+  security changes that did not satisfy root Local Completion Exit.
 - When reviewing whether implementation matches a plan or spec.
 - When deciding whether remaining risk is acceptable.
 
@@ -31,6 +33,8 @@ are missing, use the fallback route before irreversible action.
 - The goal is unclear. Use `/clarify`.
 - The failure is unexplained. Use `/investigate`.
 - The plan has not been executed. Use `/execute`.
+- `/execute` proved every root Local Completion Exit condition and already
+  reported the fresh proof. The task is complete.
 
 ## Risk Gate
 
@@ -149,8 +153,9 @@ the observed artifact and residual risk.
 
 For high-risk, unfamiliar-stack, unfamiliar-domain, fresh-context, broad diff,
 or release-path work, provide a concise reviewer explainer before final status.
-It should state the claim, changed behavior, key files, decisions or unknowns
-resolved, proof run, residual risk, and rollback or follow-up when relevant.
+It should state the claim, changed behavior, key files, decisions or
+uncertainties resolved, accepted residual uncertainty, proof run, residual risk,
+and rollback or follow-up when relevant.
 
 Add a lightweight understanding check only when a human handoff would benefit
 from it. Use two to four questions or self-check prompts that expose whether the
@@ -285,6 +290,12 @@ local checklist and state that the review was self-run.
   durable decision, learning, or diff exists, including whether changed lines
   trace to the request.
 - Behavior Regression Proof: run when observable behavior changed.
+- Uncertainty Status: when a Task Handoff carried uncertainty, check evidence for
+  resolved items, confirm blocking probes ran before dependent work, and report
+  every accepted residual uncertainty without treating it as resolved. Mark the
+  task Missing or Not Ready when an open or stale item can still change
+  acceptance criteria, protected boundaries, changed behavior, or required
+  proof.
 - Review Readiness Dashboard: use for medium-risk, high-risk, or release-path
   work.
 - Verification Observability: choose proof that can see, measure, or interact
@@ -344,7 +355,7 @@ local checklist and state that the review was self-run.
 
 | Excuse | Reality |
 | --- | --- |
-| "The change is tiny" | Tiny changes still need targeted proof |
+| "The change is tiny" | Size is not an exit criterion; use Local Completion Exit, which still requires targeted fresh proof |
 | "Tests passed earlier" | Earlier is not fresh verification |
 | "The agent said it worked" | Reports are not evidence |
 | "Build passed, so requirements are met" | Build is not acceptance |
@@ -373,6 +384,8 @@ local checklist and state that the review was self-run.
 
 ### When Applicable
 
+- Uncertainty Status evidence and accepted residual uncertainty when carried by
+  the task handoff.
 - Durable decision, project learning, or referenced memory compliance when relevant.
 - Review Readiness Dashboard when risk justifies it.
 - Adversarial Review result or reason skipped.

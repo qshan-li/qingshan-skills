@@ -97,8 +97,8 @@ not reopen approval.
 For medium/high-risk work, list the decisions most likely to change the
 implementation before listing ordered tasks. Prioritize user-visible behavior,
 data model or schema shape, API or type contracts, ownership boundaries,
-validation strategy, rollout, rollback, and any unknowns carried forward from
-`/clarify`.
+validation strategy, rollout, rollback, and any unresolved or stale
+uncertainties carried forward from `/clarify`.
 
 Classify each as Mechanical, Taste, or User Challenge using root Decision
 Grading criteria:
@@ -175,8 +175,10 @@ turning it into an implicit requirement.
    - Taste: batch Decision Briefs and run the Taste Approval Gate once before execution.
    - User Challenge: stop immediately for explicit approval using a Decision Brief based on `docs/templates/decision-brief.md`.
 6. Record selected Taste options and approval evidence, or stop with the open batch.
-7. Place discovery probes early when carried-forward unknowns could change scope,
-   sequencing, boundaries, or verification.
+7. Place discovery probes early when carried-forward uncertainties could change
+   scope, sequencing, boundaries, or verification. Do not schedule dependent
+   implementation until each blocking item is resolved or routed to its decision
+   gate.
 8. Decompose work into vertical slices with verification after each meaningful change.
 9. Record approved durable decisions that pass the three-gate rule, or explicitly defer them with a reason.
 10. Define rollback or failure handling when changes affect deploy, data, security, or architecture.
@@ -194,6 +196,8 @@ turning it into an implicit requirement.
 - Do not add future-proofing, compatibility layers, or abstractions without current need.
 - Do not let the plan include unrelated cleanup.
 - Do not proceed if evidence required by the task is missing.
+- Do not hide carried-forward uncertainty inside implementation tasks; preserve
+  its status and place any blocking probe before dependent work.
 - Do not ignore a relevant durable decision, project learning, or trigger-matched global memory entry that can affect the plan.
 - Do not split by technical layer when a thin end-to-end slice can be verified independently.
 - Do not leave approved durable decisions only in the conversation or plan text.
@@ -226,6 +230,7 @@ turning it into an implicit requirement.
 
 ### When Applicable
 
+- Carried-forward Uncertainty Status, scheduled probes, and blocking outcome.
 - Referenced memory and the trigger that made it relevant.
 - Durable decision artifact path and entry, or deferral reason.
 - Stale, superseded, or unresolved durable context that affected planning.

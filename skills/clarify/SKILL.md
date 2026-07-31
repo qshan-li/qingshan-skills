@@ -23,7 +23,7 @@ are missing, use the fallback route before irreversible action.
 
 - New features, refactors, project structure work, deployment changes, docs, or developer-experience work with unclear intent.
 - Requests to read or understand a new project, directory, or module and produce
-  a structured map, guided reading path, or unknowns.
+  a structured map, guided reading path, or uncertainties.
 - Requests with missing acceptance criteria, non-goals, constraints, or user-facing tradeoffs.
 - Medium or high-risk work where multiple reasonable approaches exist.
 - Any task where the codebase cannot answer a necessary decision.
@@ -54,33 +54,55 @@ Treat `CONTEXT.md` as a glossary only: stable domain terms and resolved ambiguit
 
 When the user confirms stable canonical vocabulary or a resolved ambiguity that future agents should reuse, update the project root `CONTEXT.md` before handoff. If `CONTEXT.md` does not exist and the repository needs shared vocabulary, create it using `docs/templates/context-glossary.md`. Do not persist candidate terms, unresolved disagreements, implementation details, task plans, decision rationale, or session summaries.
 
-## Unknowns Pass
+## Uncertainty Pass
 
-Run an Unknowns Pass for medium/high-risk work, unfamiliar programming
+Run an Uncertainty Pass for medium/high-risk work, unfamiliar programming
 languages, frameworks, build systems, business domains, or user-visible behavior
 where the user may only know the right answer after seeing an option.
+Unfamiliarity triggers this pass; it does not raise task risk by itself. Apply
+root Risk Classification Floors to the task's actual impact.
 
-Separate the result into:
+Separate the result by resolution mechanism:
 
-- Known facts: evidence anchored in the request, code, docs, tests, or durable
-  context.
-- Known unknowns: missing facts or decisions that can be named now.
-- Likely unknown unknowns: unfamiliar stack conventions, hidden lifecycle hooks,
-  generated files, business invariants, external-service contracts, implicit
-  permissions, or product behavior that the current context may not reveal.
-- Discovery probes: the smallest read-only inspection, spike, prototype,
-  question, or smoke check that can expose the risk before implementation.
+- Evidence: facts anchored in the request, code, docs, tests, or durable context.
+- Open fact: an objective answer exists but has not yet been found.
+- Open decision: the answer does not exist until its owner chooses; grade it as
+  Mechanical, Taste, or User Challenge instead of treating it as fact finding.
+- Blind-spot hypothesis: a grounded reason that a named surface may hide a
+  constraint, such as lifecycle hooks, generated files, business invariants,
+  external-service contracts, or permissions. Do not list generic possibilities.
+- Residual uncertainty: proportionate discovery cannot eliminate it; record its
+  impact, mitigation, and required proof without treating it as resolved.
 
-Ask the user only when a probe cannot answer the question and the answer can
-change the goal, acceptance criteria, protected boundaries, validation path, or
-a User Challenge decision. Route to `/plan` when the probes affect sequencing,
-risk, rollout, or decision grading; route to `/investigate` when the missing fact
-is failure evidence or root cause.
+A discovery probe is the smallest non-mutating inspection or smoke check that
+can resolve an open fact or expose a blind-spot hypothesis.
+Every `/clarify` discovery probe must be non-mutating. Run it only when the
+result can change the goal, acceptance criteria, protected boundaries,
+validation path, or a user decision.
+A user question is not a discovery probe. Ask only when repository evidence
+cannot supply the answer and the answer can change one of those clarification
+outputs.
+
+Writable spikes and prototypes are planned execution slices, not `/clarify`
+probes. Route them through `/plan` with an explicit boundary, cleanup path, and
+proof before any write.
+
+Resolved items stay temporary unless downstream work needs their evidence or the
+evidence may become stale. Carry only cross-stage open, deferred,
+accepted-residual, or potentially stale items in Task Handoff `Uncertainty
+Status`. Convert open decisions into Decision Briefs; do not duplicate approval
+state in uncertainty tracking. An uncertainty that can change the goal,
+acceptance criteria, protected boundaries, or a User Challenge decision remains
+blocking and cannot be accepted as residual.
+
+Route to `/plan` when an uncertainty affects sequencing, ownership, validation,
+rollout, or decision grading. Route to `/investigate` when the missing fact is
+failure evidence or root cause.
 
 ## Project/Module Orientation
 
 Use Project/Module Orientation when the user asks `/clarify` to read a project,
-directory, or module and return a structured map and unknowns. The goal is a
+directory, or module and return a structured map and uncertainties. The goal is a
 teaching graph in prose: explain how the scoped parts fit together and in what
 order to read them, not to impress with graph complexity.
 
@@ -109,8 +131,8 @@ Return a compact orientation with:
 - Domain map: business domain, flows, steps, invariants, permissions, external
   contracts, and hidden rule candidates when the module has domain behavior.
 - Guided tour: the recommended reading order and why each stop matters.
-- Unknowns: known unknowns, likely unknown unknowns, and the smallest discovery
-  probes that would resolve them.
+- Uncertainties: evidence, open facts, open decisions, blind-spot hypotheses,
+  residual uncertainty, and the smallest applicable discovery probes.
 - Next questions and next route: continue `/clarify`, move to `/plan`, route to
   `/investigate`, or proceed to `/execute` only when a scoped change is clear.
 
@@ -169,10 +191,10 @@ require a confirmation stop.
    acceptance criteria.
 3. State the task type and risk level using root Risk Classification Floors.
 4. For orientation mode, run Project/Module Orientation and stop with a
-   structured map, unknowns, and next route.
+   structured map, uncertainties, and next route.
 5. For goal-clarify mode, identify goal, non-goals, constraints, and acceptance
    criteria with provenance labels on the full acceptance package, including goal.
-6. Run the Unknowns Pass when risk, unfamiliarity, or user-visible uncertainty
+6. Run the Uncertainty Pass when risk, unfamiliarity, or user-visible uncertainty
    makes hidden assumptions likely.
 7. Ask only one question at a time when code cannot answer it.
 8. Provide a recommended answer with each question.
@@ -183,7 +205,7 @@ require a confirmation stop.
     non-goal, success definition, or protected boundary changes outcome, scope,
     or user-visible behavior.
 13. Pass Taste decisions to `/plan` as open Decision Briefs, or run the single Taste Approval Gate before a direct `/execute` handoff.
-14. Persist a Task Handoff when the clarified goal, non-goals, constraints, acceptance criteria, provenance, referenced memory, decision approval status, unknowns, discovery probes, or next proof must survive outside the conversation. For low-risk direct `/execute`, a lightweight target with Referenced Memory is enough.
+14. Persist a Task Handoff when the clarified goal, non-goals, constraints, acceptance criteria, provenance, referenced memory, decision approval status, cross-stage uncertainty status, discovery probes, or next proof must survive outside the conversation. For low-risk direct `/execute`, a lightweight target with Referenced Memory is enough.
 15. End with either a lightweight target statement, a Project/Module Orientation, or an approved design.
 
 ## Question Stop Rule
@@ -219,7 +241,10 @@ If the runtime cannot surface interactive input, stop with the single blocking q
 - Do not run goal-clarify outputs for an orientation-mode request.
 - Do not treat fuzzy domain language as harmless when it affects behavior, naming, or acceptance criteria.
 - Do not treat unfamiliar languages, frameworks, build systems, or business
-  domains as normal context when an Unknowns Pass would expose hidden risk.
+  domains as normal context when an Uncertainty Pass would expose hidden risk.
+- Do not raise task risk only because the stack or domain is unfamiliar.
+- Do not treat a user question, writable spike, or prototype as a read-only
+  discovery probe.
 - Do not invent a new top-level command for project or module orientation.
 - Do not present inferred purpose, layer, ownership, or business meaning as fact.
 - Do not replace scoped orientation with an unbounded whole-repository summary.
@@ -239,7 +264,7 @@ If the runtime cannot surface interactive input, stop with the single blocking q
 | "I read enough" | If acceptance criteria are missing, understanding is incomplete |
 | "I inferred the AC from context, so continue" | Agent-proposed goals or success criteria that change outcome or behavior need confirmation |
 | "Call it repository-derived" | Repository-derived requires a cited path or symbol |
-| "I'll discover the stack while coding" | Unknowns should be exposed with cheap probes before edits create momentum |
+| "I'll discover the stack while coding" | Uncertainties should be exposed with cheap read-only probes before edits create momentum |
 | "A directory tree is enough" | Orientation needs relationships, layers, flows, and a guided reading path |
 | "The graph should be generated and saved" | The lightweight path teaches the scoped module without adding product machinery |
 
@@ -258,9 +283,9 @@ If the runtime cannot surface interactive input, stop with the single blocking q
 ### When Applicable
 
 - Project/Module Orientation when requested, including scope, evidence read,
-  structural map, domain map, guided tour, unknowns, next questions, and next
+  structural map, domain map, guided tour, uncertainties, next questions, and next
   route.
-- Unknowns Pass result, or why no Unknowns Pass was needed.
+- Uncertainty Pass result, or why no Uncertainty Pass was needed.
 - Shared-language terms or ambiguities captured in `CONTEXT.md`, or the reason no glossary update was needed.
 - Referenced memory used, or the reason no memory retrieval was needed.
 - Task Handoff artifact path when one was needed, or the reason no handoff artifact was needed.

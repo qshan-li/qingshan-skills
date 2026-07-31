@@ -17,8 +17,8 @@ route line for the expected workflow skills across ten scenarios:
   `/plan`
 - `test-system-investigate-route`: unclear flaky CI test improvement routes
   through `/investigate`
-- `planned-docs-execute-route`: a clear small README typo routes through
-  `/execute` and `/verify`
+- `planned-docs-execute-route`: a clear small README typo enters `/execute`;
+  Local Completion Exit decides whether `/verify` is needed
 - `review-verify-route`: a diff review request routes through `/verify` without
   implementation claims
 - `completion-claim-verify-route`: a completion claim routes through `/verify`

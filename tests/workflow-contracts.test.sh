@@ -16,6 +16,16 @@ grep -qF 'the original request asks for the complete outcome' SKILL.md ||
   fail "root SKILL.md must allow bounded automatic continuation"
 grep -qF 'the user invoked only the current workflow stage' SKILL.md ||
   fail "root SKILL.md must stop after phase-only invocation"
+grep -q '^## Local Completion Exit$' SKILL.md ||
+  fail "root SKILL.md missing Local Completion Exit"
+grep -qF 'risk is Low and the decision is Mechanical' SKILL.md ||
+  fail "Local Completion Exit must be limited to Low-risk Mechanical work"
+grep -qF 'no temporary task state was created or consumed' SKILL.md ||
+  fail "Local Completion Exit must preserve /verify cleanup ownership"
+grep -qF 'File count and words such as' SKILL.md ||
+  fail "Local Completion Exit must reject subjective size shortcuts"
+grep -qF 'Apply root Local Completion Exit first' skills/execute/SKILL.md ||
+  fail "execute must apply Local Completion Exit before /verify handoff"
 grep -q '^## Workflow Handoff Selection$' SKILL.md ||
   fail "root SKILL.md missing Workflow Handoff Selection"
 grep -qF 'only when `Workflow Continuation` returns control' SKILL.md ||
@@ -50,6 +60,33 @@ grep -qF 'Status: open | approved | changed' docs/templates/decision-brief.md ||
   fail "Decision Brief must preserve approval status"
 grep -qF 'Approval evidence:' docs/templates/decision-brief.md ||
   fail "Decision Brief must preserve approval evidence"
+
+grep -q '^## Uncertainty Pass$' skills/clarify/SKILL.md ||
+  fail "clarify must define Uncertainty Pass"
+if grep -q '^## Unknowns Pass$' skills/clarify/SKILL.md; then
+  fail "clarify still uses the ambiguous Unknowns Pass name"
+fi
+grep -qF 'Unfamiliarity triggers this pass; it does not raise task risk by itself.' skills/clarify/SKILL.md ||
+  fail "clarify must separate unfamiliarity from task risk"
+grep -qF 'A user question is not a discovery probe.' skills/clarify/SKILL.md ||
+  fail "clarify must separate user decisions from discovery probes"
+grep -qF 'Every `/clarify` discovery probe must be non-mutating.' skills/clarify/SKILL.md ||
+  fail "clarify discovery probes must be non-mutating"
+grep -qF 'Writable spikes and prototypes are planned execution slices' skills/clarify/SKILL.md ||
+  fail "clarify must not run writable spikes as discovery probes"
+grep -q '^## Implementation Constraint Probe$' skills/execute/SKILL.md ||
+  fail "execute must define Implementation Constraint Probe"
+if grep -q '^## Unknown-Unknowns Probe$' skills/execute/SKILL.md; then
+  fail "execute still uses the ambiguous Unknown-Unknowns Probe name"
+fi
+grep -qF 'Reuse applicable, fresh evidence from the plan or Task Handoff.' skills/execute/SKILL.md ||
+  fail "execute must reuse fresh upstream discovery evidence"
+grep -q '^## Uncertainty Status (When Needed)$' docs/templates/task-handoff.md ||
+  fail "Task Handoff must carry cross-stage uncertainty status"
+for field in 'Item:' 'Kind:' 'Impact:' 'Next action:' 'Status:' 'Evidence:'; do
+  grep -qF -- "- ${field}" docs/templates/task-handoff.md ||
+    fail "Task Handoff uncertainty status missing field: ${field}"
+done
 
 for skill in clarify plan execute investigate verify reflect; do
   path="skills/${skill}/SKILL.md"

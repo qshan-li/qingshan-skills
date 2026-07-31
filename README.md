@@ -32,10 +32,10 @@ qingshan-skills is not a set of isolated commands — it is a lightweight routin
 | Task Signal | Entry Skill | Typical Follow-up |
 | --- | --- | --- |
 | Goal, scope, acceptance criteria, terminology, or user decision unclear | [`/clarify`](skills/clarify/SKILL.md) | Low-risk → `/execute`; needs decomposition → `/plan` |
-| Read a project, directory, or module and produce a structured map plus unknowns | [`/clarify`](skills/clarify/SKILL.md) | Continue `/clarify`, or route to `/plan`, `/investigate`, or `/execute` when a scoped next step is clear |
+| Read a project, directory, or module and produce a structured map plus uncertainties | [`/clarify`](skills/clarify/SKILL.md) | Continue `/clarify`, or route to `/plan`, `/investigate`, or `/execute` when a scoped next step is clear |
 | Goal is clear, but needs task breakdown, ordering, decision grading, or verification design | [`/plan`](skills/plan/SKILL.md) | `/execute → /verify` |
 | Dependency or toolchain upgrade | [`/plan`](skills/plan/SKILL.md) | Control blast radius, compatibility impact, and verification path |
-| Plan is clear, needs code, config, docs, tools, or project structure changes | [`/execute`](skills/execute/SKILL.md) | `/verify` |
+| Plan is clear, needs code, config, docs, tools, or project structure changes | [`/execute`](skills/execute/SKILL.md) | Local completion or `/verify` |
 | Bug, failing test, performance, deployment, security, stability, or unknown root cause | [`/investigate`](skills/investigate/SKILL.md) | After root cause is clear → `/plan` or `/execute` |
 | Test improvement but coverage gap, flaky signal, or failure behavior unclear | [`/investigate`](skills/investigate/SKILL.md) | Confirm real signal first, then `/plan` or `/execute` |
 | Code review, PR/diff review, implementation or spec review | [`/verify`](skills/verify/SKILL.md) | Scope/quality review and report residual risk |
@@ -47,7 +47,7 @@ qingshan-skills is not a set of isolated commands — it is a lightweight routin
 
 | Risk | Approach |
 | --- | --- |
-| Low | Shortest path, e.g. `/clarify → /execute → /verify`; no heavy planning |
+| Low | Shortest path, e.g. `/clarify → /execute`, ending locally only when Local Completion Exit passes |
 | Medium | Clarify goals, task order, decision grading, and verification strategy, e.g. `/clarify → /plan → /execute → /verify` |
 | High | Establish evidence, rollback, or failure handling first; use fresh-context subagents, TDD, adversarial review, and release checks as needed |
 
@@ -80,7 +80,10 @@ Core actions:
 - Clarify goals, non-goals, constraints, and acceptance criteria with provenance labels; confirm agent-proposed user-visible success criteria before continuation.
 - For project or module reading requests, produce a teaching-graph style
   orientation: scoped evidence, structural nodes and edges, layers, domain
-  flows, guided tour, unknowns, and next route.
+  flows, guided tour, uncertainties, and next route.
+- Run an operational Uncertainty Pass for unfamiliar or risk-sensitive work:
+  separate evidence, open facts, open decisions, blind-spot hypotheses, and
+  residual uncertainty. Unfamiliarity triggers the pass, not a higher risk floor.
 - Run a shared language check on domain vocabulary; user-confirmed stable terms are written to or updated in `CONTEXT.md`.
 - Provide tradeoff analysis and recommendations for medium-to-high-risk tasks; high-impact decisions must be left to the user.
 - Pass Taste decisions to `/plan` for batch approval, or approve the batch in `/clarify` before a low-risk direct `/execute` handoff.
@@ -188,7 +191,7 @@ Choose the lightest workflow for the scenario; no need to run the full pipeline 
 
 | Scenario | Path |
 | --- | --- |
-| Small docs change | `/clarify → /execute → /verify` |
+| Small Mechanical docs change | `/clarify → /execute → done` through Local Completion Exit |
 | Bug fix | `/investigate → /execute → /verify` |
 | Performance tuning | `/investigate → /plan → /execute → /verify` |
 | Dependency or toolchain upgrade | `/plan → /execute → /verify` |

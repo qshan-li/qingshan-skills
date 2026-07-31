@@ -32,10 +32,10 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 | 任务信号 | 入口 skill | 典型后续 |
 | --- | --- | --- |
 | 目标、范围、验收标准、术语或用户决策不清 | [`/clarify`](skills/clarify/SKILL.md) | 低风险到 `/execute`；需要拆解到 `/plan` |
-| 阅读项目、目录或模块并产出结构化地图与 unknowns | [`/clarify`](skills/clarify/SKILL.md) | 继续 `/clarify`，或在下一步明确后进入 `/plan`、`/investigate` 或 `/execute` |
+| 阅读项目、目录或模块并产出结构化地图与不确定项 | [`/clarify`](skills/clarify/SKILL.md) | 继续 `/clarify`，或在下一步明确后进入 `/plan`、`/investigate` 或 `/execute` |
 | 目标已清楚，但需要拆任务、排顺序、分级决策或设计验证方式 | [`/plan`](skills/plan/SKILL.md) | `/execute → /verify` |
 | 依赖或工具链升级 | [`/plan`](skills/plan/SKILL.md) | 控制 blast radius、兼容影响和验证路径 |
-| 已有明确计划，需要改代码、配置、文档、工具或项目结构 | [`/execute`](skills/execute/SKILL.md) | `/verify` |
+| 已有明确计划，需要改代码、配置、文档、工具或项目结构 | [`/execute`](skills/execute/SKILL.md) | 局部完成或 `/verify` |
 | Bug、失败测试、性能、部署、安全、稳定性或未知根因 | [`/investigate`](skills/investigate/SKILL.md) | 根因清楚后到 `/plan` 或 `/execute` |
 | 测试体系改进但 coverage gap、flaky signal 或失败行为不清楚 | [`/investigate`](skills/investigate/SKILL.md) | 先确认真实信号，再到 `/plan` 或 `/execute` |
 | code review、PR/diff review、实现或 spec review | [`/verify`](skills/verify/SKILL.md) | 做 scope/quality review 并报告残余风险 |
@@ -47,7 +47,7 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 
 | 风险 | 用法 |
 | --- | --- |
-| 低风险 | 用最短路径处理，例如 `/clarify → /execute → /verify`；不写重型计划 |
+| 低风险 | 用最短路径处理，例如 `/clarify → /execute`；仅在 Local Completion Exit 成立时局部完成 |
 | 中风险 | 明确目标、任务顺序、决策分级和验证策略，例如 `/clarify → /plan → /execute → /verify` |
 | 高风险 | 先建立证据、回滚或失败处理；必要时使用新上下文子代理、TDD、对抗性评审和发布检查 |
 
@@ -77,7 +77,8 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 - 先读相关代码、文档和已有上下文，避免问代码能回答的问题。
 - 先选择 `goal-clarify` 或 `orientation` 模式；orientation 不得发明实现验收标准。
 - 明确目标、非目标、约束与带 provenance 的验收标准；代理自拟且影响用户可见成功定义的项须确认后再续跑。
-- 阅读项目或模块时，产出 teaching-graph 风格的 orientation：限定范围、证据、节点与边、层次、领域流程、推荐阅读顺序、unknowns 和下一 route。
+- 阅读项目或模块时，产出 teaching-graph 风格的 orientation：限定范围、证据、节点与边、层次、领域流程、推荐阅读顺序、不确定项和下一 route。
+- 对陌生或风险敏感的工作运行操作型 Uncertainty Pass：区分 evidence、open fact、open decision、blind-spot hypothesis 与 residual uncertainty。陌生性只触发该 pass，不自动抬高风险等级。
 - 对领域词汇做 shared language 检查；用户确认后的稳定术语写入或更新 `CONTEXT.md`。
 - 对中高风险任务给出方案取舍和推荐；高影响决策必须留给用户。
 - Taste 决策交给 `/plan` 批量批准；低风险直接进入 `/execute` 时，由 `/clarify` 先完成统一审批门。
@@ -134,7 +135,7 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 
 ### `/verify`
 
-防止把"看起来对"当成"已经完成"。它用于任何完成、修复、通过、发布、优化或待评审声明之前。
+防止把"看起来对"当成"已经完成"。除 active `/execute` 已证明 Local Completion Exit 外，它用于任何完成、修复、通过、发布、优化或待评审声明之前。
 
 核心动作：
 
@@ -182,7 +183,7 @@ qingshan-skills 不是一组孤立命令，而是一条轻量路由规则。每�
 
 | 场景 | 路径 |
 | --- | --- |
-| 小幅文档改动 | `/clarify → /execute → /verify` |
+| 小幅 Mechanical 文档改动 | `/clarify → /execute → done`（通过 Local Completion Exit） |
 | Bug 修复 | `/investigate → /execute → /verify` |
 | 性能调优 | `/investigate → /plan → /execute → /verify` |
 | 依赖或工具链升级 | `/plan → /execute → /verify` |

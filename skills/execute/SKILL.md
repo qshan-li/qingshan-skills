@@ -36,7 +36,7 @@ are missing, use the fallback route before irreversible action.
 
 | Risk | Execution behavior |
 | --- | --- |
-| Low | Make the smallest edit and verify locally |
+| Low | Make the smallest edit, verify locally, and apply root Local Completion Exit |
 | Medium | Follow the plan step-by-step and verify at meaningful checkpoints |
 | High | Run the Context Gate; use TDD for code; use fresh context when risk justifies it |
 
@@ -58,9 +58,10 @@ Before editing, read the scoped input that matches the task risk:
   artifact exists.
 
 The inputs must name the goal, owned files or touched surface, protected
-boundaries, acceptance criteria, required proof, and the status of every Taste
-or User Challenge decision. If direct `/execute` entry lacks those inputs,
-return to `/clarify` or `/plan` before editing.
+boundaries, acceptance criteria, required proof, the status of every Taste or
+User Challenge decision, and any cross-stage Uncertainty Status. If direct
+`/execute` entry lacks those inputs, return to `/clarify` or `/plan` before
+editing.
 
 A lightweight target is a valid named-memory container. When root bootstrap or
 an upstream workflow retrieves matching memory for low-risk work, record it in
@@ -109,24 +110,29 @@ into a narrower slice or use fresh context before editing. If exactly one
 non-blocking signal is present, record the concern and mitigation before
 editing. If no signals are present, proceed locally.
 
-## Unknown-Unknowns Probe
+## Implementation Constraint Probe
 
 Before editing in an unfamiliar language, framework, build system, runtime, or
-business domain, run the smallest read-only probe that can expose local
-conventions and hidden constraints. Prefer existing project evidence: package or
-build files, nearby implementations, tests, docs, generated-code markers,
-framework lifecycle entry points, configuration, fixtures, logs, and accepted
-business-rule examples.
+business domain, resolve only the unresolved or stale local constraints that can
+change the planned implementation.
+Reuse applicable, fresh evidence from the plan or Task Handoff.
+Unfamiliarity requires this check when local conventions remain uninspected; it
+does not raise task risk by itself or require repeating a fresh upstream probe.
 
-Use a throwaway spike or prototype only when read-only inspection cannot expose a
-user-visible behavior, API shape, or domain rule. Keep it outside the final
-change unless the task explicitly asks for it.
+Use the smallest read-only inspection that can expose the constraint. Prefer
+existing project evidence: package or build files, nearby implementations,
+tests, docs, generated-code markers, framework lifecycle entry points,
+configuration, fixtures, logs, and accepted business-rule examples.
 
-If the probe reveals missing acceptance criteria, protected boundaries,
-ownership, validation, sequencing, an open Taste decision, or a User Challenge
-decision, stop and return to `/clarify` or `/plan`. If it reveals unexplained
+If read-only evidence cannot resolve the constraint, stop and return to `/plan`
+to authorize a bounded writable spike as its own execution slice. Do not create
+or keep prototype code as part of this probe.
+
+If the probe reveals missing goals, acceptance criteria, protected boundaries,
+or a user decision, return to `/clarify`. If it changes ownership, validation,
+sequencing, rollout, or rollback, return to `/plan`. If it reveals unexplained
 failure evidence or root-cause uncertainty, route to `/investigate`. Do not
-continue by guessing around a newly discovered unknown.
+continue by guessing around a newly discovered uncertainty.
 
 ## Deviation Log
 
@@ -191,15 +197,19 @@ Reason: <why that outcome is correct>
 4. If the current context cannot complete the task accurately, stop and gather
    context, narrow the slice, or use fresh context before any edit.
 5. If two or more of the remaining context-risk signals are present, split the work into a narrower slice or use `docs/templates/fresh-context-packet.md` and `prompts/fresh-worker.md` with explicit file ownership, protected boundaries, and a context manifest with read-only or owned-edit access modes.
-6. Run the Unknown-Unknowns Probe before editing when unfamiliarity or hidden
-   constraints are context-risk signals.
+6. Run the Implementation Constraint Probe before editing when unfamiliarity or
+   hidden constraints are context-risk signals, limited to unresolved or stale
+   items not already covered by fresh upstream evidence.
 7. For high-risk code changes, write one behavior-focused failing test before production code.
 8. Make the smallest change that satisfies the current task. Every changed line should trace to the task, required proof, or cleanup caused by this change.
 9. Stop and reopen approval if implementation materially changes an approved Taste decision.
 10. Record deviations from the plan as they occur, or state that none occurred.
 11. Run the specified verification.
-12. Report temporary task artifacts to `/verify` without deleting or trimming them.
-13. Report changed files, verification result, temporary state status, and unresolved concerns.
+12. Apply root Local Completion Exit. Terminate only when every condition is
+    proven; otherwise report temporary task artifacts to `/verify` without
+    deleting or trimming them.
+13. Report changed files, verification result, local-exit status, temporary
+    state status, and unresolved concerns.
 
 ## Hard Rules
 
@@ -216,7 +226,8 @@ Reason: <why that outcome is correct>
 - Do not edit when the current context cannot complete the task accurately;
   gather context, narrow the slice, or use fresh context first.
 - Do not edit inside an unfamiliar language, framework, runtime, build system, or
-  business domain before running the smallest useful Unknown-Unknowns Probe.
+  business domain before running the smallest useful Implementation Constraint
+  Probe or reusing applicable fresh evidence from upstream.
 - Do not keep code written before a required failing test.
 - Do not use fresh context for vague work; narrow the task first.
 - Do not keep throwaway spikes or prototypes in the final diff unless they are
@@ -225,6 +236,8 @@ Reason: <why that outcome is correct>
 - Do not couple tests to private implementation when a public behavior seam exists.
 - Do not batch all tests ahead of implementation for multi-behavior work.
 - Do not delete or trim temporary task state during execution; `/verify` owns cleanup.
+- Do not use Low risk, file count, or subjective task size as a substitute for
+  proving every Local Completion Exit condition.
 - Do not ignore `NEEDS_CONTEXT` or `BLOCKED` from a fresh worker; recover through the stated route.
 
 ## Rationalization Prevention
@@ -250,7 +263,7 @@ Reason: <why that outcome is correct>
 | "This defensive function is needed in 5 files" | Copy-pasted defense is a maintenance burden; extract to a shared module so the strategy can be reviewed once |
 | "I should write the full test suite first" | TDD needs feedback one behavior at a time |
 | "STATE.md is temporary, so delete it now" | Execution cannot prove the final lifecycle; report it to `/verify`, the sole cleanup owner |
-| "I'll learn the unfamiliar stack by editing" | Cheap read-only probes should expose local conventions before code momentum starts |
+| "I'll learn the unfamiliar stack by editing" | Fresh upstream evidence or a cheap read-only Implementation Constraint Probe should expose local conventions before code momentum starts |
 | "The deviation is small enough not to mention" | Small deviations still change what `/verify` must compare against the plan |
 | "The user called /execute, so the Taste choices are approved" | A workflow invocation selects a stage; it does not approve unresolved recommendations |
 
@@ -266,16 +279,21 @@ Reason: <why that outcome is correct>
 
 ### When Applicable
 
-- Unknown-Unknowns Probe result, or why no probe was needed.
+- Implementation Constraint Probe result, evidence reused, or why no probe was needed.
 - Referenced memory applied, or confirmation that no referenced memory affected execution.
 - Deviation Log status for medium/high-risk work.
 - Temporary state status when root `STATE.md` or another task-local artifact was used.
+- Local Completion Exit status and supporting evidence for Low-risk work.
 
 ## Handoff
 
-Apply root `Workflow Continuation`. Continue to `/verify` when the original
-request authorizes the complete outcome and no stop condition applies; otherwise
-return control with the recommended next route.
+Apply root Local Completion Exit first. When it passes, report the fresh local
+proof and end the task without a workflow handoff. When it does not pass,
+continue below.
+
+Apply root `Workflow Continuation`. Continue to `/verify` when the original request
+authorizes the complete outcome and no stop condition applies; otherwise return
+control with the recommended next route.
 
 Apply root `Workflow Handoff Selection` when returning control. Use only the
 valid routes below as options, with the recommended route first.
@@ -287,6 +305,6 @@ recommendation list.
 
 Recommended next steps for the user:
 
-- `/verify` before any completion claim.
+- `/verify` before any completion claim that does not pass Local Completion Exit.
 - `/investigate` if execution reveals unexpected failure.
 - `/plan` if task boundaries prove wrong.

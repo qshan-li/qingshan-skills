@@ -93,6 +93,25 @@ materially. Mechanical decisions never require approval. Workflow continuation
 preserves the original task boundary; it does not authorize unrelated work or
 release actions.
 
+## Local Completion Exit
+
+`/execute` may finish a task without entering `/verify` when every condition
+below is true:
+
+- risk is Low and the decision is Mechanical
+- the change is narrow and reversible
+- `/execute` freshly ran the required proof, and that proof directly observes
+  the complete touched surface
+- no distinguishing behavior proof is missing
+- no temporary task state was created or consumed
+- no `/reflect` candidate, review request, release action, or residual risk
+  needs `/verify`
+
+This is a terminal exit, not a verification bypass: `/execute` must report the
+fresh proof and its result before making the completion claim. If any condition
+is false or uncertain, continue to `/verify`. File count and words such as
+"tiny", "simple", or "obvious" are not exit criteria.
+
 ## Workflow Handoff Selection
 
 Use this contract only when `Workflow Continuation` returns control and the
@@ -128,14 +147,14 @@ manufacturing an option.
 | Request shape | Entry skill | Reason |
 | --- | --- | --- |
 | New feature, product change, refactor, project structure work, deployment improvement, documentation workflow | `/clarify` | Goal, scope, constraints, and acceptance criteria must be explicit |
-| Read or understand a new project, directory, or module; produce a structured map and unknowns | `/clarify` | Shared context must be built before decisions, plans, edits, or investigations |
+| Read or understand a new project, directory, or module; produce a structured map and uncertainties | `/clarify` | Shared context must be built before decisions, plans, edits, or investigations |
 | Bug, failing test, performance issue, deployment failure, security or stability concern | `/investigate` | Evidence must exist before fixes |
 | Clarified goal that needs decomposition, sequencing, rollback, or validation strategy | `/plan` | Hidden decisions and scope drift need control |
 | Dependency or toolchain upgrade | `/plan` | Blast radius, compatibility impact, and verification paths must be controlled |
 | Test-system improvement with unclear coverage gap, flaky signal, or failing behavior | `/investigate` | Improve a real signal instead of manufacturing tests for metrics |
 | Planned code, config, docs, or tooling change | `/execute` | Edits must stay scoped and context-safe |
 | Code review, PR or diff review, implementation or spec review | `/verify` | Review requests need fresh proof, scope review, and residual-risk reporting |
-| Any completion, fixed, passing, optimized, or ready claim | `/verify` | Claims require fresh proof |
+| Any completion, fixed, passing, optimized, or ready claim not already proven inside active `/execute` through Local Completion Exit | `/verify` | Claims require fresh proof |
 | Ship, deploy, publish, PR, merge, release | `/verify` | Release requests need fresh proof, scope review, and rollback or recovery notes before handoff |
 | Completed work with reusable learning | `/reflect` | Durable lessons should update future behavior |
 
@@ -147,7 +166,8 @@ the workflow must prevent:
 - Failure, regression, flaky behavior, deployment breakage, security concern, or
   unknown root cause with missing evidence: use `/investigate`.
 - Review, readiness, completion, PR, diff, merge, release, publish, ship, or
-  handoff claim: use `/verify` before edits or release action.
+  handoff claim: use `/verify` before edits or release action, except an active
+  `/execute` that proves every Local Completion Exit condition.
 - Missing goal, acceptance criteria, protected boundaries, validation path, or
   user decision boundary: use `/clarify`.
 - Clear goal with sequencing, rollback, blast-radius, dependency, or validation
@@ -166,7 +186,7 @@ smallest missing fact that changes the route.
 
 | Risk | Use |
 | --- | --- |
-| Low | Lightweight `/clarify -> /execute -> /verify` |
+| Low | Lightweight `/clarify -> /execute`, then terminate through Local Completion Exit or continue to `/verify` |
 | Medium | `/clarify -> /plan -> /execute -> /verify` |
 | High | Full relevant flow, with `/investigate` first when evidence is required |
 
@@ -274,6 +294,8 @@ Do not keep bouncing between skills to avoid naming the blocker.
 /clarify -> /plan -> /execute -> /verify -> /reflect (when durable learning or decisions exist)
       \                         ^
        -> /investigate -> /plan |
+                          \
+                           -> done (only through Local Completion Exit)
 ```
 
 TDD, review, and ship are embedded disciplines:
@@ -314,6 +336,6 @@ proof, and completion claims.
 | "I need to inspect files before choosing." | Choose the entry skill first; that skill tells you how much inspection is justified. |
 | "The fix is obvious." | Obvious fixes still need the correct entry: `/investigate` for failures, `/clarify` for ambiguous work, `/execute` for scoped edits. |
 | "Security is a small patch, so keep Low." | Security, secrets, auth, irreversible data, and real release actions have High floors. |
-| "I'll edit now and verify later." | Planned code, config, docs, or tooling changes enter `/execute` before edits and `/verify` before completion claims. |
+| "I'll edit now and verify later." | Planned changes enter `/execute`; completion then needs either a proven Local Completion Exit or `/verify`. |
 | "The user named a downstream skill, so prerequisites do not matter." | Follow explicit user direction, but surface missing upstream facts or decisions before irreversible work. |
 | "Hooks or runtime rules will enforce this." | Hooks may harden mechanical checks. The portable enforcement layer is this root skill. |

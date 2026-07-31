@@ -72,9 +72,11 @@ only that route line across the route shapes covered by root `SKILL.md`:
 - clarified work needing sequencing routes through `/plan`
 - dependency or toolchain upgrades route through `/plan`
 - unclear test-system improvements route through `/investigate`
-- clear planned documentation edits route through `/execute` and `/verify`
+- clear planned documentation edits enter `/execute` and may finish there only
+  when Local Completion Exit is fully proven
 - review requests route through `/verify`
-- completion claims route through `/verify`
+- completion claims route through `/verify` unless active `/execute` proves
+  every condition for Local Completion Exit
 - release requests route through `/verify`
 - reusable learning routes through `/reflect`
 
@@ -85,7 +87,10 @@ in the adapter layer and reuse the same pressure scenario signal IDs.
 The optional behavior wrapper checks selected canonical body contracts rather
 than only routing: bounded continuation, phase-only stops, Taste approval
 blocking and continuation, finite-task Loop Contract exemption, and
-recurring-work Loop Contract requirements.
+recurring-work Loop Contract requirements. It also checks that unfamiliarity
+triggers an Uncertainty Pass and a relevant non-mutating check without becoming
+a risk floor, and that unresolved decision-critical uncertainty blocks a
+handoff.
 
 Run it only when host credentials and runtime cost are acceptable:
 

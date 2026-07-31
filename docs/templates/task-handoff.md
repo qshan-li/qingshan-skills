@@ -67,6 +67,22 @@ when a targeted excerpt or artifact path is enough.
 - Root-cause hypotheses and confidence:
 - Recommended fix path:
 
+## Uncertainty Status (When Needed)
+
+Record only items that must cross a workflow boundary because they remain open
+or deferred, were accepted as residual, or rely on evidence that may become
+stale. Resolved items stay temporary unless downstream work needs their evidence.
+
+- Item:
+- Kind: <open fact | blind-spot hypothesis | residual uncertainty | open decision reference>
+- Impact: <goal, acceptance criteria, protected boundary, implementation, validation, or residual risk>
+- Next action: <read-only probe, decision brief, investigation, scheduled plan step, or verification>
+- Status: <open | resolved | deferred | accepted-residual | stale>
+- Evidence: <path, symbol, command output, approval reference, or none yet>
+
+Open decisions use `Open Decisions` and their Decision Brief as the authoritative
+approval state. If referenced here, do not duplicate or reinterpret that status.
+
 ## Open Decisions
 
 - <Decision, Mechanical | Taste | User Challenge, open | approved | changed,
@@ -94,5 +110,7 @@ task is closed.>
 - Stop if acceptance criteria or required evidence is missing, a Taste decision
   is open or changed, or a User Challenge decision is unresolved.
 - Stop if the next workflow would need files, referenced memory, or context not named here.
+- Stop if an open or stale uncertainty can change a dependent task and its next
+  action is not scheduled before that task.
 - Stop if a required loop contract lacks a trigger, stop condition, proof, or
   usage boundary.

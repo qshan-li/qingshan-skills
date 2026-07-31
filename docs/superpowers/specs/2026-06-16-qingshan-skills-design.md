@@ -353,11 +353,19 @@ It should also inherit Matt Pocock's Grill Me rules:
 It should keep asking only while the answer can change the goal, non-goals, constraints, acceptance criteria, shared language, or a high-impact user decision. Once the remaining choices are mechanical, reversible, taste-level, or answerable from the codebase and docs, `/clarify` should stop asking and hand off to the next workflow.
 
 For unfamiliar stacks or user-visible behavior, `/clarify` should run an
-Unknowns Pass that separates known facts, known unknowns, likely unknown
-unknowns, and the smallest discovery probes. When asked to read a project or
-module, it should produce a scoped Project/Module Orientation with evidence,
-nodes, edges, layers, domain flow, guided reading order, unknowns, and next route
-without inventing a new top-level command or persistent graph product.
+Uncertainty Pass that separates evidence, open facts, open decisions, blind-spot
+hypotheses, and residual uncertainty by resolution mechanism. Unfamiliarity
+triggers the pass but does not raise task risk by itself. `/clarify` may run only
+the smallest discovery probes that can change its goal, acceptance criteria,
+boundaries, validation path, or user decisions. User questions are decision or
+fact inputs, not probes; writable spikes are planned execution slices.
+
+Only cross-stage open, deferred, accepted-residual, or potentially stale items
+belong in Task Handoff `Uncertainty Status`, using item, kind, impact, next
+action, status, and evidence. When asked to read a project or module, `/clarify`
+should produce a scoped Project/Module Orientation with evidence, nodes, edges,
+layers, domain flow, guided reading order, uncertainties, and next route without
+inventing a new top-level command or persistent graph product.
 
 Runtime-specific user-input mechanisms are an adapter detail, not part of the skill contract. If a host provides a native user-input action, `/clarify` may use it; otherwise it should ask a normal conversational question. If the host cannot surface interactive input, it should stop with one blocking question and a recommended answer rather than guessing.
 
@@ -441,10 +449,11 @@ statement; that target is a valid named-memory container and does not require a
 formal Task Handoff only to satisfy memory rules.
 
 Before editing an unfamiliar language, framework, runtime, build system, or
-business domain, `/execute` should run the smallest read-only Unknown-Unknowns
-Probe that can expose local conventions, generated code, lifecycle hooks,
-external contracts, permissions, and business invariants. Medium and high-risk
-execution records any deviation from the approved plan.
+business domain, `/execute` should run an Implementation Constraint Probe only
+for unresolved or stale local constraints, reusing applicable fresh upstream
+evidence. The probe is read-only; a required writable spike returns to `/plan`
+as a bounded execution slice. Medium and high-risk execution records any
+deviation from the approved plan.
 
 For high-risk code changes, TDD is the default:
 
@@ -466,8 +475,9 @@ Outputs:
 
 Handoff:
 
-- continue to `/verify` when the original request authorizes the complete
-  outcome and the root continuation contract permits it
+- finish in `/execute` when every condition for Local Completion Exit is
+  proven; otherwise continue to `/verify` when the original request authorizes
+  the complete outcome and the root continuation contract permits it
 - to `/investigate` when execution exposes unexpected failures
 - back to `/plan` if task boundaries prove wrong
 
@@ -587,7 +597,7 @@ Handoff:
 
 Common paths:
 
-- Small documentation change: `/clarify -> /execute -> /verify`
+- Small Mechanical documentation change: `/clarify -> /execute -> done` through Local Completion Exit
 - Bug fix: `/investigate -> /execute -> /verify`
 - Performance tuning: `/investigate -> /plan -> /execute -> /verify`
 - Project structure optimization: `/clarify -> /plan -> /execute -> /verify`

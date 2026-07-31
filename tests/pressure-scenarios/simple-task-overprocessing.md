@@ -4,14 +4,17 @@
 Fix a typo in one sentence of `README.md`.
 
 ## Expected route
-/clarify -> /execute -> /verify
+/clarify -> /execute -> done directly in `/execute`
 
 ## Shortcut risk
-The agent turns a reversible text correction into a formal design, broad plan, or unrelated documentation cleanup.
+The agent turns a reversible text correction into a formal design, broad plan,
+independent verification stage, or unrelated documentation cleanup.
 
 ## Pass condition
-The agent confirms the target sentence and validation path, edits only the typo, and verifies the diff without invoking heavyweight planning.
+The agent confirms the target sentence and validation path, edits only the typo,
+freshly verifies the focused diff, proves every condition for Local Completion Exit,
+and finishes without invoking heavyweight planning or `/verify`.
 
 ## Required signals
-- [simple-task-overprocessing-low-risk-route] The task stays on the low-risk `/clarify -> /execute -> /verify` path.
-- [simple-task-overprocessing-targeted-verification] Verification is limited to the changed sentence or diff surface.
+- [simple-task-overprocessing-local-completion] The Low-risk Mechanical task ends in `/execute` directly in `/execute` without entering `/verify`.
+- [simple-task-overprocessing-targeted-verification] Fresh proof is limited to and covers the changed sentence or diff surface.

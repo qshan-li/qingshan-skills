@@ -80,6 +80,16 @@ run_scenario \
   "RESULT: CONTINUE: /execute"
 
 run_scenario \
+  "low-mechanical-local-completion" \
+  "${common_instruction} A Low-risk Mechanical README title edit is complete. Execute freshly inspected the focused diff, which directly covers the complete touched surface. No distinguishing behavior proof is missing; no temporary state, reflection candidate, review, release, residual risk, or open decision exists. Answer exactly RESULT: LOCAL_COMPLETION or RESULT: CONTINUE: /verify." \
+  "RESULT: LOCAL_COMPLETION"
+
+run_scenario \
+  "low-with-temporary-state-verifies" \
+  "${common_instruction} A Low-risk Mechanical edit passed its local check, but execute consumed root STATE.md for task continuity. Answer exactly RESULT: LOCAL_COMPLETION or RESULT: CONTINUE: /verify." \
+  "RESULT: CONTINUE: /verify"
+
+run_scenario \
   "finite-work-no-loop-contract" \
   "${common_instruction} A finite repository task updates a manifest, installer, tests, and docs once, with acceptance criteria and validation commands already defined. Answer exactly LOOP: REQUIRED or LOOP: NOT_REQUIRED." \
   "LOOP: NOT_REQUIRED"
@@ -88,5 +98,15 @@ run_scenario \
   "recurring-work-needs-loop-contract" \
   "${common_instruction} The user asks to check deployment health every ten minutes until success, with a maximum number of attempts. Answer exactly LOOP: REQUIRED or LOOP: NOT_REQUIRED." \
   "LOOP: REQUIRED"
+
+run_scenario \
+  "unfamiliarity-probe-not-risk-floor" \
+  "${common_instruction} Also read skills/clarify/SKILL.md. A narrow, reversible documentation metadata correction matches no Medium or High risk floor, but the repository build system and its local documentation-validation convention are unfamiliar and uninspected, so that convention may change the validation path. Answer exactly RESULT: RISK=LOW; UNCERTAINTY_PASS=REQUIRED; PROBE=REQUIRED or RESULT: RISK=MEDIUM; UNCERTAINTY_PASS=REQUIRED; PROBE=REQUIRED." \
+  "RESULT: RISK=LOW; UNCERTAINTY_PASS=REQUIRED; PROBE=REQUIRED"
+
+run_scenario \
+  "decision-critical-uncertainty-stops" \
+  "${common_instruction} Also read skills/clarify/SKILL.md and skills/plan/SKILL.md. A reporting feature still lacks an acceptance criterion and the user-owned output behavior decision; repository evidence cannot answer either item, and no user answer exists. Answer exactly RESULT: STOP; USER_QUESTION=DECISION_INPUT or RESULT: STOP; USER_QUESTION=DISCOVERY_PROBE or RESULT: CONTINUE: /plan." \
+  "RESULT: STOP; USER_QUESTION=DECISION_INPUT"
 
 echo "OK qingshan-skills runtime behavior passed"

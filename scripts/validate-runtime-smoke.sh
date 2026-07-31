@@ -131,8 +131,7 @@ run_scenario \
 run_scenario \
   "planned-docs-execute-route" \
   "${common_instruction} Task: The typo location and validation path are already known. Fix one sentence in README.md. What workflow route should be used?" \
-  "/execute" \
-  "/verify"
+  "/execute"
 
 run_scenario \
   "review-verify-route" \

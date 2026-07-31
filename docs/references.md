@@ -956,7 +956,7 @@ qingshan-skills/
 - **Review** is a verification dimension inside `/verify`, not a standalone skill.
 - **Shipping** is the release path after `/verify` passes, not a standalone skill.
 
-Common paths (from the design doc): small docs change → `/clarify → /execute → /verify`; bug fix → `/investigate → /execute → /verify`; perf tuning → `/investigate → /plan → /execute → /verify`.
+Common paths (from the design doc): small Mechanical docs change → `/clarify → /execute → done` through Local Completion Exit; bug fix → `/investigate → /execute → /verify`; perf tuning → `/investigate → /plan → /execute → /verify`.
 
 ## Cross-Reference: File Interface Mapping
 

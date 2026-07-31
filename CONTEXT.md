@@ -37,6 +37,40 @@ A runtime-specific wrapper, manifest, hook, prompt, or install surface that make
 the canonical skills usable in a host such as Claude Code, Codex, or Cursor
 without changing the meaning of the root router or six workflow skills.
 
+## Uncertainty Pass
+
+An operational clarification pass that separates evidence, open facts, open
+decisions, blind-spot hypotheses, and residual uncertainty by how each item can
+be resolved, who must decide it, and whether it blocks later work.
+
+## Open Fact
+
+An objective answer that exists but has not yet been found. Resolve it from
+repository or external evidence with the smallest applicable read-only probe.
+
+## Open Decision
+
+An answer that does not exist until its decision owner chooses. It is handled by
+the applicable Mechanical, Taste, or User Challenge decision rule, not disguised
+as a fact-finding probe.
+
+## Blind-spot Hypothesis
+
+A grounded suspicion that a named risk surface may contain an unobserved
+constraint. It must name why that surface is plausible and the smallest probe
+that could expose it; generic possibility lists do not qualify.
+
+## Residual Uncertainty
+
+An uncertainty that proportionate discovery cannot eliminate. It carries its
+impact, mitigation, and required proof forward and cannot replace a blocking
+goal, acceptance-criteria, boundary, or user decision.
+
+## Implementation Constraint Probe
+
+The read-only pre-edit check in `/execute` that resolves only unresolved or stale
+local implementation constraints and reuses applicable fresh upstream evidence.
+
 ## Durable Decision
 
 A settled architecture, scope, tool, vendor, release, or reversal choice that
